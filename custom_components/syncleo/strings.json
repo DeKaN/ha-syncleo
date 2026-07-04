@@ -1,0 +1,95 @@
+{
+  "config": {
+    "flow_title": "Discovered {vendor} Device",
+    "step": {
+      "zeroconf_confirm": {
+        "title": "Set up {vendor} Device",
+        "description": "A device was discovered at {host}. Please paste the 'Device Share URL' from the mobile app to complete setup.",
+        "data": {
+          "url": "Device Share URL"
+        }
+      },
+      "model_config": {
+        "title": "Enter Device Model",
+        "description": "Please confirm or edit the extracted device model. This helps Home Assistant correctly display and configure your {vendor} device.",
+        "data": {
+          "manufacturer": "Manufacturer (e.g., Ballu, Electrolux, Polaris)",
+          "model": "Device Model"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "The provided URL is invalid. Please ensure it starts with rusklimat:// or polaris://",
+      "mac_mismatch": "The pasted URL belongs to a different device. The MAC address does not match the discovered device.",
+      "type_mismatch": "The pasted URL is for a different device type. Please copy the link for the correct device."
+    },
+    "abort": {
+      "manual_setup_requires_discovery": "This device requires specific data to connect. Please wait for Home Assistant to automatically discover it on your network."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "access_control": {
+        "name": "Access Control"
+      },
+      "backlight": {
+        "name": "Backlight"
+      },
+      "child_lock": {
+        "name": "Child lock"
+      },
+      "error": {
+        "name": "Error"
+      },
+      "volume": {
+        "name": "Sound"
+      }
+    },
+    "number": {
+      "power_level": {
+        "name": "Power Level"
+      },
+      "eco_delta": {
+        "name": "Eco Delta Temperature"
+      },
+      "anti_frost_temp": {
+        "name": "Anti-Frost Threshold"
+      }
+    },
+    "switch": {
+      "backlight": {
+        "name": "Backlight"
+      },
+      "child_lock": {
+        "name": "Child Lock"
+      },
+      "damper": {
+        "name": "Damper"
+      },
+      "turbo": {
+        "name": "Turbo Mode"
+      },
+      "night": {
+        "name": "Night Mode"
+      },
+      "ionization": {
+        "name": "Ionization"
+      },
+      "ultraviolet": {
+        "name": "UV Sterilization"
+      },
+      "keep_warm": {
+        "name": "Keep Warm"
+      },
+      "smart_mode": {
+        "name": "Smart Mode"
+      },
+      "volume": {
+        "name": "Sound"
+      },
+      "warm_stream": {
+        "name": "Warm Air Stream"
+      }
+    }
+  }
+}
