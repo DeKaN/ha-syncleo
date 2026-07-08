@@ -1,7 +1,6 @@
 {
   "domain": "syncleo",
   "name": "Syncleo (Rusclimate/Polaris) WiFi (UDP)",
-  "zeroconf": ["_syncleo._udp.local."],
   "codeowners": [
     "@DeKaN"
   ],
@@ -16,5 +15,6 @@
   "requirements": [
     "pysyncleo==0.1.7"
   ],
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "zeroconf": ["_syncleo._udp.local."]
 }
