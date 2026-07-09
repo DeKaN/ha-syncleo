@@ -21,15 +21,15 @@ jobs:
         shell: "bash"
         run: |
           yq -i -o json '.version="${{ github.event.release.tag_name }}"' \
-            "${{ github.workspace }}/custom_components/boneco/manifest.json"
+            "${{ github.workspace }}/custom_components/syncleo/manifest.json"
 
       - name: "ZIP the integration directory"
         shell: "bash"
         run: |
-          cd "${{ github.workspace }}/custom_components/boneco"
-          zip boneco.zip -r ./
+          cd "${{ github.workspace }}/custom_components/syncleo"
+          zip syncleo.zip -r ./
 
       - name: "Upload the ZIP file to the release"
         uses: softprops/action-gh-release@v3
         with:
-          files: ${{ github.workspace }}/custom_components/boneco/boneco.zip
+          files: ${{ github.workspace }}/custom_components/syncleo/syncleo.zip
