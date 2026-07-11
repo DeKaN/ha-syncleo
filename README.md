@@ -7,6 +7,10 @@
 Integration to control devices using Syncleo IoT (Rusclimate/Polaris) UDP protocol.  
 Integration **doesn't** use MQTT, but your device should be visible in mDNS.
 
+## FAQ
+Q: How to get "Share URL"?  
+A: Open device settings in mobile app, go to "Access control" screen and press "Share" button. You can see QR code on new screen, press "Share" button to get "Share URL" as text
+
 ## Installation
 
 ### Install from HACS
@@ -39,10 +43,6 @@ Then add device via these steps:
 | Rusclimate | 49 | (Transformer 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux EIH/R, Electrolux EIH/S, Ballu Plaza |
 | Rusclimate | 71 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
 | Rusclimate | 89 | Aurus PF |
-
-## FAQ
-Q: How to get "Share URL"?
-A: Open device settings in mobile app, go to "Access control" screen and press "Share" button. You can see QR code on new screen, press "Share" button to get "Share URL" as text
 
 <!---->
 [hacs]: https://github.com/hacs/integration

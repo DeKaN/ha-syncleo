@@ -13,7 +13,7 @@ from homeassistant.core import HomeAssistant, callback
 from pysyncleo.commands import CmdTargetTemperature, CmdMode, CmdSpeed
 
 
-from .const import PD_SWING_MODE
+from .const import PD_SWING_MODE, TRANLATION_KEY_CLIMATE
 from .devices import ClimateProfile
 from .entity import SyncleoBaseEntity
 from .models import SyncleoConfigEntry
@@ -41,6 +41,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
         self._profile = profile
         self._attr_unique_id = f"{self._device_unique_id}_{profile.profile_type}"
+        self._attr_translation_key = TRANLATION_KEY_CLIMATE
         self._attr_min_temp = profile.min_temp
         self._attr_max_temp = profile.max_temp
         self._attr_target_temperature_step = profile.target_temp_step

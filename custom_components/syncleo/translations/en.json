@@ -46,7 +46,7 @@
       }
     },
     "climate": {
-      "_": {
+      "syncleo_climate": {
         "state_attributes": {
           "preset_mode": {
             "state": {

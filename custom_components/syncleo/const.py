@@ -55,6 +55,8 @@ FEATURE_AURUS_PF_AUTO_OFF_DISPLAY = "aurus_pf_auto_off_display"
 FEATURE_AURUS_PF_HALF_POWER = "aurus_pf_half_power"
 FEATURE_AURUS_PF_SCREENSAVER_MODE = "aurus_pf_screensaver_mode"
 
+TRANLATION_KEY_CLIMATE = DOMAIN + "_climate"
+
 ZEROCONF_CURVE = "curve"
 ZEROCONF_DEVICE_TYPE = "devtype"
 ZEROCONF_MAC_ADDRESS = "macaddr"
