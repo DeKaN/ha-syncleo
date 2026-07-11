@@ -5,11 +5,7 @@
 [![hacs][hacsbadge]][hacs]
 
 Integration to control devices using Syncleo IoT (Rusclimate/Polaris) UDP protocol.  
-Integration **doesn't** use MQTT
-
-## Supported models (by device type)
-- (8) Electrolux Fusion EVO DC, Electrolux Atrium DC, Electrolux Arctic Air DC, Zanussi Siena DC, Ballu Lagoon DC, Royal Thermo Siena DC, Climber Dresden, Climer Dresden Cki 24, ONE AIR MASTER
-- (46) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM
+Integration **doesn't** use MQTT, but your device should be visible in mDNS.
 
 ## Installation
 
@@ -25,6 +21,28 @@ Then add device via these steps:
 1. Wait for autodiscovery.
 1. Paste "Share URL" from mobile app at adding device.
 1. Fix Vendor/Model if needed.
+
+## Supported models (by device type)
+| Vendor | Device Type | Supported Models |
+| :--- | :--- | :--- |
+| Rusclimate | 6 | (Transformer DI 3.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble |
+| Rusclimate | 8 | Electrolux Fusion EVO DC, Electrolux Atrium DC, Electrolux Arctic Air DC, Zanussi Siena DC, Ballu Lagoon DC, Royal Thermo Siena DC, Climber Dresden, Climer Dresden Cki 24, ONE AIR MASTER |
+| Rusclimate | 9 | (Transformer DI 3.0 S) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble |
+| Rusclimate | 11 | Ballu Rapid |
+| Rusclimate | 14 | (Transformer DI) Electrolux Air Gate, Electrolux Rapid, Ballu Evolution, Electrolux Air Plinth PRO |
+| Rusclimate | 17 | Wi-Fi Convection Heater |
+| Rusclimate | 28 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
+| Rusclimate | 31 | (Transformer 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux EIH/R, Electrolux EIH/S, Ballu Plaza |
+| Rusclimate | 42 | (Transformer DI 3.0 XS) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble |
+| Rusclimate | 46 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
+| Rusclimate | 47 | Wi-Fi Convection Heater |
+| Rusclimate | 49 | (Transformer 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux EIH/R, Electrolux EIH/S, Ballu Plaza |
+| Rusclimate | 71 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
+| Rusclimate | 89 | Aurus PF |
+
+## FAQ
+Q: How to get "Share URL"?
+A: Open device settings in mobile app, go to "Access control" screen and press "Share" button. You can see QR code on new screen, press "Share" button to get "Share URL" as text
 
 <!---->
 [hacs]: https://github.com/hacs/integration

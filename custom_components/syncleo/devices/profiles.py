@@ -32,6 +32,15 @@ class ProgramDataField(NumberBounds):
 
 
 @dataclass(kw_only=True)
+class SelectConfig:
+    options_map: Dict[str, int]
+
+    @property
+    def options(self) -> List[str]:
+        return list(self.options_map.keys())
+
+
+@dataclass(kw_only=True)
 class PlatformProviderBase:
     @property
     def supported_platforms(self) -> List[Platform]:
@@ -59,6 +68,16 @@ class NumberMixin(PlatformProviderBase):
     def supported_platforms(self) -> List[Platform]:
         platforms = super().supported_platforms
         return platforms + [Platform.NUMBER] if self.numbers else platforms
+
+
+@dataclass(kw_only=True)
+class SelectMixin(PlatformProviderBase):
+    selects: Dict[str, SelectConfig] = field(default_factory=dict)
+
+    @property
+    def supported_platforms(self) -> List[Platform]:
+        platforms = super().supported_platforms
+        return platforms + [Platform.SELECT] if self.selects else platforms
 
 
 @dataclass(kw_only=True)
@@ -96,7 +115,12 @@ class DeviceBaseProfile(PlatformProviderBase):
 
 @dataclass(kw_only=True)
 class ClimateProfile(
-    DeviceBaseProfile, BinarySensorMixin, NumberMixin, SensorMixin, SwitchMixin
+    DeviceBaseProfile,
+    BinarySensorMixin,
+    NumberMixin,
+    SelectMixin,
+    SensorMixin,
+    SwitchMixin,
 ):
     """Profile for Heaters and Air Conditioners."""
 

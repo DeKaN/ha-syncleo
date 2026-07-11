@@ -14,6 +14,9 @@ from pysyncleo.commands import (
     CmdIonization,
     CmdKeepWarm,
     CmdNight,
+    CmdPlaceholder1,
+    CmdPlaceholder2,
+    CmdPlaceholder3,
     CmdProgramData,
     CmdSmartMode,
     CmdSpeed,
@@ -28,6 +31,9 @@ from .const import (
     DOMAIN,
     CONF_MANUFACTURER,
     FEATURE_ACCESS_CONTROL,
+    FEATURE_AURUS_PF_AUTO_OFF_DISPLAY,
+    FEATURE_AURUS_PF_HALF_POWER,
+    FEATURE_AURUS_PF_SCREENSAVER_MODE,
     FEATURE_BACKLIGHT,
     FEATURE_CHILD_LOCK,
     FEATURE_DAMPER,
@@ -62,6 +68,10 @@ FEATURE_TO_COMMAND_MAP = {
     FEATURE_ULTRAVIOLET: CmdUltraviolet,
     FEATURE_VOLUME: CmdVolume,
     FEATURE_WARM_STREAM: CmdWarmStream,
+    # Custom device specific features
+    FEATURE_AURUS_PF_AUTO_OFF_DISPLAY: CmdPlaceholder1,
+    FEATURE_AURUS_PF_HALF_POWER: CmdPlaceholder2,
+    FEATURE_AURUS_PF_SCREENSAVER_MODE: CmdPlaceholder3,
 }
 
 

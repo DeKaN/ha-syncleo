@@ -45,18 +45,54 @@
         "name": "Звук"
       }
     },
+    "climate": {
+      "_": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "anti_frost": "Anti Frost",
+              "manual": "Ручной",
+              "vacation": "Отпуск"
+            }
+          }
+        }
+      }
+    },
     "number": {
-      "power_level": {
-        "name": "Мощность"
+      "anti_frost_temp": {
+        "name": "Температура в режиме Anti Frost"
       },
       "eco_delta": {
         "name": "Разница температур в режиме Eco"
       },
-      "anti_frost_temp": {
-        "name": "Температура в режиме Anti-Frost"
+      "min_voltage": {
+        "name": "Минимальное напряжение (145+X)"
+      },
+      "power_level": {
+        "name": "Мощность"
+      },
+      "vacation_temperature": {
+        "name": "Температура режима Отпуск"
+      }
+    },
+    "select": {
+      "aurus_pf_screensaver_mode": {
+        "name": "Режим заставки",
+        "state": {
+          "screensaver_off": "Выключен",
+          "screensaver_1": "1 мин",
+          "screensaver_3": "3 мин",
+          "screensaver_5": "5 мин"
+        }
       }
     },
     "switch": {
+      "aurus_pf_auto_off_display": {
+        "name": "Автовыключение дисплея"
+      },
+      "aurus_pf_half_power": {
+        "name": "Половина мощности"
+      },
       "backlight": {
         "name": "Подсветка"
       },

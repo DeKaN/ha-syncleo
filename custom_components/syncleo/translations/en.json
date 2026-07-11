@@ -45,18 +45,54 @@
         "name": "Sound"
       }
     },
+    "climate": {
+      "_": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "anti_frost": "Anti Frost",
+              "manual": "Manual",
+              "vacation": "Vacation"
+            }
+          }
+        }
+      }
+    },
     "number": {
-      "power_level": {
-        "name": "Power Level"
+      "anti_frost_temp": {
+        "name": "Anti Frost Threshold"
       },
       "eco_delta": {
         "name": "Eco Delta Temperature"
       },
-      "anti_frost_temp": {
-        "name": "Anti-Frost Threshold"
+      "min_voltage": {
+        "name": "Min voltage (145+X)"
+      },
+      "power_level": {
+        "name": "Power Level"
+      },
+      "vacation_temperature": {
+        "name": "Vacation temperature"
+      }
+    },
+    "select": {
+      "aurus_pf_screensaver_mode": {
+        "name": "Screensaver mode",
+        "state": {
+          "screensaver_off": "Off",
+          "screensaver_1": "1 min",
+          "screensaver_3": "3 min",
+          "screensaver_5": "5 min"
+        }
       }
     },
     "switch": {
+      "aurus_pf_auto_off_display": {
+        "name": "Auto off display"
+      },
+      "aurus_pf_half_power": {
+        "name": "Half power"
+      },
       "backlight": {
         "name": "Backlight"
       },

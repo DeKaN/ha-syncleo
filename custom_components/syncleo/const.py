@@ -12,13 +12,27 @@ CONF_VENDOR = "vendor"
 
 PD_ANTI_FROST_TEMP = "anti_frost_temp"
 PD_AUTO_OFF_DISPLAY = "auto_off_display"
+PD_CURRENT_PRESET = "current_preset"
+PD_DAMPER = "damper"
 PD_ECO_DELTA = "eco_delta"
 PD_HALF_POWER = "half_power"
+PD_MIN_VOLTAGE = "min_voltage"
 PD_POWER = "power"
 PD_SWING_MODE = "swing_mode"
+PD_TIME_START = "time_start"
+PD_TIME_END = "time_end"
 PD_TURN_ON = "turn_on"
+PD_VACATION_TEMPERATURE = "vacation_temperature"
 
 PRESET_ANTI_FROST = "anti_frost"
+PRESET_MANUAL = "manual"
+PRESET_VACATION = "vacation"
+
+# Custom device specific values
+PRESET_AURUS_PF_SCREENSAVER_MODE_OFF = "screensaver_off"
+PRESET_AURUS_PF_SCREENSAVER_MODE_1 = "screensaver_1"
+PRESET_AURUS_PF_SCREENSAVER_MODE_3 = "screensaver_3"
+PRESET_AURUS_PF_SCREENSAVER_MODE_5 = "screensaver_5"
 
 FEATURE_ACCESS_CONTROL = "access_control"
 FEATURE_BACKLIGHT = "backlight"
@@ -35,6 +49,11 @@ FEATURE_TURBO = "turbo"
 FEATURE_ULTRAVIOLET = "ultraviolet"
 FEATURE_VOLUME = "volume"
 FEATURE_WARM_STREAM = "warm_stream"
+
+# Custom device specific features
+FEATURE_AURUS_PF_AUTO_OFF_DISPLAY = "aurus_pf_auto_off_display"
+FEATURE_AURUS_PF_HALF_POWER = "aurus_pf_half_power"
+FEATURE_AURUS_PF_SCREENSAVER_MODE = "aurus_pf_screensaver_mode"
 
 ZEROCONF_CURVE = "curve"
 ZEROCONF_DEVICE_TYPE = "devtype"

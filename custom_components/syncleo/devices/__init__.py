@@ -5,6 +5,7 @@ from .profiles import (
     ClimateProfile,
     BinarySensorMixin,
     NumberMixin,
+    SelectMixin,
     SensorMixin,
     SwitchMixin,
 )
@@ -24,6 +25,7 @@ __all__ = [
     "ClimateProfile",
     "BinarySensorMixin",
     "NumberMixin",
+    "SelectMixin",
     "SensorMixin",
     "SwitchMixin",
 ]
