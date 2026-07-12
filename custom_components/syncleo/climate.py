@@ -1,6 +1,7 @@
 import logging
 from homeassistant.components.climate import ClimateEntity
 from homeassistant.components.climate.const import (
+    PRESET_NONE,
     SWING_BOTH,
     SWING_HORIZONTAL,
     SWING_OFF,
@@ -48,12 +49,13 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         self._attr_supported_features = profile.supported_features
 
         self._attr_hvac_modes = list(profile.hvac_modes_map.keys())
+
         self._rev_hvac_map = {v: k for k, v in profile.hvac_modes_map.items()}
         self._rev_presets_map = {v: k for k, v in profile.preset_modes_map.items()}
+        self._rev_fan_map = {v: k for k, v in profile.fan_modes_map.items()}
 
         if profile.fan_modes_map:
             self._attr_fan_modes = list(profile.fan_modes_map.keys())
-            self._rev_fan_map = {v: k for k, v in profile.fan_modes_map.items()}
 
         if profile.preset_modes_map:
             self._attr_preset_modes = list(profile.preset_modes_map.keys())
@@ -63,7 +65,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
         self._is_on = False
         self._current_hvac_mode = HVACMode.OFF
-        self._current_preset_mode = None
+        self._current_preset_mode = PRESET_NONE if profile.preset_modes_map else None
         self._target_temp = None
         self._current_temp = None
         self._fan_mode = None
@@ -139,12 +141,17 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
             if resolved_preset:
                 self._current_preset_mode = resolved_preset
-                if self._current_hvac_mode == HVACMode.OFF:
+                if (
+                    self._current_hvac_mode == HVACMode.OFF
+                    and self._current_preset_mode != PRESET_NONE
+                ):
                     self._current_hvac_mode = self._profile.default_hvac_mode
 
             self._is_on = self._current_hvac_mode != HVACMode.OFF
             if not self._is_on:
-                self._current_preset_mode = None
+                self._current_preset_mode = (
+                    PRESET_NONE if self._profile.preset_modes_map else None
+                )
 
             update_needed = True
 
@@ -200,6 +207,8 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         raw_val = self._profile.fan_modes_map.get(fan_mode)
         if raw_val is not None:
             await self._connection.send_command(CmdSpeed(raw_val))
+            self._fan_mode = fan_mode
+            self.async_write_ha_state()
 
     async def async_set_swing_mode(self, swing_mode: str):
         field = self._profile.program_data_fields.get(PD_SWING_MODE)
@@ -212,3 +221,10 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         packed_bytes = bytes([h_val, v_val])
 
         await self.async_set_program_data(PD_SWING_MODE, packed_bytes)
+
+    async def async_set_preset_mode(self, preset_mode: str) -> None:
+        raw_val = self._profile.preset_modes_map.get(preset_mode)
+        if raw_val is not None:
+            await self._connection.send_command(CmdMode(raw_val))
+            self._current_preset_mode = preset_mode
+            self.async_write_ha_state()

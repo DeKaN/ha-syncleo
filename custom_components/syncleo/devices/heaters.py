@@ -1,6 +1,7 @@
 from homeassistant.components.climate.const import (
     PRESET_ECO,
     PRESET_COMFORT,
+    PRESET_NONE,
     HVACMode,
     ClimateEntityFeature,
 )
@@ -59,7 +60,12 @@ PROFILES = [
         default_hvac_mode=HVACMode.HEAT,
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
-        preset_modes_map={PRESET_COMFORT: 1, PRESET_ECO: 2, PRESET_ANTI_FROST: 3},
+        preset_modes_map={
+            PRESET_NONE: 0,
+            PRESET_COMFORT: 1,
+            PRESET_ECO: 2,
+            PRESET_ANTI_FROST: 3,
+        },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
@@ -98,7 +104,12 @@ PROFILES = [
         default_hvac_mode=HVACMode.HEAT,
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
-        preset_modes_map={PRESET_COMFORT: 1, PRESET_ECO: 2, PRESET_ANTI_FROST: 3},
+        preset_modes_map={
+            PRESET_NONE: 0,
+            PRESET_COMFORT: 1,
+            PRESET_ECO: 2,
+            PRESET_ANTI_FROST: 3,
+        },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
@@ -138,7 +149,12 @@ PROFILES = [
         default_hvac_mode=HVACMode.HEAT,
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
-        preset_modes_map={PRESET_COMFORT: 1, PRESET_ECO: 2, PRESET_ANTI_FROST: 3},
+        preset_modes_map={
+            PRESET_NONE: 0,
+            PRESET_COMFORT: 1,
+            PRESET_ECO: 2,
+            PRESET_ANTI_FROST: 3,
+        },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_CURRENT_PRESET: ProgramDataField(
@@ -179,7 +195,12 @@ PROFILES = [
         default_hvac_mode=HVACMode.HEAT,
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
-        preset_modes_map={PRESET_COMFORT: 1, PRESET_ECO: 2, PRESET_ANTI_FROST: 3},
+        preset_modes_map={
+            PRESET_NONE: 0,
+            PRESET_COMFORT: 1,
+            PRESET_ECO: 2,
+            PRESET_ANTI_FROST: 3,
+        },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
         },
@@ -215,7 +236,12 @@ PROFILES = [
         default_hvac_mode=HVACMode.HEAT,
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
-        preset_modes_map={PRESET_COMFORT: 1, PRESET_ECO: 2, PRESET_ANTI_FROST: 3},
+        preset_modes_map={
+            PRESET_NONE: 0,
+            PRESET_COMFORT: 1,
+            PRESET_ECO: 2,
+            PRESET_ANTI_FROST: 3,
+        },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
@@ -256,7 +282,12 @@ PROFILES = [
         default_hvac_mode=HVACMode.HEAT,
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
-        preset_modes_map={PRESET_COMFORT: 1, PRESET_ECO: 2, PRESET_ANTI_FROST: 3},
+        preset_modes_map={
+            PRESET_NONE: 0,
+            PRESET_COMFORT: 1,
+            PRESET_ECO: 2,
+            PRESET_ANTI_FROST: 3,
+        },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
@@ -297,7 +328,12 @@ PROFILES = [
         default_hvac_mode=HVACMode.HEAT,
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
-        preset_modes_map={PRESET_COMFORT: 1, PRESET_ECO: 2, PRESET_ANTI_FROST: 3},
+        preset_modes_map={
+            PRESET_NONE: 0,
+            PRESET_COMFORT: 1,
+            PRESET_ECO: 2,
+            PRESET_ANTI_FROST: 3,
+        },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
@@ -338,7 +374,12 @@ PROFILES = [
         default_hvac_mode=HVACMode.HEAT,
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
-        preset_modes_map={PRESET_COMFORT: 1, PRESET_ECO: 2, PRESET_ANTI_FROST: 3},
+        preset_modes_map={
+            PRESET_NONE: 0,
+            PRESET_COMFORT: 1,
+            PRESET_ECO: 2,
+            PRESET_ANTI_FROST: 3,
+        },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
@@ -378,7 +419,12 @@ PROFILES = [
         default_hvac_mode=HVACMode.HEAT,
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
-        preset_modes_map={PRESET_COMFORT: 1, PRESET_ECO: 2, PRESET_ANTI_FROST: 3},
+        preset_modes_map={
+            PRESET_NONE: 0,
+            PRESET_COMFORT: 1,
+            PRESET_ECO: 2,
+            PRESET_ANTI_FROST: 3,
+        },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
@@ -419,7 +465,12 @@ PROFILES = [
         default_hvac_mode=HVACMode.HEAT,
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
-        preset_modes_map={PRESET_COMFORT: 1, PRESET_ECO: 2, PRESET_ANTI_FROST: 3},
+        preset_modes_map={
+            PRESET_NONE: 0,
+            PRESET_COMFORT: 1,
+            PRESET_ECO: 2,
+            PRESET_ANTI_FROST: 3,
+        },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
@@ -460,7 +511,12 @@ PROFILES = [
         default_hvac_mode=HVACMode.HEAT,
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
-        preset_modes_map={PRESET_COMFORT: 1, PRESET_ECO: 2, PRESET_ANTI_FROST: 3},
+        preset_modes_map={
+            PRESET_NONE: 0,
+            PRESET_COMFORT: 1,
+            PRESET_ECO: 2,
+            PRESET_ANTI_FROST: 3,
+        },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
@@ -501,7 +557,12 @@ PROFILES = [
         default_hvac_mode=HVACMode.HEAT,
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
-        preset_modes_map={PRESET_COMFORT: 1, PRESET_ECO: 2, PRESET_ANTI_FROST: 3},
+        preset_modes_map={
+            PRESET_NONE: 0,
+            PRESET_COMFORT: 1,
+            PRESET_ECO: 2,
+            PRESET_ANTI_FROST: 3,
+        },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
@@ -543,6 +604,7 @@ PROFILES = [
         cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
         cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_COMFORT: 1,
             PRESET_ECO: 2,
             PRESET_ANTI_FROST: 3,
