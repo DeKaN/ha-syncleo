@@ -1,0 +1,89 @@
+name: "Bug Report"
+description: Report an error, incorrect state, or slider/toggle issue for a supported device.
+title: "[Bug]: <Short description of the issue>"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please provide as much context as possible. **Debug logs are almost always required** to see what your device is sending and receiving.
+
+  - type: dropdown
+    id: vendor
+    attributes:
+      label: Vendor
+      description: Choose your mobile app vendor
+      options:
+        - Rusclimate (Hommyn)
+        - Polaris
+        - Bork
+    validations:
+      required: true
+
+  - type: input
+    id: device_type
+    attributes:
+      label: Device Type ID
+      description: The integer ID of the device type (e.g., 6, 46, 90).
+      placeholder: "90"
+    validations:
+      required: true
+
+  - type: input
+    id: model
+    attributes:
+      label: Model Name
+      description: The exact model name.
+      placeholder: Ballu Cetrion Inox Inverter
+    validations:
+      required: true
+
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant Version
+      placeholder: e.g., 2026.5.0
+    validations:
+      required: true
+
+  - type: input
+    id: integration_version
+    attributes:
+      label: ha-syncleo Version
+      description: Which release or branch are you using?
+      placeholder: e.g., 0.2.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+      placeholder: e.g., "The Power Level slider jumps back to 0 immediately after I set it to 3."
+    validations:
+      required: true
+
+  - type: textarea
+    id: debug_logs
+    attributes:
+      label: Debug Logs
+      description: |
+        Please enable debug logging, trigger the bug, and paste the logs below. 
+        You can enable debug logs via UI or add this to your configuration.yaml:
+        `logger:`
+          `default: warning`
+          `logs:`
+            `custom_components.syncleo: debug`
+            `pysyncleo: debug`
+      render: log
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add any other context here. You can put screenshots from the app for your device here
+    validations:
+      required: false

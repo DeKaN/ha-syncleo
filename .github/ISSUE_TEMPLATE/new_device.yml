@@ -1,0 +1,72 @@
+name: "Add support for a new device type"
+description: Request integration for a new heater, air conditioner, or boiler.
+title: "[Device]: <Vendor> <Model Name>"
+labels: ["enhancement", "new device"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping expand `ha-syncleo`! To build a device profile, we rely entirely on the raw JSON configuration that defines the device's capabilities.
+  
+  - type: dropdown
+    id: vendor
+    attributes:
+      label: Vendor
+      description: Choose your mobile app vendor
+      options:
+        - Rusclimate (Hommyn)
+        - Polaris
+        - Bork
+    validations:
+      required: true
+
+  - type: input
+    id: device_type
+    attributes:
+      label: Device Type ID
+      description: The integer ID of the device type (e.g., 6, 46, 90).
+      placeholder: "90"
+    validations:
+      required: true
+
+  - type: input
+    id: model
+    attributes:
+      label: Model Name
+      description: The exact model name.
+      placeholder: Ballu Cetrion Inox Inverter
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device_class
+    attributes:
+      label: Device Class
+      description: What type of device is this?
+      options:
+        - Air Conditioner
+        - Heater
+        - Water Heater (Boiler)
+        - Sensors
+        - Socket / Switch / Relay
+        - Ventilation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: json_profile
+    attributes:
+      label: JSON Profile Data
+      description: Paste the complete JSON configuration for this device here, if you have it.
+      render: json
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add any other context here. You can put screenshots from the app for your device here
+    validations:
+      required: false
