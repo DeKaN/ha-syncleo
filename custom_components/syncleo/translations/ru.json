@@ -86,6 +86,14 @@
         }
       }
     },
+    "sensor": {
+      "expendables_anode": {
+        "name": "Ресурс анода, д"
+      },
+      "tank": {
+        "name": "Water Tank"
+      }
+    },
     "switch": {
       "aurus_pf_auto_off_display": {
         "name": "Автовыключение дисплея"
@@ -96,11 +104,17 @@
       "backlight": {
         "name": "Подсветка"
       },
+      "bss": {
+        "name": "BSS"
+      },
       "child_lock": {
         "name": "Замок от детей"
       },
       "damper": {
         "name": "Обнаружение открытого окна"
+      },
+      "display_half_power": {
+        "name": "50% подсветка"
       },
       "turbo": {
         "name": "Турбо режим"

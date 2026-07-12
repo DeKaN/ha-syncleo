@@ -35,13 +35,13 @@ async def async_setup_entry(
 class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_name = None
+    _attr_translation_key = TRANLATION_KEY_CLIMATE
 
     def __init__(self, connection, profile: ClimateProfile, entry: SyncleoConfigEntry):
         super().__init__(connection, profile, entry)
 
         self._profile = profile
         self._attr_unique_id = f"{self._device_unique_id}_{profile.profile_type}"
-        self._attr_translation_key = TRANLATION_KEY_CLIMATE
         self._attr_min_temp = profile.min_temp
         self._attr_max_temp = profile.max_temp
         self._attr_target_temperature_step = profile.target_temp_step
@@ -191,7 +191,10 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
     async def async_set_temperature(self, **kwargs):
         temp = kwargs.get(ATTR_TEMPERATURE)
         if temp is not None:
+            temp = max(self._attr_min_temp, min(self._attr_max_temp, float(temp)))
             await self._connection.send_command(CmdTargetTemperature(temp))
+            self._current_temp = temp
+            self.async_write_ha_state()
 
     async def async_set_fan_mode(self, fan_mode: str):
         raw_val = self._profile.fan_modes_map.get(fan_mode)

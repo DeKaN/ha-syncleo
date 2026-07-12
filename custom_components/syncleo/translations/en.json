@@ -75,6 +75,14 @@
         "name": "Vacation temperature"
       }
     },
+    "sensor": {
+      "expendables_anode": {
+        "name": "Anode resource, d"
+      },
+      "tank": {
+        "name": "Water Tank"
+      }
+    },
     "select": {
       "aurus_pf_screensaver_mode": {
         "name": "Screensaver mode",
@@ -96,11 +104,17 @@
       "backlight": {
         "name": "Backlight"
       },
+      "bss": {
+        "name": "BSS"
+      },
       "child_lock": {
         "name": "Child Lock"
       },
       "damper": {
         "name": "Damper"
+      },
+      "display_half_power": {
+        "name": "50% backlight"
       },
       "turbo": {
         "name": "Turbo Mode"

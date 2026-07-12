@@ -5,7 +5,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .devices import SelectMixin
+from .devices import SelectConfig, SelectMixin
 from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
 from .utils import get_device_profile
 
@@ -30,7 +30,9 @@ async def async_setup_entry(
 
 
 class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
-    def __init__(self, connection, profile, entry, feature_key: str, config):
+    def __init__(
+        self, connection, profile, entry, feature_key: str, config: SelectConfig
+    ):
         super().__init__(connection, profile, entry)
 
         self._feature_key = feature_key

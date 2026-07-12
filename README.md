@@ -9,7 +9,11 @@ Integration **doesn't** use MQTT, but your device should be visible in mDNS.
 
 ## FAQ
 Q: How to get "Share URL"?  
-A: Open device settings in mobile app, go to "Access control" screen and press "Share" button. You can see QR code on new screen, press "Share" button to get "Share URL" as text
+A: Open device settings in mobile app, go to "Access control" screen and press "Share" button. You can see QR code on new screen, press "Share" button to get "Share URL" as text.
+
+Q: How to find device type for my device?  
+A: Look at your "Share URL", it has a specific format: `rusklimat://device-share/rusclimate/<DEVICE_TYPE>/<MAC_ADDRESS>>?token=<TOKEN>&name=<DEVICE_NAME>&deviceLocation=<LOCATION_NAME>&<DEVICE_ATTRIBUTES>`.
+
 
 ## Installation
 
@@ -43,6 +47,7 @@ Then add device via these steps:
 | Rusclimate | 49 | (Transformer 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux EIH/R, Electrolux EIH/S, Ballu Plaza |
 | Rusclimate | 71 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
 | Rusclimate | 89 | Aurus PF |
+| Rusclimate | 90 | Ballu Cetrion Inverter, Ballu Cetrion Inox Inverter |
 
 <!---->
 [hacs]: https://github.com/hacs/integration

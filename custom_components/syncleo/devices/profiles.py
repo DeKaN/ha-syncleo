@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 from homeassistant.components.climate.const import HVACMode, ClimateEntityFeature
+from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
+from homeassistant.components.water_heater import WaterHeaterEntityFeature
 from homeassistant.const import Platform
 
 from pysyncleo.enums import UdpCommandType
@@ -27,7 +29,7 @@ class ProgramDataField(NumberBounds):
     """Configuration for numbers packed into CmdProgramData."""
 
     mode: int
-    offset: int
+    offset: int = 0
     size: int = 1
 
 
@@ -38,6 +40,13 @@ class SelectConfig:
     @property
     def options(self) -> List[str]:
         return list(self.options_map.keys())
+
+
+@dataclass(kw_only=True)
+class SensorConfig:
+    device_class: SensorDeviceClass | None = None
+    state_class: SensorStateClass | None = None
+    unit_of_measurement: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -82,7 +91,7 @@ class SelectMixin(PlatformProviderBase):
 
 @dataclass(kw_only=True)
 class SensorMixin(PlatformProviderBase):
-    sensors: List[str] = field(default_factory=list)
+    sensors: Dict[str, SensorConfig] = field(default_factory=dict)
 
     @property
     def supported_platforms(self) -> List[Platform]:
@@ -106,6 +115,7 @@ class DeviceBaseProfile(PlatformProviderBase):
 
     vendor: str
     device_type: int
+    profile_type: str
     program_data_fields: Dict[str, ProgramDataField] = field(default_factory=dict)
 
     @property
@@ -124,7 +134,6 @@ class ClimateProfile(
 ):
     """Profile for Heaters and Air Conditioners."""
 
-    profile_type: str
     min_temp: int
     max_temp: int
     target_temp_step: float
@@ -147,6 +156,35 @@ class ClimateProfile(
     @property
     def supported_platforms(self) -> List[Platform]:
         return super().supported_platforms + [Platform.CLIMATE]
+
+
+@dataclass(kw_only=True)
+class WaterHeaterProfile(
+    DeviceBaseProfile,
+    BinarySensorMixin,
+    NumberMixin,
+    SensorMixin,
+    SwitchMixin,
+    SelectMixin,
+):
+    """Profile for Water Heaters (Boilers)."""
+
+    profile_type = "boiler"
+    min_temp: int
+    max_temp: int
+    target_temp_step: float
+    supported_features: WaterHeaterEntityFeature
+
+    cmd_mode: UdpCommandType
+    operation_modes_map: Dict[str, int]
+    default_operation_mode: str
+
+    cmd_target_temp: UdpCommandType
+    cmd_current_temp: Optional[UdpCommandType] = None
+
+    @property
+    def supported_platforms(self) -> List[Platform]:
+        return super().supported_platforms + [Platform.WATER_HEATER]
 
 
 # ==========================================
@@ -210,15 +248,3 @@ class ClimateProfile(
 # class SensorProfile(DeviceBaseProfile):
 #     """Profile for passive reporting devices."""
 #     pass
-
-
-# @dataclass(kw_only=True)
-# class WaterHeaterProfile(DeviceBaseProfile):
-#     """Profile for Boilers and Kettles."""
-
-#     min_temp: int
-#     max_temp: int
-#     supported_features: WaterHeaterEntityFeature
-#     cmd_power: UdpCommandType
-#     cmd_target_temp: UdpCommandType
-#     cmd_current_temp: Optional[UdpCommandType] = None

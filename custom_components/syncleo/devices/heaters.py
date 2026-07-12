@@ -22,7 +22,7 @@ from ..const import (
     PD_CURRENT_PRESET,
     PD_DAMPER,
     PD_ECO_DELTA,
-    PD_HALF_POWER,
+    PD_DISPLAY_HALF_POWER,
     PD_MIN_VOLTAGE,
     PD_POWER,
     PD_TIME_END,
@@ -102,7 +102,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -219,7 +219,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -260,7 +260,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -301,7 +301,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -342,7 +342,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -382,7 +382,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -423,7 +423,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -464,7 +464,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -505,7 +505,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
