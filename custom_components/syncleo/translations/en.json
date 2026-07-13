@@ -116,29 +116,46 @@
       "display_half_power": {
         "name": "50% backlight"
       },
-      "turbo": {
-        "name": "Turbo Mode"
-      },
-      "night": {
-        "name": "Night Mode"
+      "energy_saving": {
+        "name": "Energy Saving"
       },
       "ionization": {
         "name": "Ionization"
       },
-      "ultraviolet": {
-        "name": "UV Sterilization"
-      },
       "keep_warm": {
         "name": "Keep Warm"
       },
+      "night": {
+        "name": "Night Mode"
+      },
+      "silence_mode": {
+        "name": "Silence Mode"
+      },
       "smart_mode": {
         "name": "Smart Mode"
+      },
+      "turbo": {
+        "name": "Turbo Mode"
+      },
+      "ultraviolet": {
+        "name": "UV Sterilization"
       },
       "volume": {
         "name": "Sound"
       },
       "warm_stream": {
         "name": "Warm Air Stream"
+      }
+    },
+    "water_heater": {
+      "syncleo_water_heater": {
+        "state": {
+          "off": "Off",
+          "eco": "Low (700W)",
+          "electric": "Mid (1300W)",
+          "performance": "Turbo (2000W)",
+          "heat_pump": "NO Frost"
+        }
       }
     }
   }

@@ -116,29 +116,46 @@
       "display_half_power": {
         "name": "50% подсветка"
       },
-      "turbo": {
-        "name": "Турбо режим"
-      },
-      "night": {
-        "name": "Ночной режим"
+      "energy_saving": {
+        "name": "Экономичный режим"
       },
       "ionization": {
         "name": "Ионизация"
       },
-      "ultraviolet": {
-        "name": "УФ стерилизация"
-      },
       "keep_warm": {
         "name": "Поддержание тепла"
       },
+      "night": {
+        "name": "Ночной режим"
+      },
+      "silence_mode": {
+        "name": "Тихий режим"
+      },
       "smart_mode": {
         "name": "Smart режим"
+      },
+      "turbo": {
+        "name": "Турбо режим"
+      },
+      "ultraviolet": {
+        "name": "УФ стерилизация"
       },
       "volume": {
         "name": "Звук"
       },
       "warm_stream": {
         "name": "Тёплый воздушный поток"
+      }
+    },
+    "water_heater": {
+      "syncleo_water_heater": {
+        "state": {
+          "off": "Выключено",
+          "eco": "Низкий (700Вт)",
+          "electric": "Средний (1300Вт)",
+          "performance": "Турбо (2000Вт)",
+          "heat_pump": "NO Frost"
+        }
       }
     }
   }
