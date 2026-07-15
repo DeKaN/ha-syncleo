@@ -59,9 +59,23 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         await self.async_set_unique_id(formatted_mac)
 
-        self._abort_if_unique_id_configured(
-            updates={CONF_IP_ADDRESS: discovery_info.host}
-        )
+        for entry in self._async_current_entries():
+            if entry.unique_id == formatted_mac:
+                current_ip = entry.data.get(CONF_IP_ADDRESS)
+
+                if current_ip == discovery_info.host:
+                    return self.async_abort(reason="already_configured")
+
+                _LOGGER.info(
+                    "Syncleo device %s changed IP from %s to %s! Updating config...",
+                    formatted_mac,
+                    current_ip,
+                    discovery_info.host,
+                )
+
+                self._abort_if_unique_id_configured(
+                    updates={CONF_IP_ADDRESS: discovery_info.host}
+                )
 
         self._discovered_host = discovery_info.host
         self._discovered_port = discovery_info.port

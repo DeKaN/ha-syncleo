@@ -45,12 +45,6 @@ class SyncleoBinarySensor(SyncleoBaseEntity, BinarySensorEntity):
     def is_on(self) -> bool:
         return self._is_on
 
-    async def async_added_to_hass(self):
-        self._connection.register_callback(self._handle_device_update)
-
-    async def async_will_remove_from_hass(self):
-        self._connection.unregister_callback(self._handle_device_update)
-
     @callback
     def _handle_device_update(self, cmd):
         super()._handle_device_update(cmd)

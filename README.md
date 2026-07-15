@@ -38,13 +38,17 @@ Then add device via these steps:
 | Rusclimate | 7 | Zanussi Azurro PRO WiFi, Zanussi Artendo WiFi |
 | Rusclimate | 8 | Electrolux Fusion EVO DC, Electrolux Atrium DC, Electrolux Arctic Air DC, Zanussi Siena DC, Ballu Lagoon DC, Royal Thermo Siena DC, Climber Dresden, Climer Dresden Cki 24, ONE AIR MASTER |
 | Rusclimate | 9 | (Transformer DI 3.0 S) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble |
+| Rusclimate | 10 | Zanussi Massimo Solar |
 | Rusclimate | 11 | Ballu Rapid |
 | Rusclimate | 12 | Electrolux Centurio IQ 2.0, Electrolux Maximus WiFi |
+| Rusclimate | 13 | Ballu Ice Peak DC, Ballu Eco Smart DC, Ballu Boho DC, Ballu Odyssey, Electrolux Smartline |
 | Rusclimate | 14 | (Transformer DI) Electrolux Air Gate, Electrolux Rapid, Ballu Evolution, Electrolux Air Plinth PRO |
+| Rusclimate | 15 | Electrolux Viking DC, Zanussi Perfecto DC, Electrolux Viking 2.0 DC, Electrolux Avalanche DC, Ballu Greenland DC, Electrolux Portofino DC, Electrolux Fusion Ultra DC, Electrolux Air Gate 2 DC, Electrolux Fusion 2.0 DC, Electrolux Fusion Wave Super DC, Royal Thermo Perfecto DC, Royal Thermo Fenix DC |
 | Rusclimate | 16 | Ballu Smart WiFi |
 | Rusclimate | 17 | Wi-Fi Convection Heater |
 | Rusclimate | 18 | Electrolux Maximus, Zanussi Artendo PRO-C WiFi, Electrolux Megapolis WiFi, Zanussi Splendore XP 2.0 |
 | Rusclimate | 19 | Electrolux Regency |
+| Rusclimate | 20 | Ballu Defender DC, Royal Thermo Milano, Ballu Olympio Legend, Electrolux Skandi DC, Ballu Platinum Evolution DC, Electrolux Onix Black Super DC |
 | Rusclimate | 28 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
 | Rusclimate | 31 | (Transformer 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux EIH/R, Electrolux EIH/S, Ballu Plaza |
 | Rusclimate | 33 | Electrolux Centurio IQ 3.0 |

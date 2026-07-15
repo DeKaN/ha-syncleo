@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
@@ -8,6 +9,7 @@ from homeassistant.const import (
     CONF_PORT,
     CONF_TOKEN,
 )
+from homeassistant.helpers.instance_id import async_get
 
 from pysyncleo.transport import TransportManager
 from pysyncleo.models import SyncleoUdpDevice
@@ -23,13 +25,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: SyncleoConfigEntry) -> b
     """Set up Syncleo from a config entry."""
     assert entry.unique_id is not None
 
-    if DOMAIN not in hass.data:
-        manager = TransportManager()
-        transport, _ = await hass.loop.create_datagram_endpoint(
-            lambda: manager, local_addr=("0.0.0.0", 0)
-        )
+    lock_name = f"{DOMAIN}_setup_lock"
+    if lock_name not in hass.data:
+        hass.data[lock_name] = asyncio.Lock()
 
-        hass.data[DOMAIN] = SyncleoDomainData(manager=manager, transport=transport)
+    async with hass.data[lock_name]:
+        if DOMAIN not in hass.data:
+            ha_uuid = await async_get(hass)
+            manager = TransportManager()
+            transport, _ = await hass.loop.create_datagram_endpoint(
+                lambda: manager, local_addr=("0.0.0.0", 0)
+            )
+
+            hass.data[DOMAIN] = SyncleoDomainData(
+                manager=manager, transport=transport, ha_uuid=ha_uuid
+            )
 
     domain_data: SyncleoDomainData = hass.data[DOMAIN]
     manager = domain_data.manager
@@ -58,6 +68,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: SyncleoConfigEntry) -> b
         _LOGGER.debug(
             f"Loading platforms {platforms} for {connection.device.mac_address}"
         )
+        entry.async_on_unload(entry.add_update_listener(update_listener))
         await hass.config_entries.async_forward_entry_setups(entry, platforms)
 
         entry.async_create_background_task(
@@ -70,6 +81,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: SyncleoConfigEntry) -> b
         )
 
     return True
+
+
+async def update_listener(hass: HomeAssistant, entry: SyncleoConfigEntry) -> None:
+    _LOGGER.info(
+        f"Reloading Syncleo device {entry.data.get('host')} due to config update."
+    )
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -86,9 +104,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     if unload_ok:
         domain_data: SyncleoDomainData = hass.data[DOMAIN]
-        domain_data.manager.connections.pop(
-            entry.runtime_data.device.inet_address, None
-        )
+        domain_data.manager.unregister_device(connection.device)
 
         if not domain_data.manager.connections:
             domain_data.transport.close()

@@ -113,12 +113,6 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
         return SWING_OFF
 
-    async def async_added_to_hass(self):
-        self._connection.register_callback(self._handle_device_update)
-
-    async def async_will_remove_from_hass(self):
-        self._connection.unregister_callback(self._handle_device_update)
-
     @callback
     def _handle_device_update(self, cmd):
         super()._handle_device_update(cmd)
@@ -190,7 +184,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
     async def async_set_hvac_mode(self, hvac_mode: HVACMode):
         raw_val = self._profile.hvac_modes_map.get(hvac_mode)
         if raw_val is not None:
-            await self._connection.send_command(CmdMode(raw_val))
+            await self.async_send_command(CmdMode(raw_val))
             self._current_hvac_mode = hvac_mode
             self._is_on = hvac_mode != HVACMode.OFF
             self.async_write_ha_state()
@@ -199,14 +193,14 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         temp = kwargs.get(ATTR_TEMPERATURE)
         if temp is not None:
             temp = max(self._attr_min_temp, min(self._attr_max_temp, float(temp)))
-            await self._connection.send_command(CmdTargetTemperature(temp))
+            await self.async_send_command(CmdTargetTemperature(temp))
             self._current_temp = temp
             self.async_write_ha_state()
 
     async def async_set_fan_mode(self, fan_mode: str):
         raw_val = self._profile.fan_modes_map.get(fan_mode)
         if raw_val is not None:
-            await self._connection.send_command(CmdSpeed(raw_val))
+            await self.async_send_command(CmdSpeed(raw_val))
             self._fan_mode = fan_mode
             self.async_write_ha_state()
 
@@ -225,6 +219,6 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
     async def async_set_preset_mode(self, preset_mode: str) -> None:
         raw_val = self._profile.preset_modes_map.get(preset_mode)
         if raw_val is not None:
-            await self._connection.send_command(CmdMode(raw_val))
+            await self.async_send_command(CmdMode(raw_val))
             self._current_preset_mode = preset_mode
             self.async_write_ha_state()

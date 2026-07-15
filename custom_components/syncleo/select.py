@@ -52,12 +52,6 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
     def current_option(self) -> str | None:
         return self._current_option
 
-    async def async_added_to_hass(self):
-        self._connection.register_callback(self._handle_device_update)
-
-    async def async_will_remove_from_hass(self):
-        self._connection.unregister_callback(self._handle_device_update)
-
     @callback
     def _handle_device_update(self, cmd):
         super()._handle_device_update(cmd)
@@ -88,7 +82,7 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
             return
 
         if self._cmd_class:
-            await self._connection.send_command(self._cmd_class(value))
+            await self.async_send_command(self._cmd_class(value))
 
         self._current_option = option
         self.async_write_ha_state()

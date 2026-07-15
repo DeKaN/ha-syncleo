@@ -68,12 +68,6 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
     def target_temperature(self) -> float | None:
         return self._target_temp
 
-    async def async_added_to_hass(self):
-        self._connection.register_callback(self._handle_device_update)
-
-    async def async_will_remove_from_hass(self):
-        self._connection.unregister_callback(self._handle_device_update)
-
     @callback
     def _handle_device_update(self, cmd):
         super()._handle_device_update(cmd)
@@ -115,13 +109,13 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
         temp = kwargs.get(ATTR_TEMPERATURE)
         if temp is not None:
             temp = max(self._attr_min_temp, min(self._attr_max_temp, float(temp)))
-            await self._connection.send_command(CmdTargetTemperature(temp))
+            await self.async_send_command(CmdTargetTemperature(temp))
             self._current_temp = temp
             self.async_write_ha_state()
 
     async def async_set_operation_mode(self, operation_mode: str) -> None:
         raw_val = self._op_mode_map.get(operation_mode)
         if raw_val is not None:
-            await self._connection.send_command(CmdMode(raw_val))
+            await self.async_send_command(CmdMode(raw_val))
             self._current_operation = operation_mode
             self.async_write_ha_state()

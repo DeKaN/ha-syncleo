@@ -23,12 +23,13 @@ from pysyncleo.commands import (
     CmdSmartMode,
     CmdSpeed,
     CmdTank,
+    CmdTargetId,
     CmdTurbo,
     CmdUltraviolet,
     CmdVolume,
     CmdWarmStream,
 )
-from pysyncleo.enums import UdpCommandType
+from pysyncleo.enums import ConnectionState, UdpCommandType
 
 from .const import (
     DOMAIN,
@@ -98,6 +99,34 @@ class SyncleoBaseEntity(Entity):
         self._device_unique_id = self._connection.device.mac_address
         self._program_data_modes: Dict[int, bytearray] = {}
 
+    @property
+    def available(self) -> bool:
+        return self._connection.state == ConnectionState.CONNECTED
+
+    async def async_added_to_hass(self):
+        self._connection.register_callback(self._handle_device_update)
+        self._connection.register_state_callback(self._handle_connection_state)
+
+    async def async_will_remove_from_hass(self):
+        self._connection.unregister_callback(self._handle_device_update)
+        self._connection.unregister_state_callback(self._handle_connection_state)
+
+    async def async_send_command(self, cmd) -> None:
+        _LOGGER.info("Sending command %s", cmd)
+        await self._connection.send_command(cmd)
+        domain_data = self.hass.data.get(DOMAIN)
+        command = (
+            CmdTargetId(bytes.fromhex(domain_data.ha_uuid))
+            if domain_data and domain_data.ha_uuid
+            else CmdTargetId()
+        )
+        _LOGGER.info("Also sending command %s", command)
+        await self._connection.send_command(command)
+
+    @callback
+    def _handle_connection_state(self, state: ConnectionState):
+        self.async_write_ha_state()
+
     @callback
     def _handle_device_update(self, cmd):
         _LOGGER.info(
@@ -159,7 +188,7 @@ class SyncleoBaseEntity(Entity):
 
         data[field.offset : field.offset + field.size] = value
 
-        await self._connection.send_command(CmdProgramData(data=data, mode=field.mode))
+        await self.async_send_command(CmdProgramData(data=data, mode=field.mode))
 
         self._program_data_modes[field.mode] = data
         self.async_write_ha_state()

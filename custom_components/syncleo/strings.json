@@ -48,6 +48,12 @@
     "climate": {
       "syncleo_climate": {
         "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "max": "Max",
+              "min": "Min"
+            }
+          },
           "preset_mode": {
             "state": {
               "anti_frost": "Anti Frost",
@@ -59,6 +65,12 @@
       }
     },
     "number": {
+      "angle_horizontal": {
+        "name": "Horizontal blinds"
+      },
+      "angle_vertical": {
+        "name": "Vertical blinds"
+      },
       "anti_frost_temp": {
         "name": "Anti Frost Threshold"
       },
@@ -104,6 +116,9 @@
       "backlight": {
         "name": "Backlight"
       },
+      "breeze_away": {
+        "name": "Breeze Away"
+      },
       "bss": {
         "name": "BSS"
       },
@@ -116,8 +131,17 @@
       "display_half_power": {
         "name": "50% backlight"
       },
+      "eco_mode": {
+        "name": "Eco"
+      },
       "energy_saving": {
         "name": "Energy Saving"
+      },
+      "freeze_protection": {
+        "name": "Freeze Protection +8"
+      },
+      "fungus_proof": {
+        "name": "Fungus proof"
       },
       "ionization": {
         "name": "Ionization"
@@ -127,6 +151,9 @@
       },
       "night": {
         "name": "Night Mode"
+      },
+      "selfclean": {
+        "name": "Clean"
       },
       "silence_mode": {
         "name": "Silence Mode"

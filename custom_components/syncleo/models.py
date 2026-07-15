@@ -9,6 +9,7 @@ from pysyncleo.transport import TransportManager, SyncleoConnection
 class SyncleoDomainData:
     manager: TransportManager
     transport: asyncio.DatagramTransport
+    ha_uuid: str
 
 
 type SyncleoConfigEntry = ConfigEntry[SyncleoConnection]

@@ -48,6 +48,12 @@
     "climate": {
       "syncleo_climate": {
         "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "max": "Максимальный",
+              "min": "Минимальный"
+            }
+          },
           "preset_mode": {
             "state": {
               "anti_frost": "Anti Frost",
@@ -59,6 +65,12 @@
       }
     },
     "number": {
+      "angle_horizontal": {
+        "name": "Горизонтальные жалюзи"
+      },
+      "angle_vertical": {
+        "name": "Вертикальные жалюзи"
+      },
       "anti_frost_temp": {
         "name": "Температура в режиме Anti Frost"
       },
@@ -104,6 +116,9 @@
       "backlight": {
         "name": "Подсветка"
       },
+      "breeze_away": {
+        "name": "Деликативный обдув"
+      },
       "bss": {
         "name": "BSS"
       },
@@ -116,8 +131,17 @@
       "display_half_power": {
         "name": "50% подсветка"
       },
+      "eco_mode": {
+        "name": "Экономичный режим"
+      },
       "energy_saving": {
         "name": "Экономичный режим"
+      },
+      "freeze_protection": {
+        "name": "Автообогрев +8"
+      },
+      "fungus_proof": {
+        "name": "Профилактика грибка"
       },
       "ionization": {
         "name": "Ионизация"
@@ -127,6 +151,9 @@
       },
       "night": {
         "name": "Ночной режим"
+      },
+      "selfclean": {
+        "name": "Самоочистка"
       },
       "silence_mode": {
         "name": "Тихий режим"
