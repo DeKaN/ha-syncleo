@@ -51,7 +51,8 @@
           "fan_mode": {
             "state": {
               "max": "Max",
-              "min": "Min"
+              "min": "Min",
+              "quite": "Quite"
             }
           },
           "preset_mode": {
@@ -66,10 +67,10 @@
     },
     "number": {
       "angle_horizontal": {
-        "name": "Horizontal blinds"
+        "name": "Horizontal blinds position"
       },
       "angle_vertical": {
-        "name": "Vertical blinds"
+        "name": "Vertical blinds position"
       },
       "anti_frost_temp": {
         "name": "Anti Frost Threshold"
@@ -82,6 +83,12 @@
       },
       "power_level": {
         "name": "Power Level"
+      },
+      "swing_horizontal": {
+        "name": "Horizontal blinds position"
+      },
+      "swing_vertical": {
+        "name": "Vertical blinds position"
       },
       "vacation_temperature": {
         "name": "Vacation temperature"
@@ -103,6 +110,22 @@
           "screensaver_1": "1 min",
           "screensaver_3": "3 min",
           "screensaver_5": "5 min"
+        }
+      },
+      "power": {
+        "name": "Power Selection",
+        "state": {
+          "power_50": "50%",
+          "power_75": "75%",
+          "power_100": "100%"
+        }
+      },
+      "noiseless": {
+        "name": "Noiseless",
+        "state": {
+          "noiseless_off": "Off",
+          "noiseless_1": "Noiseless 1",
+          "noiseless_2": "Noiseless 2"
         }
       }
     },
@@ -130,9 +153,6 @@
       },
       "display_half_power": {
         "name": "50% backlight"
-      },
-      "eco_mode": {
-        "name": "Eco"
       },
       "energy_saving": {
         "name": "Energy Saving"

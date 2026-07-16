@@ -51,7 +51,8 @@
           "fan_mode": {
             "state": {
               "max": "Максимальный",
-              "min": "Минимальный"
+              "min": "Минимальный",
+              "quite": "Тихий"
             }
           },
           "preset_mode": {
@@ -66,10 +67,10 @@
     },
     "number": {
       "angle_horizontal": {
-        "name": "Горизонтальные жалюзи"
+        "name": "Положение горизонтальных жалюзей"
       },
       "angle_vertical": {
-        "name": "Вертикальные жалюзи"
+        "name": "Положение вертикальных жалюзей"
       },
       "anti_frost_temp": {
         "name": "Температура в режиме Anti Frost"
@@ -83,6 +84,12 @@
       "power_level": {
         "name": "Мощность"
       },
+      "swing_horizontal": {
+        "name": "Положение горизонтальных жалюзей"
+      },
+      "swing_vertical": {
+        "name": "Положение вертикальных жалюзей"
+      },
       "vacation_temperature": {
         "name": "Температура режима Отпуск"
       }
@@ -95,6 +102,22 @@
           "screensaver_1": "1 мин",
           "screensaver_3": "3 мин",
           "screensaver_5": "5 мин"
+        }
+      },
+      "power": {
+        "name": "Мощность компрессора",
+        "state": {
+          "power_50": "50%",
+          "power_75": "75%",
+          "power_100": "100%"
+        }
+      },
+      "noiseless": {
+        "name": "Бесшумный режим",
+        "state": {
+          "noiseless_off": "Выключен",
+          "noiseless_1": "Бесшумный 1",
+          "noiseless_2": "Бесшумный 2"
         }
       }
     },
@@ -130,9 +153,6 @@
       },
       "display_half_power": {
         "name": "50% подсветка"
-      },
-      "eco_mode": {
-        "name": "Экономичный режим"
       },
       "energy_saving": {
         "name": "Экономичный режим"

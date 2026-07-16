@@ -49,14 +49,18 @@ Then add device via these steps:
 | Rusclimate | 18 | Electrolux Maximus, Zanussi Artendo PRO-C WiFi, Electrolux Megapolis WiFi, Zanussi Splendore XP 2.0 |
 | Rusclimate | 19 | Electrolux Regency |
 | Rusclimate | 20 | Ballu Defender DC, Royal Thermo Milano, Ballu Olympio Legend, Electrolux Skandi DC, Ballu Platinum Evolution DC, Electrolux Onix Black Super DC |
+| Rusclimate | 21 | Shuft Soturai, Ballu Maverick DC, Ballu iGreen Pro, Ballu Maverick DC, Electrolux Loft DC, Zanussi Moderno DC, Electrolux Slide DC, Electrolux Arctic Air Wi-Fi, Shuft Asgard Black DC, Ballu Platinum Black DC, Ballu Platinum DC Inverter |
 | Rusclimate | 28 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
 | Rusclimate | 31 | (Transformer 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux EIH/R, Electrolux EIH/S, Ballu Plaza |
 | Rusclimate | 33 | Electrolux Centurio IQ 3.0 |
+| Rusclimate | 38 | Toshiba Shorai EE |
+| Rusclimate | 41 | Electrolux Monaco DC |
 | Rusclimate | 42 | (Transformer DI 3.0 XS) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble |
 | Rusclimate | 44 | Royal Thermo Aqua Inverter, Royal Thermo Aqua Inox Inverter |
 | Rusclimate | 46 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
 | Rusclimate | 47 | Wi-Fi Convection Heater |
 | Rusclimate | 49 | (Transformer 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux EIH/R, Electrolux EIH/S, Ballu Plaza |
+| Rusclimate | 51 | Zanussi Massimo Solar 2023 |
 | Rusclimate | 68 | Ballu iGreen Pro, Electrolux Loft DC, Zanussi Moderno DC, Electrolux Slide DC, Electrolux Arctic Air Wi-Fi, Shuft Asgard Black DC, Ballu Platinum Black DC, Ballu Platinum DC Inverter |
 | Rusclimate | 71 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
 | Rusclimate | 74 | Aurus S |

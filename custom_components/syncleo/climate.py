@@ -14,7 +14,7 @@ from homeassistant.core import HomeAssistant, callback
 from pysyncleo.commands import CmdTargetTemperature, CmdMode, CmdSpeed
 
 
-from .const import PD_SWING_MODE, TRANLATION_KEY_CLIMATE
+from .const import PD_SWING_HORIZONTAL, PD_SWING_VERTICAL, TRANLATION_KEY_CLIMATE
 from .devices import ClimateProfile
 from .entity import SyncleoBaseEntity
 from .models import SyncleoConfigEntry
@@ -92,17 +92,14 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
     @property
     def swing_mode(self) -> str | None:
-        field = self._profile.program_data_fields.get(PD_SWING_MODE)
-        if not field or field.size != 2:
+        if not self._profile.supported_swing_modes:
             return None
 
-        raw_bytes = self.get_program_data(PD_SWING_MODE)
+        h_bytes = self.get_program_data(PD_SWING_HORIZONTAL)
+        v_bytes = self.get_program_data(PD_SWING_VERTICAL)
 
-        if len(raw_bytes) < 2:
-            return SWING_OFF
-
-        horizontal = raw_bytes[0] > 0
-        vertical = raw_bytes[1] > 0
+        horizontal = h_bytes and len(h_bytes) > 0 and h_bytes[0] == 1
+        vertical = v_bytes and len(v_bytes) > 0 and v_bytes[0] == 1
 
         if horizontal and vertical:
             return SWING_BOTH
@@ -205,16 +202,17 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
             self.async_write_ha_state()
 
     async def async_set_swing_mode(self, swing_mode: str):
-        field = self._profile.program_data_fields.get(PD_SWING_MODE)
-        if not field or field.size != 2:
+        if not self._profile.supported_swing_modes:
             return
 
-        h_val = swing_mode in (SWING_HORIZONTAL, SWING_BOTH)
-        v_val = swing_mode in (SWING_VERTICAL, SWING_BOTH)
-
-        packed_bytes = bytes([h_val, v_val])
-
-        await self.async_set_program_data(PD_SWING_MODE, packed_bytes)
+        await self._async_update_swing_field(
+            field_key=PD_SWING_HORIZONTAL,
+            is_enabled=swing_mode in (SWING_HORIZONTAL, SWING_BOTH),
+        )
+        await self._async_update_swing_field(
+            field_key=PD_SWING_VERTICAL,
+            is_enabled=swing_mode in (SWING_VERTICAL, SWING_BOTH),
+        )
 
     async def async_set_preset_mode(self, preset_mode: str) -> None:
         raw_val = self._profile.preset_modes_map.get(preset_mode)
@@ -222,3 +220,15 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
             await self.async_send_command(CmdMode(raw_val))
             self._current_preset_mode = preset_mode
             self.async_write_ha_state()
+
+    async def _async_update_swing_field(self, field_key: str, is_enabled: bool):
+        if field := self._profile.program_data_fields.get(field_key):
+            raw_val = self.get_program_data(field_key)
+            data = bytearray(raw_val) if raw_val else bytearray(field.size)
+
+            if is_enabled:
+                data[0] = 1
+            elif data[0] == 1:
+                data[0] = 0
+
+            await self.async_set_program_data(field_key, bytes(data))
