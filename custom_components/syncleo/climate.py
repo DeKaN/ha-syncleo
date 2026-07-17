@@ -68,6 +68,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         self._current_preset_mode = PRESET_NONE if profile.preset_modes_map else None
         self._target_temp = None
         self._current_temp = None
+        self._current_humidity = None
         self._fan_mode = None
 
     @property
@@ -85,6 +86,10 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
     @property
     def current_temperature(self) -> float | None:
         return self._current_temp
+
+    @property
+    def current_humidity(self) -> float | None:
+        return self._current_humidity
 
     @property
     def fan_mode(self) -> str | None:
@@ -155,6 +160,13 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
             and cmd.command_type == self._profile.cmd_current_temp
         ):
             self._current_temp = float(cmd.value)
+            update_needed = True
+
+        elif (
+            self._profile.cmd_current_humidity
+            and cmd.command_type == self._profile.cmd_current_humidity
+        ):
+            self._current_humidity = float(cmd.value)
             update_needed = True
 
         elif (

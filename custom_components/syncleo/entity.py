@@ -2,14 +2,17 @@ import logging
 from typing import Dict
 
 from homeassistant.const import CONF_MAC, CONF_MODEL
-from homeassistant.helpers.entity import Entity, callback
+from homeassistant.core import callback
+from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.device_registry import DeviceInfo
 
 from pysyncleo.commands import (
     CmdAccessControl,
     CmdBacklight,
     CmdBss,
+    CmdCO2,
     CmdChildLock,
+    CmdCurrentTemperature,
     CmdDamper,
     CmdError,
     CmdExpendables,
@@ -37,17 +40,31 @@ from .const import (
     FEATURE_ACCESS_CONTROL,
     FEATURE_AURUS_PF_AUTO_OFF_DISPLAY,
     FEATURE_AURUS_PF_HALF_POWER,
-    FEATURE_AURUS_PF_SCREENSAVER_MODE,
+    FEATURE_AURUS_SCREENSAVER_MODE,
+    FEATURE_AURUS_VRF_CHILD_LOCK,
+    FEATURE_AURUS_VRF_ECO_MODE,
+    FEATURE_AURUS_VRF_NOISELESS_MODE,
     FEATURE_BACKLIGHT,
+    FEATURE_ANTI_MELDEW,
     FEATURE_BSS,
     FEATURE_CHILD_LOCK,
+    FEATURE_CURRENT_CO2,
+    FEATURE_CURRENT_TEMPERATURE,
     FEATURE_DAMPER,
     FEATURE_ERROR,
     FEATURE_EXPENDABLES_ANODE,
+    FEATURE_EXPENDABLES_FILTER,
+    FEATURE_GOLDSTAR_GSTI_BREEZE_AWAY,
+    FEATURE_GOLDSTAR_GSTI_CLEAN,
+    FEATURE_GOLDSTAR_GSTI_DAMPER,
+    FEATURE_GOLDSTAR_GSTI_FREEZE_PROTECTION,
     FEATURE_IONIZATION,
     FEATURE_KEEP_WARM,
     FEATURE_NIGHT,
     FEATURE_POWER_LEVEL,
+    FEATURE_ECO_AS_SMART_MODE,
+    FEATURE_SHUFT_SFMS_09_ANTI_MELDEW,
+    FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
     FEATURE_SMART_MODE,
     FEATURE_TANK,
     FEATURE_TURBO,
@@ -62,12 +79,17 @@ _LOGGER = logging.getLogger(__name__)
 
 FEATURE_TO_COMMAND_MAP = {
     FEATURE_ACCESS_CONTROL: CmdAccessControl,
+    FEATURE_ANTI_MELDEW: CmdBss,
     FEATURE_BACKLIGHT: CmdBacklight,
     FEATURE_BSS: CmdBss,
     FEATURE_CHILD_LOCK: CmdChildLock,
+    FEATURE_CURRENT_CO2: CmdCO2,
+    FEATURE_CURRENT_TEMPERATURE: CmdCurrentTemperature,
     FEATURE_DAMPER: CmdDamper,
+    FEATURE_ECO_AS_SMART_MODE: CmdSmartMode,
     FEATURE_ERROR: CmdError,
     FEATURE_EXPENDABLES_ANODE: CmdExpendables,
+    FEATURE_EXPENDABLES_FILTER: CmdExpendables,
     FEATURE_IONIZATION: CmdIonization,
     FEATURE_KEEP_WARM: CmdKeepWarm,
     FEATURE_NIGHT: CmdNight,
@@ -81,7 +103,16 @@ FEATURE_TO_COMMAND_MAP = {
     # Custom device specific features
     FEATURE_AURUS_PF_AUTO_OFF_DISPLAY: CmdPlaceholder1,
     FEATURE_AURUS_PF_HALF_POWER: CmdPlaceholder2,
-    FEATURE_AURUS_PF_SCREENSAVER_MODE: CmdPlaceholder3,
+    FEATURE_AURUS_SCREENSAVER_MODE: CmdPlaceholder3,
+    FEATURE_AURUS_VRF_CHILD_LOCK: CmdPlaceholder3,
+    FEATURE_AURUS_VRF_ECO_MODE: CmdPlaceholder1,
+    FEATURE_AURUS_VRF_NOISELESS_MODE: CmdPlaceholder2,
+    FEATURE_GOLDSTAR_GSTI_BREEZE_AWAY: CmdPlaceholder1,
+    FEATURE_GOLDSTAR_GSTI_CLEAN: CmdPlaceholder2,
+    FEATURE_GOLDSTAR_GSTI_DAMPER: CmdDamper,
+    FEATURE_GOLDSTAR_GSTI_FREEZE_PROTECTION: CmdPlaceholder3,
+    FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION: CmdPlaceholder1,
+    FEATURE_SHUFT_SFMS_09_ANTI_MELDEW: CmdPlaceholder2,
 }
 
 
@@ -89,6 +120,7 @@ class SyncleoBaseEntity(Entity):
     """Base class for all Syncleo entities."""
 
     _attr_has_entity_name = True
+    _device_connection_states: dict[str, ConnectionState] = {}
 
     def __init__(
         self, connection, profile: DeviceBaseProfile, entry: SyncleoConfigEntry
@@ -114,6 +146,9 @@ class SyncleoBaseEntity(Entity):
     async def async_send_command(self, cmd) -> None:
         _LOGGER.info("Sending command %s", cmd)
         await self._connection.send_command(cmd)
+        await self._async_set_device_target()
+
+    async def _async_set_device_target(self):
         domain_data = self.hass.data.get(DOMAIN)
         command = (
             CmdTargetId(bytes.fromhex(domain_data.ha_uuid))
@@ -126,6 +161,21 @@ class SyncleoBaseEntity(Entity):
     @callback
     def _handle_connection_state(self, state: ConnectionState):
         self.async_write_ha_state()
+        if state == (
+            last_state := self._device_connection_states.get(self._device_unique_id, "")
+        ):
+            return
+
+        self._device_connection_states[self._device_unique_id] = state
+        _LOGGER.info(
+            "Connection state changed from '%s' to '%s' for device %s",
+            last_state,
+            state,
+            self._device_unique_id,
+        )
+
+        if state == ConnectionState.CONNECTED:
+            self.hass.async_create_task(self._async_set_device_target())
 
     @callback
     def _handle_device_update(self, cmd):

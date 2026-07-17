@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 from homeassistant.components.climate.const import HVACMode, ClimateEntityFeature
+from homeassistant.components.fan import FanEntityFeature
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.components.water_heater import WaterHeaterEntityFeature
 from homeassistant.const import Platform
@@ -124,6 +125,29 @@ class DeviceBaseProfile(PlatformProviderBase):
 
 
 @dataclass(kw_only=True)
+class BreezerProfile(
+    DeviceBaseProfile,
+    BinarySensorMixin,
+    NumberMixin,
+    SelectMixin,
+    SensorMixin,
+    SwitchMixin,
+):
+    """Profile for Breezers and Ventilation systems."""
+
+    supported_features: FanEntityFeature
+    speed_count: int
+    cmd_mode: UdpCommandType
+    preset_modes_map: Dict[str, int] = field(default_factory=dict)
+    default_preset_mode: str
+    cmd_speed: UdpCommandType | None = None
+
+    @property
+    def supported_platforms(self) -> List[Platform]:
+        return super().supported_platforms + [Platform.FAN]
+
+
+@dataclass(kw_only=True)
 class ClimateProfile(
     DeviceBaseProfile,
     BinarySensorMixin,
@@ -145,6 +169,7 @@ class ClimateProfile(
 
     cmd_target_temp: UdpCommandType
     cmd_current_temp: Optional[UdpCommandType] = None
+    cmd_current_humidity: Optional[UdpCommandType] = None
 
     preset_modes_map: Dict[str, int] = field(default_factory=dict)
 
@@ -231,20 +256,3 @@ class WaterHeaterProfile(
 #     @property
 #     def supported_platforms(self) -> List[Platform]:
 #         return [Platform.FAN]
-
-
-# @dataclass(kw_only=True)
-# class SwitchProfile(DeviceBaseProfile):
-#     """Profile for generic appliances that turn on/off."""
-
-#     cmd_power: UdpCommandType
-
-#     @property
-#     def supported_platforms(self) -> List[Platform]:
-#         return [Platform.SWITCH]
-
-
-# @dataclass(kw_only=True)
-# class SensorProfile(DeviceBaseProfile):
-#     """Profile for passive reporting devices."""
-#     pass

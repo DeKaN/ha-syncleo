@@ -61,18 +61,36 @@ Then add device via these steps:
 | Rusclimate | 47 | Wi-Fi Convection Heater |
 | Rusclimate | 49 | (Transformer 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux EIH/R, Electrolux EIH/S, Ballu Plaza |
 | Rusclimate | 51 | Zanussi Massimo Solar 2023 |
+| Rusclimate | 55 | Zanussi Barocco DC, Royal Thermo Barocco DC |
+| Rusclimate | 56 | Toshiba Haori, Toshiba Seiya, Toshiba Shorai E |
+| Rusclimate | 57 | Shuft Berg, MBO M-1, MI-3 DC, NeoLine, HitAir HAM, Monroe Dream Air |
+| Rusclimate | 60 | Ballu Discovery DC |
 | Rusclimate | 68 | Ballu iGreen Pro, Electrolux Loft DC, Zanussi Moderno DC, Electrolux Slide DC, Electrolux Arctic Air Wi-Fi, Shuft Asgard Black DC, Ballu Platinum Black DC, Ballu Platinum DC Inverter |
+| Rusclimate | 69 | Ballu ONEAIR ASP-100, Electrolux EASP-100 |
+| Rusclimate | 70 | Ballu Universal 3, DC, Free Match |
 | Rusclimate | 71 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
+| Rusclimate | 72 | Zanussi Barocco, Royal Thermo Barocco |
 | Rusclimate | 74 | Aurus S |
 | Rusclimate | 76 | Ballu Artendo Inverter, Electrolux Royal Flash, Electrolux Centurio IQ Inverter |
 | Rusclimate | 77 | Royal Thermo Major Inverter, Royal Thermo Smalto Inverter |
 | Rusclimate | 80 | Aurus F |
+| Rusclimate | 82 | Goldstar GSAC/GSACI |
+| Rusclimate | 83 | Ballu Aura 07, Ballu Aura 09/12 |
+| Rusclimate | 84 | Ballu Aura 07, Ballu Aura 09/12 |
+| Rusclimate | 85 | Aurus D |
 | Rusclimate | 89 | Aurus PF |
 | Rusclimate | 90 | Ballu Cetrion Inverter, Ballu Cetrion Inox Inverter |
 | Rusclimate | 91 | Royal Thermo Regency |
 | Rusclimate | 93 | Electrolux SI (SE/BE) EEC, Electrolux Smartinverter, Electrolux Smartinverter PRO, Electrolux Smartinverter PRO 2.0, Electrolux Smartinverter Enamel |
+| Rusclimate | 95 | Climer Dresden ??K/in-07/G8, Climer Dresden ??K/in-09/G8, Climer Dresden CK/in-18/G8 |
+| Rusclimate | 99 | Aurus A |
+| Rusclimate | 108 | Royal Thermo Diamond DC |
 | Rusclimate | 109 | Aurus S |
+| Rusclimate | 110 | GoldStar GSTI |
+| Rusclimate | 111 | Shuft SFMS/-09 |
+| Rusclimate | 114 | Shuft SFMS/-07 |
 | Rusclimate | 119 | Electrolux SI (SE/BE) EEC, Electrolux Smartinverter, Electrolux Smartinverter PRO, Electrolux Smartinverter PRO 2.0, Electrolux Smartinverter Enamel |
+| Rusclimate | 120 | Aurus VRF |
 
 <!---->
 [hacs]: https://github.com/hacs/integration

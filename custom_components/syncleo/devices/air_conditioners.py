@@ -14,19 +14,36 @@ from pysyncleo.enums import UdpCommandType
 
 from ..const import (
     FAN_MAX,
+    FAN_MID_HIGH,
+    FAN_MID_LOW,
     FAN_MIN,
     FAN_QUITE,
+    FAN_TURBO,
     FEATURE_ACCESS_CONTROL,
+    FEATURE_ANTI_MELDEW,
+    FEATURE_AURUS_VRF_CHILD_LOCK,
+    FEATURE_AURUS_VRF_ECO_MODE,
+    FEATURE_AURUS_VRF_NOISELESS_MODE,
     FEATURE_BACKLIGHT,
     FEATURE_CHILD_LOCK,
     FEATURE_ERROR,
+    FEATURE_GOLDSTAR_GSTI_BREEZE_AWAY,
+    FEATURE_GOLDSTAR_GSTI_CLEAN,
+    FEATURE_GOLDSTAR_GSTI_DAMPER,
+    FEATURE_GOLDSTAR_GSTI_FREEZE_PROTECTION,
     FEATURE_IONIZATION,
     FEATURE_NIGHT,
+    FEATURE_ECO_AS_SMART_MODE,
+    FEATURE_SHUFT_SFMS_09_ANTI_MELDEW,
+    FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
     FEATURE_TURBO,
     FEATURE_VOLUME,
     PD_ANGLE_HORIZONTAL,
     PD_ANGLE_VERTICAL,
+    PD_AURUS_A_AIR_CLEAN,
+    PD_AURUS_SCREENSAVER_MODE,
     PD_BREEZE_AWAY,
+    PD_DISPLAY_HALF_POWER,
     PD_ENERGY_SAVING,
     PD_FIREPLACE,
     PD_FREEZE_PROTECTION,
@@ -39,12 +56,21 @@ from ..const import (
     PD_SWING_HORIZONTAL,
     PD_SWING_VERTICAL,
     PD_TURN_ON,
-    PRESET_TOSHIBA_SHORAI_EE_NOISELESS_1,
-    PRESET_TOSHIBA_SHORAI_EE_NOISELESS_2,
-    PRESET_TOSHIBA_SHORAI_EE_NOISELESS_OFF,
-    PRESET_TOSHIBA_SHORAI_EE_POWER_100,
-    PRESET_TOSHIBA_SHORAI_EE_POWER_50,
-    PRESET_TOSHIBA_SHORAI_EE_POWER_75,
+    PRESET_AURUS_SCREENSAVER_MODE_1,
+    PRESET_AURUS_SCREENSAVER_MODE_3,
+    PRESET_AURUS_SCREENSAVER_MODE_5,
+    PRESET_AURUS_SCREENSAVER_MODE_OFF,
+    PRESET_NIGHT_MODE_AGED,
+    PRESET_NIGHT_MODE_CHILD,
+    PRESET_NIGHT_MODE_OFF,
+    PRESET_NIGHT_MODE_STANDARD,
+    PRESET_NIGHT_MODE_TEEN,
+    PRESET_TOSHIBA_NOISELESS_1,
+    PRESET_TOSHIBA_NOISELESS_2,
+    PRESET_TOSHIBA_NOISELESS_OFF,
+    PRESET_TOSHIBA_POWER_100,
+    PRESET_TOSHIBA_POWER_50,
+    PRESET_TOSHIBA_POWER_75,
     VENDOR_RUSCLIMATE,
 )
 from .profiles import ClimateProfile, ProgramDataField, SelectConfig
@@ -431,16 +457,16 @@ PROFILES = [
         selects={
             PD_POWER: SelectConfig(
                 options_map={
-                    PRESET_TOSHIBA_SHORAI_EE_POWER_50: 0,
-                    PRESET_TOSHIBA_SHORAI_EE_POWER_75: 1,
-                    PRESET_TOSHIBA_SHORAI_EE_POWER_100: 2,
+                    PRESET_TOSHIBA_POWER_50: 0,
+                    PRESET_TOSHIBA_POWER_75: 1,
+                    PRESET_TOSHIBA_POWER_100: 2,
                 }
             ),
             PD_NOISELESS: SelectConfig(
                 options_map={
-                    PRESET_TOSHIBA_SHORAI_EE_NOISELESS_OFF: 0,
-                    PRESET_TOSHIBA_SHORAI_EE_NOISELESS_1: 1,
-                    PRESET_TOSHIBA_SHORAI_EE_NOISELESS_2: 2,
+                    PRESET_TOSHIBA_NOISELESS_OFF: 0,
+                    PRESET_TOSHIBA_NOISELESS_1: 1,
+                    PRESET_TOSHIBA_NOISELESS_2: 2,
                 }
             ),
         },
@@ -551,6 +577,273 @@ PROFILES = [
     ),
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
+        device_type=55,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=30,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_QUITE: 1,
+            FAN_LOW: 2,
+            FAN_MID_LOW: 3,
+            FAN_MEDIUM: 4,
+            FAN_MID_HIGH: 5,
+            FAN_HIGH: 6,
+            FAN_TURBO: 7,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1),
+            PD_ENERGY_SAVING: ProgramDataField(mode=0, offset=2),
+            PD_FREEZE_PROTECTION: ProgramDataField(mode=0, offset=3),
+            PD_SELFCLEAN: ProgramDataField(mode=1),
+            PD_BREEZE_AWAY: ProgramDataField(mode=2),
+            PD_ANGLE_HORIZONTAL: ProgramDataField(mode=3, max_value=5),
+            PD_ANGLE_VERTICAL: ProgramDataField(mode=4, max_value=5),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_ANGLE_HORIZONTAL, PD_ANGLE_VERTICAL],
+        selects={
+            FEATURE_NIGHT: SelectConfig(
+                options_map={
+                    PRESET_NIGHT_MODE_OFF: 0,
+                    PRESET_NIGHT_MODE_STANDARD: 1,
+                    PRESET_NIGHT_MODE_CHILD: 2,
+                    PRESET_NIGHT_MODE_AGED: 3,
+                }
+            )
+        },
+        switches=[
+            FEATURE_ANTI_MELDEW,
+            FEATURE_BACKLIGHT,
+            FEATURE_VOLUME,
+            PD_ENERGY_SAVING,
+            PD_FREEZE_PROTECTION,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=56,
+        profile_type="ac",
+        min_temp=17,
+        max_temp=30,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_QUITE: 1,
+            FAN_MIN: 2,
+            FAN_LOW: 3,
+            FAN_MEDIUM: 4,
+            FAN_HIGH: 5,
+            FAN_MAX: 6,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0, max_value=6),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1),
+            PD_ENERGY_SAVING: ProgramDataField(mode=0, offset=2),
+            PD_FREEZE_PROTECTION: ProgramDataField(mode=0, offset=3),
+            PD_POWER: ProgramDataField(mode=1, max_value=2),
+            PD_FIREPLACE: ProgramDataField(mode=1, offset=1),
+            PD_NOISELESS: ProgramDataField(mode=1, offset=2, max_value=2),
+            PD_TURN_ON: ProgramDataField(mode=1, offset=3),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_SWING_HORIZONTAL],
+        selects={
+            PD_POWER: SelectConfig(
+                options_map={
+                    PRESET_TOSHIBA_POWER_50: 0,
+                    PRESET_TOSHIBA_POWER_75: 1,
+                    PRESET_TOSHIBA_POWER_100: 2,
+                }
+            ),
+            PD_NOISELESS: SelectConfig(
+                options_map={
+                    PRESET_TOSHIBA_NOISELESS_OFF: 0,
+                    PRESET_TOSHIBA_NOISELESS_1: 1,
+                    PRESET_TOSHIBA_NOISELESS_2: 2,
+                }
+            ),
+        },
+        switches=[
+            FEATURE_IONIZATION,
+            FEATURE_TURBO,
+            PD_ENERGY_SAVING,
+            PD_FIREPLACE,
+            PD_FREEZE_PROTECTION,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=57,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=32,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_LOW: 1,
+            FAN_MEDIUM: 2,
+            FAN_HIGH: 3,
+            FAN_TURBO: 4,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1),
+            PD_ENERGY_SAVING: ProgramDataField(mode=0, offset=2),
+            PD_FREEZE_PROTECTION: ProgramDataField(mode=0, offset=3),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        switches=[
+            FEATURE_BACKLIGHT,
+            FEATURE_NIGHT,
+            PD_ENERGY_SAVING,
+            PD_FREEZE_PROTECTION,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=60,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=31,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_QUITE: 1,
+            FAN_LOW: 2,
+            FAN_MID_LOW: 3,
+            FAN_MEDIUM: 4,
+            FAN_MID_HIGH: 5,
+            FAN_HIGH: 6,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1),
+            PD_ENERGY_SAVING: ProgramDataField(mode=0, offset=2),
+            PD_FREEZE_PROTECTION: ProgramDataField(mode=0, offset=3),
+            PD_SELFCLEAN: ProgramDataField(mode=1),
+            PD_BREEZE_AWAY: ProgramDataField(mode=2),
+            PD_ANGLE_HORIZONTAL: ProgramDataField(mode=3, max_value=5),
+            PD_ANGLE_VERTICAL: ProgramDataField(mode=4, max_value=5),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_ANGLE_HORIZONTAL, PD_ANGLE_VERTICAL],
+        switches=[
+            FEATURE_BACKLIGHT,
+            FEATURE_NIGHT,
+            FEATURE_VOLUME,
+            PD_ENERGY_SAVING,
+            PD_FREEZE_PROTECTION,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
         device_type=68,
         profile_type="ac",
         min_temp=16,
@@ -605,6 +898,725 @@ PROFILES = [
             FEATURE_BACKLIGHT,
             FEATURE_NIGHT,
             PD_ENERGY_SAVING,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=70,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=32,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_LOW: 1,
+            FAN_MEDIUM: 2,
+            FAN_HIGH: 3,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1),
+            PD_ENERGY_SAVING: ProgramDataField(mode=0, offset=2),
+            PD_FUNGUS_PROOF: ProgramDataField(mode=0, offset=3),
+            PD_SELFCLEAN: ProgramDataField(mode=1),
+            PD_SILENCE_MODE: ProgramDataField(mode=1, offset=1),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        switches=[
+            FEATURE_BACKLIGHT,
+            FEATURE_NIGHT,
+            FEATURE_TURBO,
+            PD_ENERGY_SAVING,
+            PD_FUNGUS_PROOF,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=72,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=30,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_QUITE: 1,
+            FAN_LOW: 2,
+            FAN_MID_LOW: 3,
+            FAN_MEDIUM: 4,
+            FAN_MID_HIGH: 5,
+            FAN_HIGH: 6,
+            FAN_TURBO: 7,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1),
+            PD_ENERGY_SAVING: ProgramDataField(mode=0, offset=2),
+            PD_FREEZE_PROTECTION: ProgramDataField(mode=0, offset=3),
+            PD_SELFCLEAN: ProgramDataField(mode=1),
+            PD_BREEZE_AWAY: ProgramDataField(mode=2),
+            PD_ANGLE_HORIZONTAL: ProgramDataField(mode=3, max_value=5),
+            PD_ANGLE_VERTICAL: ProgramDataField(mode=4, max_value=5),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_ANGLE_HORIZONTAL, PD_ANGLE_VERTICAL],
+        selects={
+            FEATURE_NIGHT: SelectConfig(
+                options_map={
+                    PRESET_NIGHT_MODE_OFF: 0,
+                    PRESET_NIGHT_MODE_STANDARD: 1,
+                    PRESET_NIGHT_MODE_CHILD: 2,
+                    PRESET_NIGHT_MODE_AGED: 3,
+                }
+            )
+        },
+        switches=[
+            FEATURE_ANTI_MELDEW,
+            FEATURE_BACKLIGHT,
+            FEATURE_VOLUME,
+            PD_ENERGY_SAVING,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=82,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=32,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={FAN_AUTO: 0, FAN_LOW: 1, FAN_MEDIUM: 2, FAN_HIGH: 3},
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        switches=[FEATURE_BACKLIGHT, FEATURE_NIGHT, FEATURE_TURBO],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=83,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=30,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.COOL,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={FAN_LOW: 1, FAN_HIGH: 2},
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_LAST_PROGRAM: ProgramDataField(mode=0, offset=1, max_value=5),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        switches=[FEATURE_NIGHT],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=84,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=30,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.COOL,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={FAN_LOW: 1, FAN_HIGH: 2},
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_LAST_PROGRAM: ProgramDataField(mode=0, offset=1, max_value=5),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        switches=[FEATURE_NIGHT],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=85,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=30,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_QUITE: 1,
+            FAN_MIN: 2,
+            FAN_LOW: 3,
+            FAN_MEDIUM: 4,
+            FAN_HIGH: 5,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0, max_value=6),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1, max_value=6),
+            PD_ENERGY_SAVING: ProgramDataField(mode=0, offset=2),
+            PD_FREEZE_PROTECTION: ProgramDataField(mode=0, offset=3),
+            PD_LAST_PROGRAM: ProgramDataField(mode=0, offset=4),
+            PD_SELFCLEAN: ProgramDataField(mode=1),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_SWING_HORIZONTAL, PD_SWING_VERTICAL],
+        switches=[
+            FEATURE_BACKLIGHT,
+            FEATURE_NIGHT,
+            FEATURE_TURBO,
+            FEATURE_VOLUME,
+            PD_FREEZE_PROTECTION,
+            PD_SELFCLEAN,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=95,
+        profile_type="ac",
+        min_temp=17,
+        max_temp=30,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={FAN_AUTO: 0, FAN_LOW: 1, FAN_MEDIUM: 2, FAN_HIGH: 3},
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1),
+            PD_SELFCLEAN: ProgramDataField(mode=1),
+        },
+        binary_sensors=[FEATURE_BACKLIGHT, FEATURE_ERROR],
+        switches=[FEATURE_NIGHT, FEATURE_TURBO],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=99,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=32,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_QUITE: 1,
+            FAN_LOW: 2,
+            FAN_MEDIUM: 3,
+            FAN_HIGH: 4,
+            FAN_MAX: 5,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1),
+            PD_ENERGY_SAVING: ProgramDataField(mode=0, offset=2),
+            PD_FREEZE_PROTECTION: ProgramDataField(mode=0, offset=3),
+            PD_SELFCLEAN: ProgramDataField(mode=1),
+            PD_AURUS_A_AIR_CLEAN: ProgramDataField(mode=1, offset=1),
+            PD_NOISELESS: ProgramDataField(mode=1, offset=2),
+            PD_BREEZE_AWAY: ProgramDataField(mode=2),
+            PD_ANGLE_HORIZONTAL: ProgramDataField(mode=3, max_value=6),
+            PD_ANGLE_VERTICAL: ProgramDataField(mode=4, max_value=5),
+        },
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_CHILD_LOCK,
+            FEATURE_ERROR,
+            FEATURE_VOLUME,
+        ],
+        numbers=[PD_ANGLE_HORIZONTAL, PD_ANGLE_VERTICAL],
+        selects={
+            FEATURE_NIGHT: SelectConfig(
+                options_map={
+                    PRESET_NIGHT_MODE_OFF: 0,
+                    PRESET_NIGHT_MODE_STANDARD: 1,
+                    PRESET_NIGHT_MODE_CHILD: 2,
+                    PRESET_NIGHT_MODE_TEEN: 3,
+                    PRESET_NIGHT_MODE_AGED: 4,
+                }
+            )
+        },
+        switches=[
+            FEATURE_BACKLIGHT,
+            FEATURE_ECO_AS_SMART_MODE,
+            FEATURE_TURBO,
+            PD_AURUS_A_AIR_CLEAN,
+            PD_ENERGY_SAVING,
+            PD_FREEZE_PROTECTION,
+            PD_NOISELESS,
+            PD_SELFCLEAN,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=108,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=31,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_QUITE: 1,
+            FAN_LOW: 2,
+            FAN_MID_LOW: 3,
+            FAN_MEDIUM: 4,
+            FAN_MID_HIGH: 5,
+            FAN_HIGH: 6,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1),
+            PD_ENERGY_SAVING: ProgramDataField(mode=0, offset=2),
+            PD_FREEZE_PROTECTION: ProgramDataField(mode=0, offset=3),
+            PD_SELFCLEAN: ProgramDataField(mode=1),
+            PD_BREEZE_AWAY: ProgramDataField(mode=2),
+            PD_ANGLE_HORIZONTAL: ProgramDataField(mode=3, max_value=5),
+            PD_ANGLE_VERTICAL: ProgramDataField(mode=4, max_value=5),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_ANGLE_HORIZONTAL, PD_ANGLE_VERTICAL],
+        switches=[
+            FEATURE_BACKLIGHT,
+            FEATURE_NIGHT,
+            FEATURE_ECO_AS_SMART_MODE,
+            FEATURE_VOLUME,
+            PD_FREEZE_PROTECTION,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=110,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=31,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_QUITE: 1,
+            FAN_LOW: 2,
+            FAN_MID_LOW: 3,
+            FAN_MEDIUM: 4,
+            FAN_MID_HIGH: 5,
+            FAN_HIGH: 6,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0, max_value=8),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1, max_value=9),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_SWING_HORIZONTAL, PD_SWING_VERTICAL],
+        selects={
+            FEATURE_NIGHT: SelectConfig(
+                options_map={
+                    PRESET_NIGHT_MODE_OFF: 0,
+                    PRESET_NIGHT_MODE_STANDARD: 1,
+                    PRESET_NIGHT_MODE_CHILD: 2,
+                    PRESET_NIGHT_MODE_AGED: 3,
+                }
+            )
+        },
+        switches=[
+            FEATURE_BACKLIGHT,
+            FEATURE_ECO_AS_SMART_MODE,
+            FEATURE_GOLDSTAR_GSTI_BREEZE_AWAY,
+            FEATURE_GOLDSTAR_GSTI_CLEAN,
+            FEATURE_GOLDSTAR_GSTI_DAMPER,
+            FEATURE_GOLDSTAR_GSTI_FREEZE_PROTECTION,
+            FEATURE_TURBO,
+            FEATURE_VOLUME,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=111,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=31,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_QUITE: 1,
+            FAN_LOW: 2,
+            FAN_MID_LOW: 3,
+            FAN_MEDIUM: 4,
+            FAN_MID_HIGH: 5,
+            FAN_HIGH: 6,
+            FAN_TURBO: 7,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_HORIZONTAL,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_ANGLE_HORIZONTAL: ProgramDataField(mode=3, max_value=5),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_ANGLE_HORIZONTAL],
+        switches=[
+            FEATURE_BACKLIGHT,
+            FEATURE_ECO_AS_SMART_MODE,
+            FEATURE_VOLUME,
+            FEATURE_SHUFT_SFMS_09_ANTI_MELDEW,
+            FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=114,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=31,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_QUITE: 1,
+            FAN_LOW: 2,
+            FAN_MID_LOW: 3,
+            FAN_MEDIUM: 4,
+            FAN_MID_HIGH: 5,
+            FAN_HIGH: 6,
+            FAN_TURBO: 7,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_HORIZONTAL,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_ANGLE_HORIZONTAL: ProgramDataField(mode=3, max_value=5),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_ANGLE_HORIZONTAL],
+        switches=[
+            FEATURE_BACKLIGHT,
+            FEATURE_TURBO,
+            FEATURE_VOLUME,
+            FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
+        ],
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=120,
+        profile_type="ac",
+        min_temp=16,
+        max_temp=32,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        cmd_mode=UdpCommandType.MODE,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
+        cmd_current_temp=UdpCommandType.TEMPERATURE,
+        cmd_current_humidity=UdpCommandType.CURRENT_HUMIDITY,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_QUITE: 1,
+            FAN_MIN: 2,
+            FAN_LOW: 3,
+            FAN_MEDIUM: 4,
+            FAN_HIGH: 5,
+            FAN_MAX: 6,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_HORIZONTAL,
+        ],
+        program_data_fields={
+            PD_LAST_PROGRAM: ProgramDataField(mode=0, max_value=5),
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=1, max_value=5),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=2),
+            PD_AURUS_SCREENSAVER_MODE: ProgramDataField(mode=3),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_SWING_HORIZONTAL],
+        selects={
+            PD_AURUS_SCREENSAVER_MODE: SelectConfig(
+                options_map={
+                    PRESET_AURUS_SCREENSAVER_MODE_OFF: 0,
+                    PRESET_AURUS_SCREENSAVER_MODE_1: 1,
+                    PRESET_AURUS_SCREENSAVER_MODE_3: 2,
+                    PRESET_AURUS_SCREENSAVER_MODE_5: 3,
+                },
+            ),
+        },
+        switches=[
+            FEATURE_AURUS_VRF_CHILD_LOCK,
+            FEATURE_AURUS_VRF_ECO_MODE,
+            FEATURE_AURUS_VRF_NOISELESS_MODE,
+            FEATURE_BACKLIGHT,
+            FEATURE_IONIZATION,
+            FEATURE_TURBO,
+            FEATURE_VOLUME,
         ],
     ),
 ]

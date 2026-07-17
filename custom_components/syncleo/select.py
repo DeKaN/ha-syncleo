@@ -36,6 +36,7 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
         super().__init__(connection, profile, entry)
 
         self._feature_key = feature_key
+        self._is_program_data = feature_key in profile.program_data_fields
         self._cmd_class = FEATURE_TO_COMMAND_MAP.get(feature_key)
 
         self._attr_unique_id = f"{self._device_unique_id}_{feature_key}"
@@ -58,17 +59,27 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
 
         current_option = self._current_option
 
-        if self._cmd_class and cmd.command_type == self._cmd_class.command_type:
+        if self._is_program_data:
+            data = self.get_program_data(self._feature_key)
+            _LOGGER.info(
+                "Handle program data update for device %s, received data: %s",
+                self._attr_unique_id,
+                data.hex(),
+            )
+            value = int.from_bytes(data, byteorder="little") if data else 0
+
+        elif self._cmd_class and cmd.command_type == self._cmd_class.command_type:
             _LOGGER.info(
                 "Handle update for device %s, received command: %s",
                 self._attr_unique_id,
                 cmd,
             )
             value = int(cmd.value)
-            text_value = self._rev_options_map.get(value)
 
-            if text_value is not None:
-                current_option = text_value
+        text_value = self._rev_options_map.get(value)
+
+        if text_value is not None:
+            current_option = text_value
 
         if current_option != self._current_option:
             self._current_option = current_option
@@ -81,7 +92,12 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
             _LOGGER.error("Invalid option %s for %s", option, self._feature_key)
             return
 
-        if self._cmd_class:
+        if self._is_program_data:
+            field_config = self._profile.program_data_fields[self._feature_key]
+            data = value.to_bytes(field_config.size, byteorder="little")
+
+            await self.async_set_program_data(self._feature_key, data)
+        elif self._cmd_class:
             await self.async_send_command(self._cmd_class(value))
 
         self._current_option = option

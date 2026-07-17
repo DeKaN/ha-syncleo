@@ -51,8 +51,11 @@
           "fan_mode": {
             "state": {
               "max": "Максимальный",
+              "mid_high": "Средне-высокий",
+              "mid_low": "Средне-низкий",
               "min": "Минимальный",
-              "quite": "Тихий"
+              "quite": "Тихий",
+              "turbo": "Турбо"
             }
           },
           "preset_mode": {
@@ -60,6 +63,21 @@
               "anti_frost": "Anti Frost",
               "manual": "Ручной",
               "vacation": "Отпуск"
+            }
+          }
+        }
+      }
+    },
+    "fan": {
+      "syncleo_fan": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "manual": "Ручной",
+              "auto": "Авто",
+              "night": "Ночной",
+              "turbo": "Турбо",
+              "ventilation": "Вентиляция"
             }
           }
         }
@@ -95,7 +113,7 @@
       }
     },
     "select": {
-      "aurus_pf_screensaver_mode": {
+      "aurus_screensaver_mode": {
         "name": "Режим заставки",
         "state": {
           "screensaver_off": "Выключен",
@@ -104,12 +122,14 @@
           "screensaver_5": "5 мин"
         }
       },
-      "power": {
-        "name": "Мощность компрессора",
+      "night": {
+        "name": "Настройки ночного режима",
         "state": {
-          "power_50": "50%",
-          "power_75": "75%",
-          "power_100": "100%"
+          "night_mode_off": "Выключен",
+          "night_mode_standard": "Стандартный",
+          "night_mode_child": "Детский",
+          "night_mode_teen": "Подростковый",
+          "night_mode_aged": "Для пожилых"
         }
       },
       "noiseless": {
@@ -119,22 +139,54 @@
           "noiseless_1": "Бесшумный 1",
           "noiseless_2": "Бесшумный 2"
         }
+      },
+      "power": {
+        "name": "Мощность компрессора",
+        "state": {
+          "power_50": "50%",
+          "power_75": "75%",
+          "power_100": "100%"
+        }
       }
     },
     "sensor": {
+      "current_co2": {
+        "name": "CO2 - ppm"
+      },
+      "current_temperature": {
+        "name": "Температура притока"
+      },
       "expendables_anode": {
         "name": "Ресурс анода, д"
       },
+      "expendables_filter": {
+        "name": "Ресурс фильтра"
+      },
       "tank": {
-        "name": "Water Tank"
+        "name": "Бак"
       }
     },
     "switch": {
+      "anti_meldew": {
+        "name": "Защита от плесени"
+      },
+      "aurus_a_air_clean": {
+        "name": "Очистка воздуха"
+      },
       "aurus_pf_auto_off_display": {
         "name": "Автовыключение дисплея"
       },
       "aurus_pf_half_power": {
         "name": "Половина мощности"
+      },
+      "aurus_vrf_child_lock": {
+        "name": "Детский замок"
+      },
+      "aurus_vrf_eco_mode": {
+        "name": "Эко"
+      },
+      "aurus_vrf_noiseless_mode": {
+        "name": "Бесшумный"
       },
       "backlight": {
         "name": "Подсветка"
@@ -163,6 +215,9 @@
       "fungus_proof": {
         "name": "Профилактика грибка"
       },
+      "goldstar_gsti_damper": {
+        "name": "Здоровье"
+      },
       "ionization": {
         "name": "Ионизация"
       },
@@ -174,6 +229,9 @@
       },
       "selfclean": {
         "name": "Самоочистка"
+      },
+      "shuft_sfms_09_anti_meldew": {
+        "name": "Защита от плесени"
       },
       "silence_mode": {
         "name": "Тихий режим"

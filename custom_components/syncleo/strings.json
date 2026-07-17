@@ -51,8 +51,11 @@
           "fan_mode": {
             "state": {
               "max": "Max",
+              "mid_high": "Mid-High",
+              "mid_low": "Mid-Low",
               "min": "Min",
-              "quite": "Quite"
+              "quite": "Quite",
+              "turbo": "Turbo"
             }
           },
           "preset_mode": {
@@ -60,6 +63,21 @@
               "anti_frost": "Anti Frost",
               "manual": "Manual",
               "vacation": "Vacation"
+            }
+          }
+        }
+      }
+    },
+    "fan": {
+      "syncleo_fan": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "manual": "Manual",
+              "auto": "Auto",
+              "night": "Sleep",
+              "turbo": "Turbo",
+              "ventilation": "Fan"
             }
           }
         }
@@ -95,15 +113,24 @@
       }
     },
     "sensor": {
+      "current_co2": {
+        "name": "CO2 - ppm"
+      },
+      "current_temperature": {
+        "name": "Inlet temperature"
+      },
       "expendables_anode": {
         "name": "Anode resource, d"
+      },
+      "expendables_filter": {
+        "name": "Filter resource"
       },
       "tank": {
         "name": "Water Tank"
       }
     },
     "select": {
-      "aurus_pf_screensaver_mode": {
+      "aurus_screensaver_mode": {
         "name": "Screensaver mode",
         "state": {
           "screensaver_off": "Off",
@@ -112,12 +139,14 @@
           "screensaver_5": "5 min"
         }
       },
-      "power": {
-        "name": "Power Selection",
+      "night": {
+        "name": "Night mode settings",
         "state": {
-          "power_50": "50%",
-          "power_75": "75%",
-          "power_100": "100%"
+          "night_mode_off": "Off",
+          "night_mode_standard": "Standard",
+          "night_mode_child": "Child",
+          "night_mode_teen": "Teen",
+          "night_mode_aged": "The aged"
         }
       },
       "noiseless": {
@@ -127,14 +156,37 @@
           "noiseless_1": "Noiseless 1",
           "noiseless_2": "Noiseless 2"
         }
+      },
+      "power": {
+        "name": "Power Selection",
+        "state": {
+          "power_50": "50%",
+          "power_75": "75%",
+          "power_100": "100%"
+        }
       }
     },
     "switch": {
+      "anti_meldew": {
+        "name": "Anti – Mildew"
+      },
+      "aurus_a_air_clean": {
+        "name": "Air clean"
+      },
       "aurus_pf_auto_off_display": {
         "name": "Auto off display"
       },
       "aurus_pf_half_power": {
         "name": "Half power"
+      },
+      "aurus_vrf_child_lock": {
+        "name": "Child Lock"
+      },
+      "aurus_vrf_eco_mode": {
+        "name": "Eco"
+      },
+      "aurus_vrf_noiseless_mode": {
+        "name": "Noiseless"
       },
       "backlight": {
         "name": "Backlight"
@@ -163,6 +215,9 @@
       "fungus_proof": {
         "name": "Fungus proof"
       },
+      "goldstar_gsti_damper": {
+        "name": "Health"
+      },
       "ionization": {
         "name": "Ionization"
       },
@@ -173,7 +228,10 @@
         "name": "Night Mode"
       },
       "selfclean": {
-        "name": "Clean"
+        "name": "Self clean"
+      },
+      "shuft_sfms_09_anti_meldew": {
+        "name": "Anti – Mildew"
       },
       "silence_mode": {
         "name": "Silence Mode"
