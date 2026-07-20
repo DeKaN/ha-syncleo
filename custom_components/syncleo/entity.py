@@ -5,6 +5,7 @@ from homeassistant.const import CONF_MAC, CONF_MODEL
 from homeassistant.core import callback
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.event import async_call_later
 
 from pysyncleo.commands import (
     CmdAccessControl,
@@ -27,6 +28,7 @@ from pysyncleo.commands import (
     CmdSpeed,
     CmdTank,
     CmdTargetId,
+    CmdTargetTemperature,
     CmdTurbo,
     CmdUltraviolet,
     CmdVolume,
@@ -67,6 +69,7 @@ from .const import (
     FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
     FEATURE_SMART_MODE,
     FEATURE_TANK,
+    FEATURE_KETTLE_TEMPERATURE_PRESET,
     FEATURE_TURBO,
     FEATURE_ULTRAVIOLET,
     FEATURE_VOLUME,
@@ -111,6 +114,7 @@ FEATURE_TO_COMMAND_MAP = {
     FEATURE_GOLDSTAR_GSTI_CLEAN: CmdPlaceholder2,
     FEATURE_GOLDSTAR_GSTI_DAMPER: CmdDamper,
     FEATURE_GOLDSTAR_GSTI_FREEZE_PROTECTION: CmdPlaceholder3,
+    FEATURE_KETTLE_TEMPERATURE_PRESET: CmdTargetTemperature,
     FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION: CmdPlaceholder1,
     FEATURE_SHUFT_SFMS_09_ANTI_MELDEW: CmdPlaceholder2,
 }
@@ -130,6 +134,8 @@ class SyncleoBaseEntity(Entity):
         self._entry = entry
         self._device_unique_id = self._connection.device.mac_address
         self._program_data_modes: Dict[int, bytearray] = {}
+        self._reconnect_attempts = 0
+        self._reconnect_unsubscribe = None
 
     @property
     def available(self) -> bool:
@@ -142,6 +148,9 @@ class SyncleoBaseEntity(Entity):
     async def async_will_remove_from_hass(self):
         self._connection.unregister_callback(self._handle_device_update)
         self._connection.unregister_state_callback(self._handle_connection_state)
+        if self._reconnect_unsubscribe:
+            self._reconnect_unsubscribe()
+            self._reconnect_unsubscribe = None
 
     async def async_send_command(self, cmd) -> None:
         _LOGGER.info("Sending command %s", cmd)
@@ -175,7 +184,43 @@ class SyncleoBaseEntity(Entity):
         )
 
         if state == ConnectionState.CONNECTED:
+            self._reconnect_attempts = 0
+            if self._reconnect_unsubscribe:
+                self._reconnect_unsubscribe()
+                self._reconnect_unsubscribe = None
+
             self.hass.async_create_task(self._async_set_device_target())
+
+        elif state == ConnectionState.DISCONNECTED:
+            self._schedule_reconnect()
+
+    @callback
+    def _schedule_reconnect(self):
+        if self._reconnect_unsubscribe:
+            self._reconnect_unsubscribe()
+            self._reconnect_unsubscribe = None
+
+        if self._connection.state == ConnectionState.CONNECTED:
+            return
+
+        delay = min(5 * (2**self._reconnect_attempts), 300)
+
+        _LOGGER.info(
+            "Scheduling reconnect for %s in %s seconds (attempt %s)",
+            self._device_unique_id,
+            delay,
+            self._reconnect_attempts + 1,
+        )
+
+        self._reconnect_unsubscribe = async_call_later(
+            self.hass, delay, self._execute_reconnect
+        )
+
+    @callback
+    def _execute_reconnect(self, _now):
+        self._reconnect_unsubscribe = None
+        self._reconnect_attempts += 1
+        self.hass.async_create_task(self._async_reconnect())
 
     @callback
     def _handle_device_update(self, cmd):
@@ -242,6 +287,23 @@ class SyncleoBaseEntity(Entity):
 
         self._program_data_modes[field.mode] = data
         self.async_write_ha_state()
+
+    async def _async_reconnect(self):
+        if self._connection.state == ConnectionState.CONNECTED:
+            return
+
+        _LOGGER.info("Attempting to reconnect to %s...", self._device_unique_id)
+        try:
+            await self._connection.connect()
+
+            if self._connection.state != ConnectionState.CONNECTED:
+                self._schedule_reconnect()
+
+        except Exception as e:
+            _LOGGER.error(
+                "Reconnection attempt failed for %s: %s", self._device_unique_id, e
+            )
+            self._schedule_reconnect()
 
     @property
     def device_info(self) -> DeviceInfo:

@@ -192,9 +192,8 @@ class WaterHeaterProfile(
     SwitchMixin,
     SelectMixin,
 ):
-    """Profile for Water Heaters (Boilers)."""
+    """Profile for Water Heaters (Boilers) and Kettles."""
 
-    profile_type = "boiler"
     min_temp: int
     max_temp: int
     target_temp_step: float

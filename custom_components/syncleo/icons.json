@@ -1,0 +1,21 @@
+{
+  "entity": {
+    "water_heater": {
+      "syncleo_kettle": {
+        "state_attributes": {
+          "operation_mode": {
+            "state": {
+              "off": "mdi:power",
+              "boiling": "mdi:pot-steam",
+              "boiling_keep": "mdi:pot-steam-outline",
+              "warm_up": "mdi:thermometer-chevron-up",
+              "warm_up_keep": "mdi:thermometer-plus",
+              "iq_boiling": "mdi:head-lightbulb",
+              "tea_time": "mdi:leaf"
+            }
+          }
+        }
+      }
+    }
+  }
+}

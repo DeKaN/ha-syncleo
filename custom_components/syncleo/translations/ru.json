@@ -122,6 +122,23 @@
           "screensaver_5": "5 мин"
         }
       },
+      "kettle_temperature_preset": {
+        "name": "Предустановка температуры",
+        "state": {
+          "kettle_preset_none": "Нет",
+          "kettle_preset_black_tea": "Чёрный чай",
+          "kettle_preset_baby_bottle": "Детская смесь",
+          "kettle_preset_instant_coffee": "Растворимый кофе",
+          "kettle_preset_green_tea": "Зеленый чай",
+          "kettle_preset_flower_tea": "Цветочный чай",
+          "kettle_preset_tea_bag": "Пакетированный чай",
+          "kettle_preset_red_tea": "Красный чай",
+          "kettle_preset_puer": "Пуэр",
+          "kettle_preset_oolong_tea": "Улун",
+          "kettle_preset_white_tea": "Белый чай",
+          "kettle_preset_herbal_tea": "Травяной чай"
+        }
+      },
       "night": {
         "name": "Настройки ночного режима",
         "state": {
@@ -253,13 +270,27 @@
       }
     },
     "water_heater": {
-      "syncleo_water_heater": {
+      "syncleo_boiler": {
         "state": {
           "off": "Выключено",
           "eco": "Низкий (700Вт)",
           "electric": "Средний (1300Вт)",
           "performance": "Турбо (2000Вт)",
           "heat_pump": "NO Frost"
+        }
+      },
+      "syncleo_kettle": {
+        "state_attributes": {
+          "operation_mode": {
+            "state": {
+              "boiling": "Кипячение",
+              "boiling_keep": "Кипячение с подогревом",
+              "warm_up": "Разогрев",
+              "warm_up_keep": "Разогрев с удержанием",
+              "iq_boiling": "IQ кипячение",
+              "tea_time": "Чайная церемония"
+            }
+          }
         }
       }
     }

@@ -9,7 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from pysyncleo.commands import CmdTargetTemperature, CmdMode
 
-from .const import TRANLATION_KEY_WATER_HEATER
+from .const import DOMAIN
 from .devices import WaterHeaterProfile
 from .entity import SyncleoBaseEntity
 from .utils import get_device_profile
@@ -34,7 +34,6 @@ async def async_setup_entry(
 class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_name = None
-    _attr_translation_key = TRANLATION_KEY_WATER_HEATER
 
     def __init__(self, connection, profile: WaterHeaterProfile, entry):
         """Initialize the water heater entity."""
@@ -42,6 +41,7 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
 
         self._profile = profile
         self._attr_unique_id = f"{self._device_unique_id}_{profile.profile_type}"
+        self._attr_translation_key = f"{DOMAIN}_{profile.profile_type}"
         self._attr_min_temp = profile.min_temp
         self._attr_max_temp = profile.max_temp
         self._attr_target_temperature_step = profile.target_temp_step

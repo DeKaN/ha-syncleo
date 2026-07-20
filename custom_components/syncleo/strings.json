@@ -139,6 +139,23 @@
           "screensaver_5": "5 min"
         }
       },
+      "kettle_temperature_preset": {
+        "name": "Temperature preset",
+        "state": {
+          "kettle_preset_none": "None",
+          "kettle_preset_black_tea": "Black tea",
+          "kettle_preset_baby_bottle": "Baby bottle",
+          "kettle_preset_instant_coffee": "Instant coffee",
+          "kettle_preset_green_tea": "Green tea",
+          "kettle_preset_flower_tea": "Flower tea",
+          "kettle_preset_tea_bag": "Tea bag",
+          "kettle_preset_red_tea": "Red tea",
+          "kettle_preset_puer": "Pu’er",
+          "kettle_preset_oolong_tea": "Oolong tea",
+          "kettle_preset_white_tea": "White tea",
+          "kettle_preset_herbal_tea": "Herbal tea"
+        }
+      },
       "night": {
         "name": "Night mode settings",
         "state": {
@@ -253,13 +270,27 @@
       }
     },
     "water_heater": {
-      "syncleo_water_heater": {
+      "syncleo_boiler": {
         "state": {
           "off": "Off",
           "eco": "Low (700W)",
           "electric": "Mid (1300W)",
           "performance": "Turbo (2000W)",
           "heat_pump": "NO Frost"
+        }
+      },
+      "syncleo_kettle": {
+        "state_attributes": {
+          "operation_mode": {
+            "state": {
+              "boiling": "Boiling",
+              "boiling_keep": "Boiling with keep",
+              "warm_up": "Warm up",
+              "warm_up_keep": "Warm up with keep",
+              "iq_boiling": "IQ Boiling",
+              "tea_time": "Tea time"
+            }
+          }
         }
       }
     }
