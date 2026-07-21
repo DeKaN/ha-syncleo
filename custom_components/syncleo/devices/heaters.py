@@ -37,6 +37,7 @@ from ..const import (
     PRESET_AURUS_SCREENSAVER_MODE_OFF,
     PRESET_MANUAL,
     PRESET_VACATION,
+    PROFILE_TYPE_HEATER,
     VENDOR_RUSCLIMATE,
 )
 from .profiles import ClimateProfile, NumberConfig, ProgramDataField, SelectConfig
@@ -45,7 +46,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=6,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
         target_temp_step=1.0,
@@ -89,7 +90,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=9,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
         target_temp_step=1.0,
@@ -134,7 +135,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=11,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=5,
         max_temp=35,
         target_temp_step=1.0,
@@ -180,7 +181,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=14,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=5,
         max_temp=35,
         target_temp_step=1.0,
@@ -221,7 +222,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=17,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
         target_temp_step=1.0,
@@ -267,7 +268,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=28,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
         target_temp_step=1.0,
@@ -313,7 +314,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=31,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
         target_temp_step=1.0,
@@ -359,7 +360,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=42,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
         target_temp_step=1.0,
@@ -404,7 +405,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=46,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
         target_temp_step=1.0,
@@ -450,7 +451,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=47,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=5,
         max_temp=35,
         target_temp_step=1.0,
@@ -496,7 +497,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=49,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=5,
         max_temp=35,
         target_temp_step=1.0,
@@ -542,7 +543,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=71,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
         target_temp_step=1.0,
@@ -588,7 +589,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=89,
-        profile_type="heater",
+        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
         target_temp_step=1.0,

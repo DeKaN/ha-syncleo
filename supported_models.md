@@ -5,6 +5,7 @@
 | Polaris | 98 | PWK1775CGLD |
 |&nbsp;|||
 | Rusclimate | 2 | Electrolux SI (SE/BE) EEC, Electrolux Smartinverter, Electrolux Smartinverter PRO, Electrolux Smartinverter PRO 2.0, Electrolux Smartinverter Enamel |
+| Rusclimate | 3 | Ballu ONEAIR ASP-200 |
 | Rusclimate | 6 | (Transformer DI 3.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble |
 | Rusclimate | 7 | Zanussi Azurro PRO WiFi, Zanussi Artendo WiFi |
 | Rusclimate | 8 | Electrolux Fusion EVO DC, Electrolux Atrium DC, Electrolux Arctic Air DC, Zanussi Siena DC, Ballu Lagoon DC, Royal Thermo Siena DC, Climber Dresden, Climer Dresden Cki 24, ONE AIR MASTER |
@@ -22,7 +23,9 @@
 | Rusclimate | 20 | Ballu Defender DC, Royal Thermo Milano, Ballu Olympio Legend, Electrolux Skandi DC, Ballu Platinum Evolution DC, Electrolux Onix Black Super DC |
 | Rusclimate | 21 | Shuft Soturai, Ballu Maverick DC, Ballu iGreen Pro, Ballu Maverick DC, Electrolux Loft DC, Zanussi Moderno DC, Electrolux Slide DC, Electrolux Arctic Air Wi-Fi, Shuft Asgard Black DC, Ballu Platinum Black DC, Ballu Platinum DC Inverter |
 | Rusclimate | 28 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
+| Rusclimate | 30 | Ballu ONEAIR ASP-200S |
 | Rusclimate | 31 | (Transformer 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux EIH/R, Electrolux EIH/S, Ballu Plaza |
+| Rusclimate | 32 | Ballu ONEAIR ASP-100, Electrolux EASP-100 |
 | Rusclimate | 33 | Electrolux Centurio IQ 3.0 |
 | Rusclimate | 38 | Toshiba Shorai EE |
 | Rusclimate | 41 | Electrolux Monaco DC |
@@ -35,6 +38,7 @@
 | Rusclimate | 55 | Zanussi Barocco DC, Royal Thermo Barocco DC |
 | Rusclimate | 56 | Toshiba Haori, Toshiba Seiya, Toshiba Shorai E |
 | Rusclimate | 57 | Shuft Berg, MBO M-1, MI-3 DC, NeoLine, HitAir HAM, Monroe Dream Air |
+| Rusclimate | 59 | Ballu ONEAIR ASP-200S |
 | Rusclimate | 60 | Ballu Discovery DC |
 | Rusclimate | 68 | Ballu iGreen Pro, Electrolux Loft DC, Zanussi Moderno DC, Electrolux Slide DC, Electrolux Arctic Air Wi-Fi, Shuft Asgard Black DC, Ballu Platinum Black DC, Ballu Platinum DC Inverter |
 | Rusclimate | 69 | Ballu ONEAIR ASP-100, Electrolux EASP-100 |

@@ -93,11 +93,20 @@
       "anti_frost_temp": {
         "name": "Температура в режиме Anti Frost"
       },
+      "breezer_auto_intensity": {
+        "name": "Интенсивность режима AUTO"
+      },
+      "breezer_temperature": {
+        "name": "Температура выдува"
+      },
       "eco_delta": {
         "name": "Разница температур в режиме Eco"
       },
       "min_voltage": {
         "name": "Минимальное напряжение (145+X)"
+      },
+      "night_speed": {
+        "name": "Скорость ночного режима"
       },
       "power_level": {
         "name": "Мощность"
@@ -120,6 +129,16 @@
           "screensaver_1": "1 мин",
           "screensaver_3": "3 мин",
           "screensaver_5": "5 мин"
+        }
+      },
+      "breezer_melody": {
+        "name": "Melodies",
+        "state": {
+          "melody_birds_singing": "Пение птиц",
+          "melody_fireplace_sound": "Звук костра",
+          "melody_forest_sound": "Звук леса",
+          "melody_rain_sound": "Звук дождя",
+          "melody_sea_sound": "Звук моря"
         }
       },
       "kettle_temperature_preset": {
@@ -179,6 +198,9 @@
       "expendables_filter": {
         "name": "Ресурс фильтра"
       },
+      "expendables_prefilter": {
+        "name": "Ресурс префильтра"
+      },
       "tank": {
         "name": "Бак"
       }
@@ -210,6 +232,9 @@
       },
       "breeze_away": {
         "name": "Деликативный обдув"
+      },
+      "breezer_damper": {
+        "name": "Рециркуляция"
       },
       "bss": {
         "name": "BSS"
@@ -280,17 +305,13 @@
         }
       },
       "syncleo_kettle": {
-        "state_attributes": {
-          "operation_mode": {
-            "state": {
-              "boiling": "Кипячение",
-              "boiling_keep": "Кипячение с подогревом",
-              "warm_up": "Разогрев",
-              "warm_up_keep": "Разогрев с удержанием",
-              "iq_boiling": "IQ кипячение",
-              "tea_time": "Чайная церемония"
-            }
-          }
+        "state": {
+          "boiling": "Кипячение",
+          "boiling_keep": "Кипячение с подогревом",
+          "warm_up": "Разогрев",
+          "warm_up_keep": "Разогрев с удержанием",
+          "iq_boiling": "IQ кипячение",
+          "tea_time": "Чайная церемония"
         }
       }
     }

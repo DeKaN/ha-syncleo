@@ -71,6 +71,7 @@ from ..const import (
     PRESET_TOSHIBA_POWER_100,
     PRESET_TOSHIBA_POWER_50,
     PRESET_TOSHIBA_POWER_75,
+    PROFILE_TYPE_AC,
     VENDOR_RUSCLIMATE,
 )
 from .profiles import ClimateProfile, ProgramDataField, SelectConfig
@@ -79,7 +80,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=8,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=17,
         max_temp=30,
         target_temp_step=1.0,
@@ -126,7 +127,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=10,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=18,
         max_temp=32,
         target_temp_step=1.0,
@@ -168,7 +169,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=13,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
         target_temp_step=1.0,
@@ -232,7 +233,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=15,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
         target_temp_step=1.0,
@@ -294,7 +295,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=20,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=32,
         target_temp_step=1.0,
@@ -350,7 +351,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=21,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=18,
         max_temp=32,
         target_temp_step=1.0,
@@ -404,7 +405,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=38,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=17,
         max_temp=30,
         target_temp_step=1.0,
@@ -475,7 +476,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=41,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
         target_temp_step=1.0,
@@ -532,7 +533,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=51,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=18,
         max_temp=32,
         target_temp_step=1.0,
@@ -578,7 +579,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=55,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
         target_temp_step=1.0,
@@ -651,7 +652,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=56,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=17,
         max_temp=30,
         target_temp_step=1.0,
@@ -729,7 +730,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=57,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=32,
         target_temp_step=1.0,
@@ -783,7 +784,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=60,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=31,
         target_temp_step=1.0,
@@ -845,7 +846,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=68,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
         target_temp_step=1.0,
@@ -903,7 +904,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=70,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=32,
         target_temp_step=1.0,
@@ -959,7 +960,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=72,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
         target_temp_step=1.0,
@@ -1031,7 +1032,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=82,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=32,
         target_temp_step=1.0,
@@ -1072,7 +1073,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=83,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
         target_temp_step=1.0,
@@ -1104,7 +1105,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=84,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
         target_temp_step=1.0,
@@ -1136,7 +1137,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=85,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
         target_temp_step=1.0,
@@ -1196,7 +1197,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=95,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=17,
         max_temp=30,
         target_temp_step=1.0,
@@ -1231,7 +1232,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=99,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=32,
         target_temp_step=1.0,
@@ -1313,7 +1314,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=108,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=31,
         target_temp_step=1.0,
@@ -1375,7 +1376,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=110,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=31,
         target_temp_step=1.0,
@@ -1444,7 +1445,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=111,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=31,
         target_temp_step=1.0,
@@ -1499,7 +1500,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=114,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=31,
         target_temp_step=1.0,
@@ -1553,7 +1554,7 @@ PROFILES = [
     ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=120,
-        profile_type="ac",
+        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=32,
         target_temp_step=1.0,

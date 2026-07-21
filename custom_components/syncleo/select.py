@@ -75,6 +75,11 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
                 cmd,
             )
             value = int(cmd.value)
+        else:
+            _LOGGER.debug(
+                "Entity %s ignoring unrelated cmd: %s", self._attr_unique_id, cmd
+            )
+            return
 
         text_value = self._rev_options_map.get(value)
 

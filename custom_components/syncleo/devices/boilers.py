@@ -20,6 +20,7 @@ from ..const import (
     PD_DISPLAY_HALF_POWER,
     PD_LAST_PROGRAM,
     PD_TURN_ON,
+    PROFILE_TYPE_BOILER,
     VENDOR_RUSCLIMATE,
 )
 from .profiles import SensorConfig, WaterHeaterProfile, ProgramDataField
@@ -28,7 +29,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=2,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=30,
         max_temp=75,
         target_temp_step=1.0,
@@ -59,7 +60,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=7,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=30,
         max_temp=75,
         target_temp_step=1.0,
@@ -87,7 +88,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=12,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=35,
         max_temp=75,
         target_temp_step=1.0,
@@ -114,7 +115,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=16,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=30,
         max_temp=75,
         target_temp_step=1.0,
@@ -136,7 +137,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=18,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=35,
         max_temp=75,
         target_temp_step=1.0,
@@ -163,7 +164,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=19,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=35,
         max_temp=75,
         target_temp_step=1.0,
@@ -183,7 +184,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=33,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=35,
         max_temp=75,
         target_temp_step=1.0,
@@ -219,7 +220,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=44,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=30,
         max_temp=75,
         target_temp_step=1.0,
@@ -259,7 +260,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=74,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=30,
         max_temp=75,
         target_temp_step=1.0,
@@ -290,7 +291,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=76,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=35,
         max_temp=75,
         target_temp_step=1.0,
@@ -329,7 +330,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=77,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=30,
         max_temp=75,
         target_temp_step=1.0,
@@ -369,7 +370,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=80,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=30,
         max_temp=75,
         target_temp_step=1.0,
@@ -402,7 +403,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=90,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=30,
         max_temp=75,
         target_temp_step=1.0,
@@ -442,7 +443,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=91,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=35,
         max_temp=75,
         target_temp_step=1.0,
@@ -462,7 +463,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=2,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=30,
         max_temp=75,
         target_temp_step=1.0,
@@ -493,7 +494,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=109,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=30,
         max_temp=75,
         target_temp_step=1.0,
@@ -524,7 +525,7 @@ PROFILES = [
     WaterHeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=119,
-        profile_type="boiler",
+        profile_type=PROFILE_TYPE_BOILER,
         min_temp=30,
         max_temp=75,
         target_temp_step=1.0,

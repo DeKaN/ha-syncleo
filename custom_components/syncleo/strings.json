@@ -93,11 +93,20 @@
       "anti_frost_temp": {
         "name": "Anti Frost Threshold"
       },
+      "breezer_auto_intensity": {
+        "name": "AUTO mode intensity"
+      },
+      "breezer_temperature": {
+        "name": "Output temperature"
+      },
       "eco_delta": {
         "name": "Eco Delta Temperature"
       },
       "min_voltage": {
         "name": "Min voltage (145+X)"
+      },
+      "night_speed": {
+        "name": "Night mode speed"
       },
       "power_level": {
         "name": "Power Level"
@@ -125,6 +134,9 @@
       "expendables_filter": {
         "name": "Filter resource"
       },
+      "expendables_prefilter": {
+        "name": "Prefilter resource"
+      },
       "tank": {
         "name": "Water Tank"
       }
@@ -137,6 +149,16 @@
           "screensaver_1": "1 min",
           "screensaver_3": "3 min",
           "screensaver_5": "5 min"
+        }
+      },
+      "breezer_melody": {
+        "name": "Melodies",
+        "state": {
+          "melody_birds_singing": "Birds singing",
+          "melody_fireplace_sound": "Fireplace sound",
+          "melody_forest_sound": "Forest sound",
+          "melody_rain_sound": "Rain sound",
+          "melody_sea_sound": "Sea sound"
         }
       },
       "kettle_temperature_preset": {
@@ -211,6 +233,9 @@
       "breeze_away": {
         "name": "Breeze Away"
       },
+      "breezer_damper": {
+        "name": "Recirculation"
+      },
       "bss": {
         "name": "BSS"
       },
@@ -280,17 +305,13 @@
         }
       },
       "syncleo_kettle": {
-        "state_attributes": {
-          "operation_mode": {
-            "state": {
-              "boiling": "Boiling",
-              "boiling_keep": "Boiling with keep",
-              "warm_up": "Warm up",
-              "warm_up_keep": "Warm up with keep",
-              "iq_boiling": "IQ Boiling",
-              "tea_time": "Tea time"
-            }
-          }
+        "state": {
+          "boiling": "Boiling",
+          "boiling_keep": "Boiling with keep",
+          "warm_up": "Warm up",
+          "warm_up_keep": "Warm up with keep",
+          "iq_boiling": "IQ Boiling",
+          "tea_time": "Tea time"
         }
       }
     }
