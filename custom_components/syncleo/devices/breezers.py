@@ -17,6 +17,7 @@ from ..const import (
     FEATURE_CURRENT_TEMPERATURE,
     FEATURE_ERROR,
     FEATURE_EXPENDABLES_FILTER,
+    FEATURE_EXPENDABLES_PREFILTER,
     FEATURE_IONIZATION,
     FEATURE_ULTRAVIOLET,
     FEATURE_VOLUME,
@@ -89,6 +90,9 @@ PROFILES = [
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                ),
             ),
         },
     ),
@@ -132,6 +136,16 @@ PROFILES = [
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                ),
+            ),
+            FEATURE_EXPENDABLES_PREFILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[1] if isinstance(val, list) and len(val) > 1 else None
+                ),
             ),
         },
     ),
@@ -184,6 +198,16 @@ PROFILES = [
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                ),
+            ),
+            FEATURE_EXPENDABLES_PREFILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[1] if isinstance(val, list) and len(val) > 1 else None
+                ),
             ),
         },
     ),
@@ -240,6 +264,16 @@ PROFILES = [
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                ),
+            ),
+            FEATURE_EXPENDABLES_PREFILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[1] if isinstance(val, list) and len(val) > 1 else None
+                ),
             ),
         },
     ),
@@ -304,6 +338,9 @@ PROFILES = [
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                ),
             ),
         },
     ),

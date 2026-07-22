@@ -18,6 +18,7 @@ from pysyncleo.commands import (
     CmdDamper,
     CmdError,
     CmdExpendables,
+    CmdInitDiagnostic,
     CmdIonization,
     CmdKeepWarm,
     CmdNight,
@@ -70,6 +71,7 @@ from .const import (
     FEATURE_NIGHT,
     FEATURE_POWER_LEVEL,
     FEATURE_ECO_AS_SMART_MODE,
+    FEATURE_RSSI,
     FEATURE_SHUFT_SFMS_09_ANTI_MELDEW,
     FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
     FEATURE_SMART_MODE,
@@ -104,6 +106,7 @@ FEATURE_TO_COMMAND_MAP = {
     FEATURE_NIGHT: CmdNight,
     FEATURE_POWER_LEVEL: CmdSpeed,
     FEATURE_SMART_MODE: CmdSmartMode,
+    FEATURE_RSSI: CmdInitDiagnostic,
     FEATURE_TANK: CmdTank,
     FEATURE_TURBO: CmdTurbo,
     FEATURE_ULTRAVIOLET: CmdUltraviolet,
@@ -251,7 +254,7 @@ class SyncleoBaseEntity(Entity):
 
         data = self._program_data_modes.get(field.mode)
         if data and len(data) >= field.offset + field.size:
-            return data[field.offset : field.offset + field.size]
+            return bytes(data[field.offset : field.offset + field.size])
 
         return bytes(field.size)
 
@@ -292,7 +295,7 @@ class SyncleoBaseEntity(Entity):
 
         data[field.offset : field.offset + field.size] = value
 
-        await self.async_send_command(CmdProgramData(data=data, mode=field.mode))
+        await self.async_send_command(CmdProgramData(data=bytes(data), mode=field.mode))
 
         self._program_data_modes[field.mode] = data
         self.async_write_ha_state()

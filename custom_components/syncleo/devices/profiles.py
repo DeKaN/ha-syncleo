@@ -1,12 +1,19 @@
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 from homeassistant.components.climate.const import HVACMode, ClimateEntityFeature
 from homeassistant.components.fan import FanEntityFeature
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.components.water_heater import WaterHeaterEntityFeature
-from homeassistant.const import Platform
+from homeassistant.const import (
+    SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+    EntityCategory,
+    Platform,
+)
 
 from pysyncleo.enums import UdpCommandType
+from pysyncleo.models import DiagnosticStatus
+
+from ..const import FEATURE_RSSI
 
 
 @dataclass(kw_only=True)
@@ -48,6 +55,22 @@ class SensorConfig:
     device_class: SensorDeviceClass | None = None
     state_class: SensorStateClass | None = None
     unit_of_measurement: str | None = None
+    entity_category: EntityCategory | None = None
+    value_fn: Callable[[Any], Any] = lambda x: x
+
+
+RSSI_SENSOR_CONFIG = SensorConfig(
+    device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+    unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+    entity_category=EntityCategory.DIAGNOSTIC,
+    value_fn=lambda status: (
+        status.rssi - 256
+        if status.rssi > 127
+        else status.rssi
+        if isinstance(status, DiagnosticStatus)
+        else None
+    ),
+)
 
 
 @dataclass(kw_only=True)
@@ -93,6 +116,12 @@ class SelectMixin(PlatformProviderBase):
 @dataclass(kw_only=True)
 class SensorMixin(PlatformProviderBase):
     sensors: Dict[str, SensorConfig] = field(default_factory=dict)
+
+    def __post_init__(self):
+        if self.sensors is None:
+            self.sensors = {}
+        if FEATURE_RSSI not in self.sensors:
+            self.sensors[FEATURE_RSSI] = RSSI_SENSOR_CONFIG
 
     @property
     def supported_platforms(self) -> List[Platform]:

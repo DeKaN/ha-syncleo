@@ -856,7 +856,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pysyncleo", specifier = "==0.2.2" }]
+requires-dist = [{ name = "pysyncleo", specifier = "==0.2.3" }]
 
 [package.metadata.requires-dev]
 dev = [
@@ -1604,14 +1604,14 @@ sdist = { url = "https://files.pythonhosted.org/packages/08/64/a99f27d3b4347486c
 
 [[package]]
 name = "pysyncleo"
-version = "0.2.2"
+version = "0.2.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cryptography" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d8/a5/fea08f3bc365802ee33c0f12f99447ef688c09f6acc18e8756430989de5a/pysyncleo-0.2.2.tar.gz", hash = "sha256:3b7d2b0b307ba7684415ab96a908e9fdcdbbb8bbcaf7f73db5bacd7ee85c5400", size = 30583, upload-time = "2026-07-17T15:55:24.165Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/32/3a/19baf79d352a0f6133d1dff08b50e6df7a38a2c3f46542e486bad3d366d5/pysyncleo-0.2.3.tar.gz", hash = "sha256:ab1be65a6d3e95b7c24d34eec13eef25fae71c69b1ffc58096e368e00ea703ec", size = 30596, upload-time = "2026-07-22T14:28:35.346Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ce/1a/ce8335c7615c0a1a6832ac6dbe82898db34944f9f09d4b9d7696dccbb760/pysyncleo-0.2.2-py3-none-any.whl", hash = "sha256:627b0af66fabed1281d15cac9e854a85b8b8aeca77df179d9d1efb418ace1297", size = 13534, upload-time = "2026-07-17T15:55:23.213Z" },
+    { url = "https://files.pythonhosted.org/packages/4d/5a/760b27f02f4ac5bf3ba95779d1bdc577ae8b7033b4b9642c53a329680c42/pysyncleo-0.2.3-py3-none-any.whl", hash = "sha256:f9ca3bb0d1e94a99d4c60041f2c4aefa3da86ff11b241ff65a4acafc455e0315", size = 13540, upload-time = "2026-07-22T14:28:34.515Z" },
 ]
 
 [[package]]

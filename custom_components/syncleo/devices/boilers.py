@@ -320,6 +320,9 @@ PROFILES = [
                 device_class=SensorDeviceClass.DURATION,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=UnitOfTime.DAYS,
+                value_fn=lambda val: (
+                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                ),
             ),
         },
         program_data_fields={

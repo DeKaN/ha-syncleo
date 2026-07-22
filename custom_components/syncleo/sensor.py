@@ -2,6 +2,7 @@ import logging
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -38,6 +39,7 @@ class SyncleoSensor(SyncleoBaseEntity, SensorEntity):
         self._feature_key = feature_key
         self._is_program_data = feature_key in profile.program_data_fields
         self._cmd_class = FEATURE_TO_COMMAND_MAP.get(feature_key)
+        self._value_fn = config.value_fn
 
         self._attr_unique_id = f"{self._device_unique_id}_{feature_key}"
         self._attr_translation_key = feature_key
@@ -45,8 +47,17 @@ class SyncleoSensor(SyncleoBaseEntity, SensorEntity):
         self._attr_device_class = config.device_class
         self._attr_state_class = config.state_class
         self._attr_native_unit_of_measurement = config.unit_of_measurement
+        self._attr_entity_category = config.entity_category
+        self._attr_entity_registry_enabled_default = (
+            config.entity_category != EntityCategory.DIAGNOSTIC
+        )
 
         self._value = None
+
+    @property
+    def native_value(self):
+        """Return the state of the sensor."""
+        return self._value
 
     @callback
     def _handle_device_update(self, cmd):
@@ -68,7 +79,17 @@ class SyncleoSensor(SyncleoBaseEntity, SensorEntity):
                 self._attr_unique_id,
                 cmd,
             )
-            value = cmd.value
+            raw_value = cmd.value
+
+            if raw_value is None:
+                value = None
+            else:
+                try:
+                    value = self._value_fn(raw_value)
+                except Exception as e:
+                    _LOGGER.warning("Sensor processing failed with error: %s", e)
+                    value = None
+
         else:
             _LOGGER.debug(
                 "Entity %s ignoring unrelated cmd: %s", self._attr_unique_id, cmd
