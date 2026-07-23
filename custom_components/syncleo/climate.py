@@ -11,7 +11,7 @@ from homeassistant.components.climate.const import (
 from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
 
-from pysyncleo.commands import CmdTargetTemperature, CmdMode, CmdSpeed
+from pysyncleo.commands import CmdTargetTemperature, CmdMode, CmdSpeed, UdpCommandType
 
 
 from .const import PD_SWING_HORIZONTAL, PD_SWING_VERTICAL, TRANLATION_KEY_CLIMATE
@@ -120,7 +120,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         super()._handle_device_update(cmd)
         update_needed = False
 
-        if cmd.command_type == self._profile.cmd_mode:
+        if cmd.command_type == UdpCommandType.MODE:
             raw_val = int(cmd.value)
             resolved_mode = self._rev_hvac_map.get(raw_val)
             resolved_preset = self._rev_presets_map.get(raw_val)
@@ -151,14 +151,11 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
             update_needed = True
 
-        elif cmd.command_type == self._profile.cmd_target_temp:
+        elif cmd.command_type == UdpCommandType.TARGET_TEMPERATURE:
             self._target_temp = float(cmd.value)
             update_needed = True
 
-        elif (
-            self._profile.cmd_current_temp
-            and cmd.command_type == self._profile.cmd_current_temp
-        ):
+        elif cmd.command_type == UdpCommandType.TEMPERATURE:
             self._current_temp = float(cmd.value)
             update_needed = True
 

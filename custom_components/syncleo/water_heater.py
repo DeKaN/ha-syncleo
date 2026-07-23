@@ -7,7 +7,7 @@ from homeassistant.const import ATTR_TEMPERATURE, STATE_OFF, UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from pysyncleo.commands import CmdTargetTemperature, CmdMode
+from pysyncleo.commands import CmdTargetTemperature, CmdMode, UdpCommandType
 
 from .const import DOMAIN
 from .devices import WaterHeaterProfile
@@ -73,21 +73,18 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
         super()._handle_device_update(cmd)
         update_needed = False
 
-        if cmd.command_type == self._profile.cmd_mode:
+        if cmd.command_type == UdpCommandType.MODE:
             raw_val = int(cmd.value)
             resolved_mode = self._rev_op_mode_map.get(raw_val)
             if resolved_mode:
                 self._current_operation = resolved_mode
                 update_needed = True
 
-        elif cmd.command_type == self._profile.cmd_target_temp:
+        elif cmd.command_type == UdpCommandType.TARGET_TEMPERATURE:
             self._target_temp = float(cmd.value)
             update_needed = True
 
-        elif (
-            self._profile.cmd_current_temp
-            and cmd.command_type == self._profile.cmd_current_temp
-        ):
+        elif cmd.command_type == UdpCommandType.TEMPERATURE:
             self._current_temp = float(cmd.value)
             update_needed = True
 

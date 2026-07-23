@@ -9,7 +9,7 @@ from homeassistant.util.percentage import (
     ranged_value_to_percentage,
 )
 
-from pysyncleo.commands import CmdMode, CmdSpeed
+from pysyncleo.commands import CmdMode, CmdSpeed, UdpCommandType
 
 from .const import TRANLATION_KEY_FAN
 from .devices import BreezerProfile
@@ -76,7 +76,7 @@ class SyncleoFan(SyncleoBaseEntity, FanEntity):
 
         update_needed = False
 
-        if cmd.command_type == self._profile.cmd_mode:
+        if cmd.command_type == UdpCommandType.MODE:
             raw_val = int(cmd.value)
 
             if raw_val == 0:
@@ -87,9 +87,14 @@ class SyncleoFan(SyncleoBaseEntity, FanEntity):
                 self._current_preset_mode = self._rev_preset_map.get(raw_val)
             update_needed = True
 
-        elif self._profile.cmd_speed and cmd.command_type == self._profile.cmd_speed:
+        elif cmd.command_type == UdpCommandType.SPEED:
             self._raw_speed = int(cmd.value)
             update_needed = True
+
+        else:
+            _LOGGER.debug(
+                "Entity %s ignoring unrelated cmd: %s", self._attr_unique_id, cmd
+            )
 
         if update_needed:
             _LOGGER.info(

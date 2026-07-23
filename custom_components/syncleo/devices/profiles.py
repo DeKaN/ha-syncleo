@@ -13,7 +13,13 @@ from homeassistant.const import (
 from pysyncleo.enums import UdpCommandType
 from pysyncleo.models import DiagnosticStatus
 
-from ..const import FEATURE_RSSI
+from ..const import (
+    FEATURE_RSSI,
+    PROFILE_TYPE_AC,
+    PROFILE_TYPE_BOILER,
+    PROFILE_TYPE_HEATER,
+    PROFILE_TYPE_KETTLE,
+)
 
 
 @dataclass(kw_only=True)
@@ -166,10 +172,8 @@ class BreezerProfile(
 
     supported_features: FanEntityFeature
     speed_count: int
-    cmd_mode: UdpCommandType
     preset_modes_map: Dict[str, int] = field(default_factory=dict)
     default_preset_mode: str
-    cmd_speed: UdpCommandType | None = None
 
     @property
     def supported_platforms(self) -> List[Platform]:
@@ -192,12 +196,9 @@ class ClimateProfile(
     target_temp_step: float
     supported_features: ClimateEntityFeature
 
-    cmd_mode: UdpCommandType
     hvac_modes_map: Dict[HVACMode, int]
     default_hvac_mode: HVACMode
 
-    cmd_target_temp: UdpCommandType
-    cmd_current_temp: Optional[UdpCommandType] = None
     cmd_current_humidity: Optional[UdpCommandType] = None
 
     preset_modes_map: Dict[str, int] = field(default_factory=dict)
@@ -228,16 +229,62 @@ class WaterHeaterProfile(
     target_temp_step: float
     supported_features: WaterHeaterEntityFeature
 
-    cmd_mode: UdpCommandType
     operation_modes_map: Dict[str, int]
     default_operation_mode: str
-
-    cmd_target_temp: UdpCommandType
-    cmd_current_temp: Optional[UdpCommandType] = None
 
     @property
     def supported_platforms(self) -> List[Platform]:
         return super().supported_platforms + [Platform.WATER_HEATER]
+
+
+@dataclass(kw_only=True)
+class BoilerProfile(WaterHeaterProfile):
+    profile_type: str = PROFILE_TYPE_BOILER
+    target_temp_step: float = 1.0
+    supported_features: WaterHeaterEntityFeature = (
+        WaterHeaterEntityFeature.TARGET_TEMPERATURE
+        | WaterHeaterEntityFeature.OPERATION_MODE
+        | WaterHeaterEntityFeature.ON_OFF
+    )
+
+
+@dataclass(kw_only=True)
+class AirConditionerProfile(ClimateProfile):
+    profile_type: str = PROFILE_TYPE_AC
+    target_temp_step: float = 1.0
+    supported_features: ClimateEntityFeature = (
+        ClimateEntityFeature.TARGET_TEMPERATURE
+        | ClimateEntityFeature.FAN_MODE
+        | ClimateEntityFeature.SWING_MODE
+        | ClimateEntityFeature.TURN_ON
+        | ClimateEntityFeature.TURN_OFF
+    )
+    cmd_fan_mode: Optional[UdpCommandType] = UdpCommandType.SPEED
+
+
+@dataclass(kw_only=True)
+class HeaterProfile(ClimateProfile):
+    profile_type: str = PROFILE_TYPE_HEATER
+    target_temp_step: float = 1.0
+    supported_features: ClimateEntityFeature = (
+        ClimateEntityFeature.TARGET_TEMPERATURE
+        | ClimateEntityFeature.PRESET_MODE
+        | ClimateEntityFeature.TURN_ON
+        | ClimateEntityFeature.TURN_OFF
+    )
+
+
+@dataclass(kw_only=True)
+class KettleProfile(WaterHeaterProfile):
+    profile_type: str = PROFILE_TYPE_KETTLE
+    min_temp: int = 30
+    max_temp: int = 100
+    target_temp_step: float = 5.0
+    supported_features: int = (
+        WaterHeaterEntityFeature.TARGET_TEMPERATURE
+        | WaterHeaterEntityFeature.OPERATION_MODE
+        | WaterHeaterEntityFeature.ON_OFF
+    )
 
 
 # ==========================================

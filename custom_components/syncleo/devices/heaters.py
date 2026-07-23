@@ -3,9 +3,7 @@ from homeassistant.components.climate.const import (
     PRESET_COMFORT,
     PRESET_NONE,
     HVACMode,
-    ClimateEntityFeature,
 )
-from pysyncleo.enums import UdpCommandType
 
 from ..const import (
     FEATURE_ACCESS_CONTROL,
@@ -37,30 +35,18 @@ from ..const import (
     PRESET_AURUS_SCREENSAVER_MODE_OFF,
     PRESET_MANUAL,
     PRESET_VACATION,
-    PROFILE_TYPE_HEATER,
     VENDOR_RUSCLIMATE,
 )
-from .profiles import ClimateProfile, NumberConfig, ProgramDataField, SelectConfig
+from .profiles import HeaterProfile, NumberConfig, ProgramDataField, SelectConfig
 
 PROFILES = [
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=6,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,
@@ -87,24 +73,13 @@ PROFILES = [
             FEATURE_VOLUME,
         ],
     ),
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=9,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,
@@ -132,24 +107,13 @@ PROFILES = [
             FEATURE_VOLUME,
         ],
     ),
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=11,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=5,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,
@@ -178,24 +142,13 @@ PROFILES = [
             FEATURE_DAMPER,
         ],
     ),
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=14,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=5,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,
@@ -219,24 +172,13 @@ PROFILES = [
             FEATURE_CHILD_LOCK,
         ],
     ),
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=17,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,
@@ -265,24 +207,13 @@ PROFILES = [
             FEATURE_VOLUME,
         ],
     ),
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=28,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,
@@ -311,24 +242,13 @@ PROFILES = [
             FEATURE_VOLUME,
         ],
     ),
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=31,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,
@@ -357,24 +277,13 @@ PROFILES = [
             FEATURE_VOLUME,
         ],
     ),
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=42,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,
@@ -402,24 +311,13 @@ PROFILES = [
             FEATURE_VOLUME,
         ],
     ),
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=46,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,
@@ -448,24 +346,13 @@ PROFILES = [
             FEATURE_VOLUME,
         ],
     ),
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=47,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=5,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,
@@ -494,24 +381,13 @@ PROFILES = [
             FEATURE_VOLUME,
         ],
     ),
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=49,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=5,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,
@@ -540,24 +416,13 @@ PROFILES = [
             FEATURE_VOLUME,
         ],
     ),
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=71,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,
@@ -586,24 +451,13 @@ PROFILES = [
             FEATURE_VOLUME,
         ],
     ),
-    ClimateProfile(
+    HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=89,
-        profile_type=PROFILE_TYPE_HEATER,
         min_temp=10,
         max_temp=35,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         preset_modes_map={
             PRESET_NONE: 0,
             PRESET_COMFORT: 1,

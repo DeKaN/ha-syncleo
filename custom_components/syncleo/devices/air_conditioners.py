@@ -71,27 +71,16 @@ from ..const import (
     PRESET_TOSHIBA_POWER_100,
     PRESET_TOSHIBA_POWER_50,
     PRESET_TOSHIBA_POWER_75,
-    PROFILE_TYPE_AC,
     VENDOR_RUSCLIMATE,
 )
-from .profiles import ClimateProfile, ProgramDataField, SelectConfig
+from .profiles import AirConditionerProfile, ProgramDataField, SelectConfig
 
 PROFILES = [
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=8,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=17,
         max_temp=30,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -101,9 +90,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={FAN_AUTO: 0, FAN_LOW: 1, FAN_MEDIUM: 2, FAN_HIGH: 3},
         supported_swing_modes=[
             SWING_OFF,
@@ -124,21 +110,11 @@ PROFILES = [
         ],
         switches=[FEATURE_NIGHT, FEATURE_TURBO],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=10,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=18,
         max_temp=32,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.COOL: 2,
@@ -147,9 +123,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={FAN_AUTO: 0, FAN_LOW: 1, FAN_MEDIUM: 2, FAN_HIGH: 3},
         supported_swing_modes=[
             SWING_OFF,
@@ -166,21 +139,11 @@ PROFILES = [
         ],
         switches=[FEATURE_NIGHT],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=13,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -190,9 +153,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_MIN: 1,
@@ -230,21 +190,11 @@ PROFILES = [
             PD_SELFCLEAN,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=15,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -254,9 +204,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_MIN: 1,
@@ -292,21 +239,11 @@ PROFILES = [
             PD_SELFCLEAN,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=20,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=32,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -316,9 +253,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={FAN_AUTO: 0, FAN_LOW: 1, FAN_MEDIUM: 2, FAN_HIGH: 3},
         supported_swing_modes=[
             SWING_OFF,
@@ -348,21 +282,11 @@ PROFILES = [
             PD_SILENCE_MODE,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=21,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=18,
         max_temp=32,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -372,9 +296,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={FAN_AUTO: 0, FAN_LOW: 1, FAN_MEDIUM: 2, FAN_HIGH: 3},
         supported_swing_modes=[
             SWING_OFF,
@@ -402,21 +323,11 @@ PROFILES = [
             PD_SILENCE_MODE,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=38,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=17,
         max_temp=30,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -426,9 +337,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,
@@ -473,21 +381,11 @@ PROFILES = [
         },
         switches=[FEATURE_TURBO, PD_ENERGY_SAVING, PD_FREEZE_PROTECTION, PD_FIREPLACE],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=41,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -497,9 +395,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_MIN: 1,
@@ -530,21 +425,11 @@ PROFILES = [
             PD_SELFCLEAN,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=51,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=18,
         max_temp=32,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.COOL: 2,
@@ -553,9 +438,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_LOW: 1,
@@ -576,21 +458,11 @@ PROFILES = [
         ],
         switches=[FEATURE_NIGHT],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=55,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -600,9 +472,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,
@@ -649,21 +518,11 @@ PROFILES = [
             PD_FREEZE_PROTECTION,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=56,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=17,
         max_temp=30,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -673,9 +532,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,
@@ -727,21 +583,11 @@ PROFILES = [
             PD_FREEZE_PROTECTION,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=57,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=32,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -751,9 +597,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_LOW: 1,
@@ -781,21 +624,11 @@ PROFILES = [
             PD_FREEZE_PROTECTION,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=60,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=31,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -805,9 +638,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,
@@ -843,21 +673,11 @@ PROFILES = [
             PD_FREEZE_PROTECTION,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=68,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -867,9 +687,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,
@@ -901,21 +718,11 @@ PROFILES = [
             PD_ENERGY_SAVING,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=70,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=32,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -925,9 +732,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_LOW: 1,
@@ -957,21 +761,11 @@ PROFILES = [
             PD_FUNGUS_PROOF,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=72,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -981,9 +775,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,
@@ -1029,21 +820,11 @@ PROFILES = [
             PD_ENERGY_SAVING,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=82,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=32,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -1053,9 +834,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={FAN_AUTO: 0, FAN_LOW: 1, FAN_MEDIUM: 2, FAN_HIGH: 3},
         supported_swing_modes=[
             SWING_OFF,
@@ -1070,20 +848,17 @@ PROFILES = [
         binary_sensors=[FEATURE_ERROR],
         switches=[FEATURE_BACKLIGHT, FEATURE_NIGHT, FEATURE_TURBO],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=83,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
-        target_temp_step=1.0,
         supported_features=(
             ClimateEntityFeature.TARGET_TEMPERATURE
             | ClimateEntityFeature.FAN_MODE
             | ClimateEntityFeature.TURN_ON
             | ClimateEntityFeature.TURN_OFF
         ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.COOL: 2,
@@ -1091,9 +866,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.COOL,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={FAN_LOW: 1, FAN_HIGH: 2},
         program_data_fields={
             PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
@@ -1102,20 +874,17 @@ PROFILES = [
         binary_sensors=[FEATURE_ERROR],
         switches=[FEATURE_NIGHT],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=84,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
-        target_temp_step=1.0,
         supported_features=(
             ClimateEntityFeature.TARGET_TEMPERATURE
             | ClimateEntityFeature.FAN_MODE
             | ClimateEntityFeature.TURN_ON
             | ClimateEntityFeature.TURN_OFF
         ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.COOL: 2,
@@ -1123,9 +892,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.COOL,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={FAN_LOW: 1, FAN_HIGH: 2},
         program_data_fields={
             PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
@@ -1134,21 +900,11 @@ PROFILES = [
         binary_sensors=[FEATURE_ERROR],
         switches=[FEATURE_NIGHT],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=85,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=30,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -1158,9 +914,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,
@@ -1194,20 +947,17 @@ PROFILES = [
             PD_SELFCLEAN,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=95,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=17,
         max_temp=30,
-        target_temp_step=1.0,
         supported_features=(
             ClimateEntityFeature.TARGET_TEMPERATURE
             | ClimateEntityFeature.FAN_MODE
             | ClimateEntityFeature.TURN_ON
             | ClimateEntityFeature.TURN_OFF
         ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -1217,9 +967,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={FAN_AUTO: 0, FAN_LOW: 1, FAN_MEDIUM: 2, FAN_HIGH: 3},
         program_data_fields={
             PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
@@ -1229,21 +976,11 @@ PROFILES = [
         binary_sensors=[FEATURE_BACKLIGHT, FEATURE_ERROR],
         switches=[FEATURE_NIGHT, FEATURE_TURBO],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=99,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=32,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -1253,9 +990,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,
@@ -1311,21 +1045,11 @@ PROFILES = [
             PD_SELFCLEAN,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=108,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=31,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -1335,9 +1059,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,
@@ -1373,21 +1094,11 @@ PROFILES = [
             PD_FREEZE_PROTECTION,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=110,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=31,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -1397,9 +1108,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,
@@ -1442,21 +1150,11 @@ PROFILES = [
             FEATURE_VOLUME,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=111,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=31,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -1466,9 +1164,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,
@@ -1497,21 +1192,11 @@ PROFILES = [
             FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=114,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=31,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -1521,9 +1206,6 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,
@@ -1551,21 +1233,11 @@ PROFILES = [
             FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
         ],
     ),
-    ClimateProfile(
+    AirConditionerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=120,
-        profile_type=PROFILE_TYPE_AC,
         min_temp=16,
         max_temp=32,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.SWING_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        cmd_mode=UdpCommandType.MODE,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -1575,10 +1247,7 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.AUTO,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         cmd_current_humidity=UdpCommandType.CURRENT_HUMIDITY,
-        cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
             FAN_AUTO: 0,
             FAN_QUITE: 1,

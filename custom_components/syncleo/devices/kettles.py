@@ -1,5 +1,4 @@
-from homeassistant.components.water_heater import STATE_OFF, WaterHeaterEntityFeature
-from pysyncleo.enums import UdpCommandType
+from homeassistant.components.water_heater import STATE_OFF
 
 from ..const import (
     FEATURE_BACKLIGHT,
@@ -24,25 +23,14 @@ from ..const import (
     KETTLE_PRESET_RED_TEA,
     KETTLE_PRESET_TEA_BAG,
     KETTLE_PRESET_WHITE_TEA,
-    PROFILE_TYPE_KETTLE,
     VENDOR_POLARIS,
 )
-from .profiles import SelectConfig, WaterHeaterProfile
+from .profiles import KettleProfile, SelectConfig
 
 PROFILES = [
-    WaterHeaterProfile(
+    KettleProfile(
         vendor=VENDOR_POLARIS,
         device_type=2,
-        profile_type=PROFILE_TYPE_KETTLE,
-        min_temp=30,
-        max_temp=100,
-        target_temp_step=5.0,
-        supported_features=WaterHeaterEntityFeature.TARGET_TEMPERATURE
-        | WaterHeaterEntityFeature.OPERATION_MODE
-        | WaterHeaterEntityFeature.ON_OFF,
-        cmd_mode=UdpCommandType.MODE,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         default_operation_mode=KETTLE_MODE_BOILING,
         operation_modes_map={
             STATE_OFF: 0,
@@ -73,19 +61,9 @@ PROFILES = [
         },
         switches=[FEATURE_CHILD_LOCK],
     ),
-    WaterHeaterProfile(
+    KettleProfile(
         vendor=VENDOR_POLARIS,
         device_type=35,
-        profile_type=PROFILE_TYPE_KETTLE,
-        min_temp=30,
-        max_temp=100,
-        target_temp_step=5.0,
-        supported_features=WaterHeaterEntityFeature.TARGET_TEMPERATURE
-        | WaterHeaterEntityFeature.OPERATION_MODE
-        | WaterHeaterEntityFeature.ON_OFF,
-        cmd_mode=UdpCommandType.MODE,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         default_operation_mode=KETTLE_MODE_BOILING,
         operation_modes_map={
             STATE_OFF: 0,
@@ -116,19 +94,9 @@ PROFILES = [
         },
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    WaterHeaterProfile(
+    KettleProfile(
         vendor=VENDOR_POLARIS,
         device_type=51,
-        profile_type=PROFILE_TYPE_KETTLE,
-        min_temp=30,
-        max_temp=100,
-        target_temp_step=5.0,
-        supported_features=WaterHeaterEntityFeature.TARGET_TEMPERATURE
-        | WaterHeaterEntityFeature.OPERATION_MODE
-        | WaterHeaterEntityFeature.ON_OFF,
-        cmd_mode=UdpCommandType.MODE,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         default_operation_mode=KETTLE_MODE_BOILING,
         operation_modes_map={
             STATE_OFF: 0,
@@ -159,19 +127,9 @@ PROFILES = [
         },
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    WaterHeaterProfile(
+    KettleProfile(
         vendor=VENDOR_POLARIS,
         device_type=56,
-        profile_type=PROFILE_TYPE_KETTLE,
-        min_temp=30,
-        max_temp=100,
-        target_temp_step=5.0,
-        supported_features=WaterHeaterEntityFeature.TARGET_TEMPERATURE
-        | WaterHeaterEntityFeature.OPERATION_MODE
-        | WaterHeaterEntityFeature.ON_OFF,
-        cmd_mode=UdpCommandType.MODE,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         default_operation_mode=KETTLE_MODE_BOILING,
         operation_modes_map={
             STATE_OFF: 0,
@@ -202,19 +160,9 @@ PROFILES = [
         },
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    WaterHeaterProfile(
+    KettleProfile(
         vendor=VENDOR_POLARIS,
         device_type=60,
-        profile_type=PROFILE_TYPE_KETTLE,
-        min_temp=30,
-        max_temp=100,
-        target_temp_step=5.0,
-        supported_features=WaterHeaterEntityFeature.TARGET_TEMPERATURE
-        | WaterHeaterEntityFeature.OPERATION_MODE
-        | WaterHeaterEntityFeature.ON_OFF,
-        cmd_mode=UdpCommandType.MODE,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         default_operation_mode=KETTLE_MODE_BOILING,
         operation_modes_map={
             STATE_OFF: 0,
@@ -245,19 +193,9 @@ PROFILES = [
         },
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    WaterHeaterProfile(
+    KettleProfile(
         vendor=VENDOR_POLARIS,
         device_type=98,
-        profile_type=PROFILE_TYPE_KETTLE,
-        min_temp=30,
-        max_temp=100,
-        target_temp_step=5.0,
-        supported_features=WaterHeaterEntityFeature.TARGET_TEMPERATURE
-        | WaterHeaterEntityFeature.OPERATION_MODE
-        | WaterHeaterEntityFeature.ON_OFF,
-        cmd_mode=UdpCommandType.MODE,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         default_operation_mode=KETTLE_MODE_BOILING,
         operation_modes_map={
             STATE_OFF: 0,
@@ -288,19 +226,9 @@ PROFILES = [
         },
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    WaterHeaterProfile(
+    KettleProfile(
         vendor=VENDOR_POLARIS,
         device_type=188,
-        profile_type=PROFILE_TYPE_KETTLE,
-        min_temp=30,
-        max_temp=100,
-        target_temp_step=5.0,
-        supported_features=WaterHeaterEntityFeature.TARGET_TEMPERATURE
-        | WaterHeaterEntityFeature.OPERATION_MODE
-        | WaterHeaterEntityFeature.ON_OFF,
-        cmd_mode=UdpCommandType.MODE,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         default_operation_mode=KETTLE_MODE_BOILING,
         operation_modes_map={
             STATE_OFF: 0,
@@ -331,19 +259,9 @@ PROFILES = [
         },
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    WaterHeaterProfile(
+    KettleProfile(
         vendor=VENDOR_POLARIS,
         device_type=223,
-        profile_type=PROFILE_TYPE_KETTLE,
-        min_temp=30,
-        max_temp=100,
-        target_temp_step=5.0,
-        supported_features=WaterHeaterEntityFeature.TARGET_TEMPERATURE
-        | WaterHeaterEntityFeature.OPERATION_MODE
-        | WaterHeaterEntityFeature.ON_OFF,
-        cmd_mode=UdpCommandType.MODE,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         default_operation_mode=KETTLE_MODE_BOILING,
         operation_modes_map={
             STATE_OFF: 0,
@@ -374,19 +292,9 @@ PROFILES = [
         },
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    WaterHeaterProfile(
+    KettleProfile(
         vendor=VENDOR_POLARIS,
         device_type=262,
-        profile_type=PROFILE_TYPE_KETTLE,
-        min_temp=30,
-        max_temp=100,
-        target_temp_step=5.0,
-        supported_features=WaterHeaterEntityFeature.TARGET_TEMPERATURE
-        | WaterHeaterEntityFeature.OPERATION_MODE
-        | WaterHeaterEntityFeature.ON_OFF,
-        cmd_mode=UdpCommandType.MODE,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         default_operation_mode=KETTLE_MODE_BOILING,
         operation_modes_map={
             STATE_OFF: 0,
@@ -417,19 +325,9 @@ PROFILES = [
         },
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    WaterHeaterProfile(
+    KettleProfile(
         vendor=VENDOR_POLARIS,
         device_type=263,
-        profile_type=PROFILE_TYPE_KETTLE,
-        min_temp=30,
-        max_temp=100,
-        target_temp_step=5.0,
-        supported_features=WaterHeaterEntityFeature.TARGET_TEMPERATURE
-        | WaterHeaterEntityFeature.OPERATION_MODE
-        | WaterHeaterEntityFeature.ON_OFF,
-        cmd_mode=UdpCommandType.MODE,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         default_operation_mode=KETTLE_MODE_BOILING,
         operation_modes_map={
             STATE_OFF: 0,
@@ -460,19 +358,9 @@ PROFILES = [
         },
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    WaterHeaterProfile(
+    KettleProfile(
         vendor=VENDOR_POLARIS,
         device_type=275,
-        profile_type=PROFILE_TYPE_KETTLE,
-        min_temp=30,
-        max_temp=100,
-        target_temp_step=5.0,
-        supported_features=WaterHeaterEntityFeature.TARGET_TEMPERATURE
-        | WaterHeaterEntityFeature.OPERATION_MODE
-        | WaterHeaterEntityFeature.ON_OFF,
-        cmd_mode=UdpCommandType.MODE,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         default_operation_mode=KETTLE_MODE_BOILING,
         operation_modes_map={
             STATE_OFF: 0,
@@ -503,19 +391,9 @@ PROFILES = [
         },
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    WaterHeaterProfile(
+    KettleProfile(
         vendor=VENDOR_POLARIS,
         device_type=294,
-        profile_type=PROFILE_TYPE_KETTLE,
-        min_temp=30,
-        max_temp=100,
-        target_temp_step=5.0,
-        supported_features=WaterHeaterEntityFeature.TARGET_TEMPERATURE
-        | WaterHeaterEntityFeature.OPERATION_MODE
-        | WaterHeaterEntityFeature.ON_OFF,
-        cmd_mode=UdpCommandType.MODE,
-        cmd_target_temp=UdpCommandType.TARGET_TEMPERATURE,
-        cmd_current_temp=UdpCommandType.TEMPERATURE,
         default_operation_mode=KETTLE_MODE_BOILING,
         operation_modes_map={
             STATE_OFF: 0,

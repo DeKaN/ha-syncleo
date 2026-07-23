@@ -7,8 +7,6 @@ from homeassistant.const import (
     UnitOfTemperature,
 )
 
-from pysyncleo.enums import UdpCommandType
-
 from ..const import (
     FEATURE_BACKLIGHT,
     FEATURE_BREEZER_DAMPER,
@@ -62,7 +60,6 @@ PROFILES = [
         | FanEntityFeature.TURN_OFF
         | FanEntityFeature.TURN_ON,
         speed_count=8,
-        cmd_mode=UdpCommandType.MODE,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
@@ -70,7 +67,6 @@ PROFILES = [
             PRESET_TURBO: 4,
         },
         default_preset_mode=PRESET_AUTO,
-        cmd_speed=UdpCommandType.SPEED,
         program_data_fields={
             PD_NIGHT_SPEED: ProgramDataField(mode=3, min_value=1, max_value=3),
             PD_COOLDOWN: ProgramDataField(mode=4, size=2, max_value=7200),
@@ -105,7 +101,6 @@ PROFILES = [
         | FanEntityFeature.TURN_OFF
         | FanEntityFeature.TURN_ON,
         speed_count=8,
-        cmd_mode=UdpCommandType.MODE,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
@@ -113,7 +108,6 @@ PROFILES = [
             PRESET_TURBO: 4,
         },
         default_preset_mode=PRESET_AUTO,
-        cmd_speed=UdpCommandType.SPEED,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_UV_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -158,7 +152,6 @@ PROFILES = [
         | FanEntityFeature.TURN_OFF
         | FanEntityFeature.TURN_ON,
         speed_count=7,
-        cmd_mode=UdpCommandType.MODE,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
@@ -167,7 +160,6 @@ PROFILES = [
             PRESET_VENTILATION: 5,
         },
         default_preset_mode=PRESET_AUTO,
-        cmd_speed=UdpCommandType.SPEED,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -220,7 +212,6 @@ PROFILES = [
         | FanEntityFeature.TURN_OFF
         | FanEntityFeature.TURN_ON,
         speed_count=8,
-        cmd_mode=UdpCommandType.MODE,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
@@ -228,7 +219,6 @@ PROFILES = [
             PRESET_TURBO: 4,
         },
         default_preset_mode=PRESET_AUTO,
-        cmd_speed=UdpCommandType.SPEED,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_UV_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -286,7 +276,6 @@ PROFILES = [
         | FanEntityFeature.TURN_OFF
         | FanEntityFeature.TURN_ON,
         speed_count=7,
-        cmd_mode=UdpCommandType.MODE,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
@@ -295,7 +284,6 @@ PROFILES = [
             PRESET_VENTILATION: 5,
         },
         default_preset_mode=PRESET_AUTO,
-        cmd_speed=UdpCommandType.SPEED,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
