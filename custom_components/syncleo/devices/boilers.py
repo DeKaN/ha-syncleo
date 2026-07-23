@@ -10,7 +10,9 @@ from homeassistant.components.water_heater import (
 from homeassistant.const import STATE_ON, UnitOfTime, UnitOfVolume
 
 from ..const import (
+    FEATURE_ACCESS_CONTROL,
     FEATURE_BSS,
+    FEATURE_ERROR,
     FEATURE_EXPENDABLES_ANODE,
     FEATURE_KEEP_WARM,
     FEATURE_SMART_MODE,
@@ -36,6 +38,17 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
+        sensors={
+            FEATURE_TANK: SensorConfig(
+                device_class=SensorDeviceClass.VOLUME_STORAGE,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfVolume.LITERS,
+            ),
+        },
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -58,6 +71,10 @@ PROFILES = [
             STATE_HEAT_PUMP: 5,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -76,6 +93,10 @@ PROFILES = [
             STATE_HEAT_PUMP: 5,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
         switches=[
             FEATURE_BSS,
         ],
@@ -91,6 +112,10 @@ PROFILES = [
             STATE_PERFORMANCE: 2,
         },
         default_operation_mode=STATE_ELECTRIC,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
     ),
     BoilerProfile(
         vendor=VENDOR_RUSCLIMATE,
@@ -105,6 +130,10 @@ PROFILES = [
             STATE_HEAT_PUMP: 5,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
         switches=[
             FEATURE_BSS,
         ],
@@ -123,6 +152,10 @@ PROFILES = [
             STATE_ON: 3,
         },
         default_operation_mode=STATE_ON,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
     ),
     BoilerProfile(
         vendor=VENDOR_RUSCLIMATE,
@@ -136,6 +169,10 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
         switches=[
             FEATURE_BSS,
         ],
@@ -192,6 +229,10 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -213,6 +254,10 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -245,6 +290,10 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -275,6 +324,10 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -298,6 +351,10 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -330,6 +387,10 @@ PROFILES = [
             STATE_ON: 3,
         },
         default_operation_mode=STATE_ON,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
     ),
     BoilerProfile(
         vendor=VENDOR_RUSCLIMATE,
@@ -343,6 +404,10 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -364,6 +429,10 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -385,6 +454,10 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+        ],
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
