@@ -68,7 +68,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: SyncleoConfigEntry) -> b
         _LOGGER.debug(
             f"Loading platforms {platforms} for {connection.device.mac_address}"
         )
-        entry.async_on_unload(entry.add_update_listener(update_listener))
         await hass.config_entries.async_forward_entry_setups(entry, platforms)
 
         entry.async_create_background_task(
@@ -81,13 +80,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: SyncleoConfigEntry) -> b
         )
 
     return True
-
-
-async def update_listener(hass: HomeAssistant, entry: SyncleoConfigEntry) -> None:
-    _LOGGER.info(
-        f"Reloading Syncleo device {entry.data.get('host')} due to config update."
-    )
-    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
