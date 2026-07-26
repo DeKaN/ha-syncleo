@@ -18,6 +18,7 @@ from homeassistant.helpers.device_registry import format_mac
 
 from .const import (
     CONF_ATTRIBUTES,
+    CONF_FIRMWARE,
     CONF_MANUFACTURER,
     DOMAIN,
     CONF_VENDOR,
@@ -65,10 +66,15 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 new_ip = discovery_info.host
                 current_pubkey = entry.data.get(CONF_PUBLIC_KEY)
                 new_pubkey = discovery_info.properties.get(CONF_PUBLIC_KEY)
+                current_firmware = entry.data.get(CONF_FIRMWARE)
+                new_firmware = discovery_info.properties.get(CONF_FIRMWARE)
 
                 updates = {}
                 if current_ip != new_ip:
                     updates[CONF_IP_ADDRESS] = new_ip
+
+                if current_firmware != new_firmware:
+                    updates[CONF_FIRMWARE] = new_firmware
 
                 if new_pubkey and current_pubkey != new_pubkey:
                     updates[CONF_PUBLIC_KEY] = new_pubkey
@@ -159,6 +165,7 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_TOKEN: parsed_data[CONF_TOKEN],
                         CONF_PROTOCOL: protocol,
                         CONF_PUBLIC_KEY: pubkey,
+                        CONF_FIRMWARE: self._discovered_properties.get(CONF_FIRMWARE),
                         CONF_FRIENDLY_NAME: parsed_data[CONF_FRIENDLY_NAME],
                     }
                     _LOGGER.debug(

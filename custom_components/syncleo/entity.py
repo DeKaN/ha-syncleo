@@ -4,7 +4,7 @@ from typing import Dict
 from homeassistant.const import CONF_MAC, CONF_MODEL
 from homeassistant.core import callback
 from homeassistant.helpers.entity import Entity
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC, DeviceInfo
 from homeassistant.helpers.event import async_call_later
 
 from pysyncleo.commands import (
@@ -39,6 +39,7 @@ from pysyncleo.commands import (
 from pysyncleo.enums import ConnectionState, UdpCommandType
 
 from .const import (
+    CONF_FIRMWARE,
     DOMAIN,
     CONF_MANUFACTURER,
     FEATURE_ACCESS_CONTROL,
@@ -318,9 +319,12 @@ class SyncleoBaseEntity(Entity):
     @property
     def device_info(self) -> DeviceInfo:
         """Return centralized device info for the Home Assistant Device Registry."""
+        mac_address = self._entry.data[CONF_MAC]
         return DeviceInfo(
-            identifiers={(DOMAIN, self._entry.data[CONF_MAC])},
+            identifiers={(DOMAIN, mac_address)},
+            connections={(CONNECTION_NETWORK_MAC, mac_address)},
             name=self._entry.title,
             manufacturer=self._entry.data[CONF_MANUFACTURER],
             model=self._entry.data[CONF_MODEL],
+            sw_version=self._entry.data[CONF_FIRMWARE],
         )
