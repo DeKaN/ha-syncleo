@@ -83,7 +83,7 @@ RSSI_SENSOR_CONFIG = SensorConfig(
 class PlatformProviderBase:
     @property
     def supported_platforms(self) -> List[Platform]:
-        return []
+        return [Platform.UPDATE]
 
 
 @dataclass(kw_only=True)

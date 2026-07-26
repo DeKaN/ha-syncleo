@@ -3,6 +3,11 @@ DOMAIN = "syncleo"
 VENDOR_RUSCLIMATE = "rusclimate"
 VENDOR_POLARIS = "polaris"
 
+FIRMVARE_HOST_BY_VENDOR = {
+    VENDOR_RUSCLIMATE: "firmware.cdn.rusklimat.ru",
+    VENDOR_POLARIS: "firmware.cdn.polaris-iot.com",
+}
+
 CONF_ATTRIBUTES = "attributes"
 CONF_FIRMWARE = "firmware"
 CONF_MANUFACTURER = "manufacturer"

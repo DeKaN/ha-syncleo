@@ -10,7 +10,7 @@ from homeassistant.const import (
 from pysyncleo.models import SyncleoUdpDevice
 
 from .devices import DEVICE_PROFILES, DeviceBaseProfile
-from .const import CONF_ATTRIBUTES, CONF_VENDOR
+from .const import CONF_ATTRIBUTES, CONF_VENDOR, FIRMVARE_HOST_BY_VENDOR
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -57,3 +57,7 @@ def get_device_profile(device: SyncleoUdpDevice) -> DeviceBaseProfile | None:
             device.device_type,
         )
     return profile
+
+
+def get_device_firmware_url(profile: DeviceBaseProfile) -> str:
+    return f"https://{FIRMVARE_HOST_BY_VENDOR[profile.vendor]}/{profile.vendor}/{profile.device_type}/slots/latest.json"
