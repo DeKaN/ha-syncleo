@@ -183,7 +183,9 @@ class SyncleoBaseEntity(Entity):
     def _handle_connection_state(self, state: ConnectionState):
         self.async_write_ha_state()
         if state == (
-            last_state := self._device_connection_states.get(self._device_unique_id, "")
+            last_state := self._device_connection_states.get(
+                self._device_unique_id, ConnectionState.NOT_CONNECTED
+            )
         ):
             return
 
@@ -307,10 +309,6 @@ class SyncleoBaseEntity(Entity):
         _LOGGER.info("Attempting to reconnect to %s...", self._device_unique_id)
         try:
             await self._connection.connect()
-
-            if self._connection.state != ConnectionState.CONNECTED:
-                self._schedule_reconnect()
-
         except Exception as e:
             _LOGGER.error(
                 "Reconnection attempt failed for %s: %s", self._device_unique_id, e
