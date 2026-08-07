@@ -47,6 +47,15 @@ class ProgramDataField(NumberBounds):
     size: int = 1
 
 
+@dataclass
+class LightConfig:
+    red_key: str
+    green_key: str
+    blue_key: str
+    brightness_key: Optional[str] = None
+    brightness_levels: int = 255
+
+
 @dataclass(kw_only=True)
 class SelectConfig:
     options_map: Dict[str, int]
@@ -96,6 +105,16 @@ class BinarySensorMixin(PlatformProviderBase):
         return (
             platforms + [Platform.BINARY_SENSOR] if self.binary_sensors else platforms
         )
+
+
+@dataclass(kw_only=True)
+class LightMixin(PlatformProviderBase):
+    lights: Dict[str, LightConfig] = field(default_factory=dict)
+
+    @property
+    def supported_platforms(self) -> List[Platform]:
+        platforms = super().supported_platforms
+        return platforms + [Platform.LIGHT] if self.lights else platforms
 
 
 @dataclass(kw_only=True)
@@ -217,6 +236,7 @@ class ClimateProfile(
 class WaterHeaterProfile(
     DeviceBaseProfile,
     BinarySensorMixin,
+    LightMixin,
     NumberMixin,
     SensorMixin,
     SwitchMixin,
