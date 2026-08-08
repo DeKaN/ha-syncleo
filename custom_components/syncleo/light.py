@@ -112,7 +112,9 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
             self._brightness_key
             and self._brightness_key in self._profile.program_data_fields
         ):
-            await self.async_set_program_data(self._feature_key, bytes([target_level]))
+            await self.async_set_program_data(
+                self._brightness_key, bytes([target_level])
+            )
         else:
             await self.async_send_command(CmdBacklight(state=True))
 
@@ -126,7 +128,7 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
             self._brightness_key
             and self._brightness_key in self._profile.program_data_fields
         ):
-            await self.async_set_program_data(self._feature_key, bytes([0]))
+            await self.async_set_program_data(self._brightness_key, bytes([0]))
         else:
             await self.async_send_command(CmdBacklight(state=False))
 
