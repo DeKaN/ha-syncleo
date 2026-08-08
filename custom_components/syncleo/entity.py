@@ -262,46 +262,57 @@ class SyncleoBaseEntity(Entity):
         return bytes(field.size)
 
     async def async_set_program_data(self, feature_key: str, value: bytes):
-        field = self._profile.program_data_fields.get(feature_key)
-        if not field:
-            _LOGGER.error(
-                "Attempted to set unknown program_data field: %s", feature_key
-            )
-            return
+        await self.async_set_program_data_fields({feature_key: value})
 
-        if len(value) != field.size:
-            _LOGGER.warning(
-                "Size mismatch for %s: expected %d bytes, got %d bytes.",
-                feature_key,
-                field.size,
-                len(value),
-            )
-            value = value.rjust(field.size, b"\x00")[: field.size]
+    async def async_set_program_data_fields(self, updates: dict[str, bytes]) -> None:
+        modes_to_update: dict[int, bytearray] = {}
 
-        mode_length = max(
-            (
-                f.offset + f.size
-                for f in self._profile.program_data_fields.values()
-                if f.mode == field.mode
-            ),
-            default=field.offset + field.size,
-        )
+        for feature_key, val in updates.items():
+            field = self._profile.program_data_fields.get(feature_key)
+            if not field:
+                _LOGGER.error(
+                    "Attempted to set unknown program_data field: %s", feature_key
+                )
+                continue
 
-        cached_data = self._program_data_modes.get(field.mode)
+            if len(val) != field.size:
+                _LOGGER.warning(
+                    "Size mismatch for %s: expected %d bytes, got %d bytes.",
+                    feature_key,
+                    field.size,
+                    len(val),
+                )
+                val = val.rjust(field.size, b"\x00")[: field.size]
 
-        if cached_data is None:
-            data = bytearray(mode_length)
-        else:
-            data = bytearray(cached_data)
-            if len(data) < mode_length:
-                data.extend(b"\x00" * (mode_length - len(data)))
+            if field.mode not in modes_to_update:
+                mode_length = max(
+                    (
+                        f.offset + f.size
+                        for f in self._profile.program_data_fields.values()
+                        if f.mode == field.mode
+                    ),
+                    default=field.offset + field.size,
+                )
 
-        data[field.offset : field.offset + field.size] = value
+                cached_data = self._program_data_modes.get(field.mode)
 
-        await self.async_send_command(CmdProgramData(data=bytes(data), mode=field.mode))
+                if cached_data is None:
+                    data = bytearray(mode_length)
+                else:
+                    data = bytearray(cached_data)
+                    if len(data) < mode_length:
+                        data.extend(b"\x00" * (mode_length - len(data)))
 
-        self._program_data_modes[field.mode] = data
-        self.async_write_ha_state()
+                modes_to_update[field.mode] = data
+
+            modes_to_update[field.mode][field.offset : field.offset + field.size] = val
+
+        for mode, data in modes_to_update.items():
+            await self.async_send_command(CmdProgramData(data=bytes(data), mode=mode))
+            self._program_data_modes[mode] = data
+
+        if modes_to_update:
+            self.async_write_ha_state()
 
     async def _async_reconnect(self):
         if self._connection.state == ConnectionState.CONNECTED:

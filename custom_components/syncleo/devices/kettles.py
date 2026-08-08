@@ -5,6 +5,7 @@ from ..const import (
     FEATURE_CHILD_LOCK,
     FEATURE_ERROR,
     FEATURE_KETTLE_TEMPERATURE_PRESET,
+    FEATURE_NIGHT,
     FEATURE_VOLUME,
     KETTLE_MODE_BOILING,
     KETTLE_MODE_BOILING_KEEP,
@@ -31,660 +32,104 @@ from ..const import (
 )
 from .profiles import KettleProfile, LightConfig, ProgramDataField, SelectConfig
 
+
+def _create_polaris_kettle(
+    device_type: int,
+    has_tea_time: bool = False,
+    has_boiling_keep: bool = False,
+    **kwargs,
+) -> KettleProfile:
+    modes = {
+        STATE_OFF: 0,
+        KETTLE_MODE_BOILING: 1,
+        KETTLE_MODE_WARM_UP: 3,
+        KETTLE_MODE_WARM_UP_KEEP: 4,
+        KETTLE_MODE_IQ_BOILING: 5,
+    }
+
+    if has_boiling_keep:
+        modes[KETTLE_MODE_BOILING_KEEP] = 2
+    if has_tea_time:
+        modes[KETTLE_MODE_TEA_TIME] = 6
+
+    params = {
+        "vendor": VENDOR_POLARIS,
+        "device_type": device_type,
+        "default_operation_mode": KETTLE_MODE_BOILING,
+        "operation_modes_map": modes,
+        "binary_sensors": [FEATURE_ERROR],
+        "switches": [FEATURE_CHILD_LOCK],
+        "selects": {
+            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
+                options_map={
+                    KETTLE_PRESET_NONE: 0,
+                    KETTLE_PRESET_BLACK_TEA: 100,
+                    KETTLE_PRESET_BABY_BOTTLE: 40,
+                    KETTLE_PRESET_INSTANT_COFFEE: 95,
+                    KETTLE_PRESET_GREEN_TEA: 80,
+                    KETTLE_PRESET_FLOWER_TEA: 80,
+                    KETTLE_PRESET_TEA_BAG: 100,
+                    KETTLE_PRESET_RED_TEA: 90,
+                    KETTLE_PRESET_PUER: 95,
+                    KETTLE_PRESET_OOLONG_TEA: 90,
+                    KETTLE_PRESET_WHITE_TEA: 65,
+                    KETTLE_PRESET_HERBAL_TEA: 90,
+                }
+            )
+        }
+        | kwargs,
+    }
+
+    return KettleProfile(**params)
+
+
 PROFILES = [
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=2,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=6,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=8,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=29,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(device_type=2, has_tea_time=True),
+    _create_polaris_kettle(device_type=6),
+    _create_polaris_kettle(device_type=8, has_tea_time=True),
+    _create_polaris_kettle(device_type=29),
+    _create_polaris_kettle(
         device_type=35,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
+        has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=38,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(device_type=38),
+    _create_polaris_kettle(
         device_type=51,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
+        has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=52,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=53,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=54,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(device_type=52),
+    _create_polaris_kettle(device_type=53, has_tea_time=True),
+    _create_polaris_kettle(device_type=54),
+    _create_polaris_kettle(
         device_type=56,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
+        has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=57,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=58,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=59,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(device_type=57),
+    _create_polaris_kettle(device_type=58, has_tea_time=True),
+    _create_polaris_kettle(device_type=59),
+    _create_polaris_kettle(
         device_type=60,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
+        has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=61,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
+    _create_polaris_kettle(device_type=61),
+    _create_polaris_kettle(device_type=62, has_tea_time=True),
+    _create_polaris_kettle(device_type=63),
+    _create_polaris_kettle(
+        device_type=67, switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME]
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=62,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=63,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=82,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(device_type=82),
+    _create_polaris_kettle(
         device_type=83,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
             PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
         lights={
             FEATURE_BACKLIGHT: LightConfig(
                 red_key=PD_BACKLIGHT_RED,
@@ -693,590 +138,242 @@ PROFILES = [
             )
         },
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=86,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
+    _create_polaris_kettle(
+        device_type=84,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
+        lights={
+            FEATURE_BACKLIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            )
         },
-        switches=[FEATURE_CHILD_LOCK],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=97,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(device_type=86),
+    _create_polaris_kettle(device_type=97),
+    _create_polaris_kettle(
         device_type=98,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
+        has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=105,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
+    _create_polaris_kettle(device_type=105),
+    _create_polaris_kettle(device_type=106),
+    _create_polaris_kettle(device_type=117),
+    _create_polaris_kettle(
+        device_type=121, switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME]
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=106,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=117,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(
         device_type=165,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_BOILING_KEEP: 2,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
+        has_tea_time=True,
+        has_boiling_keep=True,
         switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=177,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
+    _create_polaris_kettle(
+        device_type=175,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
+        lights={
+            FEATURE_BACKLIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            )
         },
-        switches=[FEATURE_CHILD_LOCK],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=185,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
+    _create_polaris_kettle(
+        device_type=176,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
+        lights={
+            FEATURE_BACKLIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            )
         },
-        switches=[FEATURE_CHILD_LOCK],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(device_type=177),
+    _create_polaris_kettle(device_type=185, has_tea_time=True),
+    _create_polaris_kettle(
         device_type=188,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
+        has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=194,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
+    _create_polaris_kettle(
+        device_type=189,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
+        lights={
+            FEATURE_BACKLIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            )
         },
-        switches=[FEATURE_CHILD_LOCK],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=196,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
+    _create_polaris_kettle(device_type=194),
+    _create_polaris_kettle(device_type=196),
+    _create_polaris_kettle(
+        device_type=205,
+        has_boiling_keep=True,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
-        device_type=208,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
-        switches=[FEATURE_CHILD_LOCK],
-    ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(device_type=208),
+    _create_polaris_kettle(
         device_type=223,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
+        has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(
+        device_type=244,
+        has_boiling_keep=True,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_BACKLIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            )
+        },
+    ),
+    _create_polaris_kettle(
+        device_type=253,
+        has_boiling_keep=True,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_BACKLIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            )
+        },
+    ),
+    _create_polaris_kettle(
+        device_type=254,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_BACKLIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            )
+        },
+    ),
+    _create_polaris_kettle(
+        device_type=255,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_BACKLIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            )
+        },
+    ),
+    _create_polaris_kettle(
+        device_type=260,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_BACKLIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            )
+        },
+    ),
+    _create_polaris_kettle(
         device_type=262,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
+        has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(
         device_type=263,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
+        has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(
+        device_type=271,
+        has_boiling_keep=True,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_BACKLIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            )
+        },
+    ),
+    _create_polaris_kettle(
         device_type=275,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
+        has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    KettleProfile(
-        vendor=VENDOR_POLARIS,
+    _create_polaris_kettle(
         device_type=294,
-        default_operation_mode=KETTLE_MODE_BOILING,
-        operation_modes_map={
-            STATE_OFF: 0,
-            KETTLE_MODE_BOILING: 1,
-            KETTLE_MODE_WARM_UP: 3,
-            KETTLE_MODE_WARM_UP_KEEP: 4,
-            KETTLE_MODE_IQ_BOILING: 5,
-            KETTLE_MODE_TEA_TIME: 6,
-        },
-        binary_sensors=[FEATURE_ERROR],
-        selects={
-            FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
-                options_map={
-                    KETTLE_PRESET_NONE: 0,
-                    KETTLE_PRESET_BLACK_TEA: 100,
-                    KETTLE_PRESET_BABY_BOTTLE: 40,
-                    KETTLE_PRESET_INSTANT_COFFEE: 95,
-                    KETTLE_PRESET_GREEN_TEA: 80,
-                    KETTLE_PRESET_FLOWER_TEA: 80,
-                    KETTLE_PRESET_TEA_BAG: 100,
-                    KETTLE_PRESET_RED_TEA: 90,
-                    KETTLE_PRESET_PUER: 95,
-                    KETTLE_PRESET_OOLONG_TEA: 90,
-                    KETTLE_PRESET_WHITE_TEA: 65,
-                    KETTLE_PRESET_HERBAL_TEA: 90,
-                }
-            ),
-        },
+        has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=308,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_BACKLIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            )
+        },
     ),
 ]

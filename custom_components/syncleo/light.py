@@ -93,11 +93,15 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
         return (r, g, b)
 
     async def async_turn_on(self, **kwargs: Any) -> None:
+        updates = {}
+
         if ATTR_RGB_COLOR in kwargs:
             r, g, b = kwargs[ATTR_RGB_COLOR]
-            await self.async_set_program_data(self._red_key, bytes([r]))
-            await self.async_set_program_data(self._green_key, bytes([g]))
-            await self.async_set_program_data(self._blue_key, bytes([b]))
+            updates |= {
+                self._red_key: bytes([r]),
+                self._green_key: bytes([g]),
+                self._blue_key: bytes([b]),
+            }
 
         if ATTR_BRIGHTNESS in kwargs:
             target_level = math.ceil(
@@ -112,11 +116,12 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
             self._brightness_key
             and self._brightness_key in self._profile.program_data_fields
         ):
-            await self.async_set_program_data(
-                self._brightness_key, bytes([target_level])
-            )
+            updates[self._brightness_key] = bytes([target_level])
         else:
             await self.async_send_command(CmdBacklight(state=True))
+
+        if updates:
+            await self.async_set_program_data_fields(updates)
 
         self._current_level = target_level
         self._last_level = target_level
