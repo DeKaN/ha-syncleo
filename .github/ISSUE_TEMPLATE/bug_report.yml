@@ -16,7 +16,6 @@ body:
       options:
         - Rusclimate (Hommyn)
         - Polaris
-        - Bork
     validations:
       required: true
 

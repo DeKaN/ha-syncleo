@@ -68,6 +68,8 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 new_pubkey = discovery_info.properties.get(CONF_PUBLIC_KEY)
                 current_firmware = entry.data.get(CONF_FIRMWARE)
                 new_firmware = discovery_info.properties.get(CONF_FIRMWARE)
+                current_port = entry.data.get(CONF_PORT)
+                new_port = discovery_info.port
 
                 updates = {}
                 if current_ip != new_ip:
@@ -78,6 +80,9 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 if new_pubkey and current_pubkey != new_pubkey:
                     updates[CONF_PUBLIC_KEY] = new_pubkey
+
+                if new_port and current_port != new_port:
+                    updates[CONF_PORT] = new_port
 
                 if not updates:
                     return self.async_abort(reason="already_configured")

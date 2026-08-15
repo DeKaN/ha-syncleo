@@ -76,9 +76,8 @@ def _create_polaris_kettle(
                     KETTLE_PRESET_HERBAL_TEA: 90,
                 }
             )
-        }
-        | kwargs,
-    }
+        },
+    } | kwargs
 
     return KettleProfile(**params)
 
