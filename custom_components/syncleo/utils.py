@@ -19,14 +19,14 @@ def parse_share_url(url: str) -> dict:
     """Extracts device metadata and authorization tokens from the Syncleo share URL."""
     parsed = urllib.parse.urlparse(url)
 
-    path_parts = parsed.path.strip("/").split("/")
+    path_parts = parsed.path.strip("/").split("/")[::-1]
 
     if len(path_parts) < 3:
         raise ValueError("Invalid URL path structure")
 
-    vendor = path_parts[0]
+    vendor = path_parts[2]
     device_type = int(path_parts[1])
-    mac = path_parts[2].lower()
+    mac = path_parts[0].lower()
 
     query = urllib.parse.parse_qs(parsed.query)
     token = query.get("token", [""])[0]
@@ -43,7 +43,7 @@ def parse_share_url(url: str) -> dict:
         CONF_DEVICE_CLASS: device_type,
         CONF_MAC: mac,
         CONF_TOKEN: token,
-        CONF_FRIENDLY_NAME: urllib.parse.unquote(name),
+        CONF_FRIENDLY_NAME: name,
         CONF_ATTRIBUTES: attributes,
     }
 
