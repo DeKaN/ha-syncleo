@@ -76,303 +76,538 @@ def _create_polaris_kettle(
                     KETTLE_PRESET_HERBAL_TEA: 90,
                 }
             )
-        },
+        }
     } | kwargs
 
     return KettleProfile(**params)
 
 
 PROFILES = [
-    _create_polaris_kettle(device_type=2, has_tea_time=True),
-    _create_polaris_kettle(device_type=6),
-    _create_polaris_kettle(device_type=8, has_tea_time=True),
-    _create_polaris_kettle(device_type=29),
     _create_polaris_kettle(
-        device_type=35,
+        device_type=2,
         has_tea_time=True,
-        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        target_temp_step=5.0,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    _create_polaris_kettle(device_type=38),
+    _create_polaris_kettle(
+        device_type=6,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=8,
+        has_tea_time=True,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=29,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=36,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_NIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            ),
+        },
+    ),
+    _create_polaris_kettle(
+        device_type=37,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_NIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            ),
+        },
+    ),
+    _create_polaris_kettle(
+        device_type=38,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
     _create_polaris_kettle(
         device_type=51,
         has_tea_time=True,
+        target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    _create_polaris_kettle(device_type=52),
-    _create_polaris_kettle(device_type=53, has_tea_time=True),
-    _create_polaris_kettle(device_type=54),
+    _create_polaris_kettle(
+        device_type=52,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=53,
+        has_tea_time=True,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=54,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
     _create_polaris_kettle(
         device_type=56,
         has_tea_time=True,
-        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        target_temp_step=5.0,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    _create_polaris_kettle(device_type=57),
-    _create_polaris_kettle(device_type=58, has_tea_time=True),
-    _create_polaris_kettle(device_type=59),
+    _create_polaris_kettle(
+        device_type=57,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=58,
+        has_tea_time=True,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=59,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
     _create_polaris_kettle(
         device_type=60,
         has_tea_time=True,
+        target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    _create_polaris_kettle(device_type=61),
-    _create_polaris_kettle(device_type=62, has_tea_time=True),
-    _create_polaris_kettle(device_type=63),
     _create_polaris_kettle(
-        device_type=67, switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME]
-    ),
-    _create_polaris_kettle(device_type=82),
-    _create_polaris_kettle(
-        device_type=83,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
-        program_data_fields={
-            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
-            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
-            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
-        },
-        lights={
-            FEATURE_BACKLIGHT: LightConfig(
-                red_key=PD_BACKLIGHT_RED,
-                green_key=PD_BACKLIGHT_GREEN,
-                blue_key=PD_BACKLIGHT_BLUE,
-            )
-        },
+        device_type=61,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
     _create_polaris_kettle(
-        device_type=84,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
-        program_data_fields={
-            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
-            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
-            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
-        },
-        lights={
-            FEATURE_BACKLIGHT: LightConfig(
-                red_key=PD_BACKLIGHT_RED,
-                green_key=PD_BACKLIGHT_GREEN,
-                blue_key=PD_BACKLIGHT_BLUE,
-            )
-        },
-    ),
-    _create_polaris_kettle(device_type=86),
-    _create_polaris_kettle(device_type=97),
-    _create_polaris_kettle(
-        device_type=98,
+        device_type=62,
         has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
-    _create_polaris_kettle(device_type=105),
-    _create_polaris_kettle(device_type=106),
-    _create_polaris_kettle(device_type=117),
     _create_polaris_kettle(
-        device_type=121, switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME]
+        device_type=63,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=67,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME]
+    ),
+    _create_polaris_kettle(
+        device_type=82,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=83,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=84,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=85,
+        has_tea_time=True,
+        target_temp_step=5.0,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(device_type=86,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_NIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            ),
+        },
+    ),
+    _create_polaris_kettle(
+        device_type=97,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_NIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            ),
+        },
+    ),
+    _create_polaris_kettle(
+        device_type=98,
+        has_tea_time=True,
+        target_temp_step=5.0,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=105,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=106,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_NIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            ),
+        },
+    ),
+    _create_polaris_kettle(
+        device_type=117,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_NIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            ),
+        },
+    ),
+    _create_polaris_kettle(
+        device_type=121,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME]
+    ),
+    _create_polaris_kettle(
+        device_type=139,
+        has_tea_time=True,
+        target_temp_step=5.0,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
+        device_type=164,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_NIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=165,
         has_tea_time=True,
-        has_boiling_keep=True,
         switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
     _create_polaris_kettle(
         device_type=175,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
             PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
         lights={
-            FEATURE_BACKLIGHT: LightConfig(
+            FEATURE_NIGHT: LightConfig(
                 red_key=PD_BACKLIGHT_RED,
                 green_key=PD_BACKLIGHT_GREEN,
                 blue_key=PD_BACKLIGHT_BLUE,
-            )
+            ),
         },
     ),
     _create_polaris_kettle(
         device_type=176,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
             PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
         lights={
-            FEATURE_BACKLIGHT: LightConfig(
+            FEATURE_NIGHT: LightConfig(
                 red_key=PD_BACKLIGHT_RED,
                 green_key=PD_BACKLIGHT_GREEN,
                 blue_key=PD_BACKLIGHT_BLUE,
-            )
+            ),
         },
     ),
-    _create_polaris_kettle(device_type=177),
-    _create_polaris_kettle(device_type=185, has_tea_time=True),
+    _create_polaris_kettle(
+        device_type=177,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_NIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            ),
+        },
+    ),
+    _create_polaris_kettle(
+        device_type=185,
+        has_tea_time=True,
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
     _create_polaris_kettle(
         device_type=188,
         has_tea_time=True,
+        target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
     _create_polaris_kettle(
         device_type=189,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
             PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
         lights={
-            FEATURE_BACKLIGHT: LightConfig(
+            FEATURE_NIGHT: LightConfig(
                 red_key=PD_BACKLIGHT_RED,
                 green_key=PD_BACKLIGHT_GREEN,
                 blue_key=PD_BACKLIGHT_BLUE,
-            )
+            ),
         },
     ),
-    _create_polaris_kettle(device_type=194),
-    _create_polaris_kettle(device_type=196),
+    _create_polaris_kettle(
+        device_type=194,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_NIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            ),
+        },
+    ),
+    _create_polaris_kettle(
+        device_type=196,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_NIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            ),
+        },
+    ),
     _create_polaris_kettle(
         device_type=205,
+        has_tea_time=True,
         has_boiling_keep=True,
         switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_NIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            ),
+        },
     ),
-    _create_polaris_kettle(device_type=208),
+    _create_polaris_kettle(
+        device_type=208,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        program_data_fields={
+            PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
+            PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
+            PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
+        },
+        lights={
+            FEATURE_NIGHT: LightConfig(
+                red_key=PD_BACKLIGHT_RED,
+                green_key=PD_BACKLIGHT_GREEN,
+                blue_key=PD_BACKLIGHT_BLUE,
+            ),
+        },
+    ),
     _create_polaris_kettle(
         device_type=223,
         has_tea_time=True,
+        target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
     _create_polaris_kettle(
         device_type=244,
-        has_boiling_keep=True,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
             PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
         lights={
-            FEATURE_BACKLIGHT: LightConfig(
+            FEATURE_NIGHT: LightConfig(
                 red_key=PD_BACKLIGHT_RED,
                 green_key=PD_BACKLIGHT_GREEN,
                 blue_key=PD_BACKLIGHT_BLUE,
-            )
+            ),
         },
     ),
     _create_polaris_kettle(
+        device_type=245,
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+    ),
+    _create_polaris_kettle(
         device_type=253,
-        has_boiling_keep=True,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
             PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
         lights={
-            FEATURE_BACKLIGHT: LightConfig(
+            FEATURE_NIGHT: LightConfig(
                 red_key=PD_BACKLIGHT_RED,
                 green_key=PD_BACKLIGHT_GREEN,
                 blue_key=PD_BACKLIGHT_BLUE,
-            )
+            ),
         },
     ),
     _create_polaris_kettle(
         device_type=254,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
             PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
         lights={
-            FEATURE_BACKLIGHT: LightConfig(
+            FEATURE_NIGHT: LightConfig(
                 red_key=PD_BACKLIGHT_RED,
                 green_key=PD_BACKLIGHT_GREEN,
                 blue_key=PD_BACKLIGHT_BLUE,
-            )
+            ),
         },
     ),
     _create_polaris_kettle(
         device_type=255,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
             PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
         lights={
-            FEATURE_BACKLIGHT: LightConfig(
+            FEATURE_NIGHT: LightConfig(
                 red_key=PD_BACKLIGHT_RED,
                 green_key=PD_BACKLIGHT_GREEN,
                 blue_key=PD_BACKLIGHT_BLUE,
-            )
+            ),
         },
     ),
     _create_polaris_kettle(
         device_type=260,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
             PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
         lights={
-            FEATURE_BACKLIGHT: LightConfig(
+            FEATURE_NIGHT: LightConfig(
                 red_key=PD_BACKLIGHT_RED,
                 green_key=PD_BACKLIGHT_GREEN,
                 blue_key=PD_BACKLIGHT_BLUE,
-            )
+            ),
         },
     ),
     _create_polaris_kettle(
         device_type=262,
         has_tea_time=True,
+        has_boiling_keep=True,
+        target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
     _create_polaris_kettle(
         device_type=263,
         has_tea_time=True,
+        target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
     _create_polaris_kettle(
         device_type=271,
-        has_boiling_keep=True,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
             PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
         lights={
-            FEATURE_BACKLIGHT: LightConfig(
+            FEATURE_NIGHT: LightConfig(
                 red_key=PD_BACKLIGHT_RED,
                 green_key=PD_BACKLIGHT_GREEN,
                 blue_key=PD_BACKLIGHT_BLUE,
-            )
+            ),
         },
     ),
     _create_polaris_kettle(
         device_type=275,
         has_tea_time=True,
+        target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
     _create_polaris_kettle(
         device_type=294,
         has_tea_time=True,
+        has_boiling_keep=True,
+        target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
     ),
     _create_polaris_kettle(
         device_type=308,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_NIGHT, FEATURE_VOLUME],
+        switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
             PD_BACKLIGHT_BLUE: ProgramDataField(mode=0, offset=2, max_value=255),
         },
         lights={
-            FEATURE_BACKLIGHT: LightConfig(
+            FEATURE_NIGHT: LightConfig(
                 red_key=PD_BACKLIGHT_RED,
                 green_key=PD_BACKLIGHT_GREEN,
                 blue_key=PD_BACKLIGHT_BLUE,
-            )
+            ),
         },
     ),
 ]

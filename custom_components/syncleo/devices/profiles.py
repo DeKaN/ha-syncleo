@@ -299,7 +299,7 @@ class KettleProfile(WaterHeaterProfile):
     profile_type: str = PROFILE_TYPE_KETTLE
     min_temp: int = 30
     max_temp: int = 100
-    target_temp_step: float = 5.0
+    target_temp_step: float = 1.0
     supported_features: int = (
         WaterHeaterEntityFeature.TARGET_TEMPERATURE
         | WaterHeaterEntityFeature.OPERATION_MODE
