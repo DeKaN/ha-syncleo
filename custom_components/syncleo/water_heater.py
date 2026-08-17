@@ -12,7 +12,7 @@ from pysyncleo.commands import CmdTargetTemperature, CmdMode, UdpCommandType
 from .const import DOMAIN
 from .devices import WaterHeaterProfile
 from .entity import SyncleoBaseEntity
-from .utils import get_device_profile
+from .utils import get_device_profile_by_device
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ async def async_setup_entry(
 ) -> None:
     """Set up the Syncleo water heater platform."""
     conn = entry.runtime_data
-    profile = get_device_profile(conn.device)
+    profile = get_device_profile_by_device(conn.device)
 
     if isinstance(profile, WaterHeaterProfile):
         async_add_entities([SyncleoWaterHeater(conn, profile, entry)])

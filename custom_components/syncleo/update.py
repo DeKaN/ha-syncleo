@@ -13,7 +13,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import CONF_FIRMWARE
 from .entity import SyncleoBaseEntity
-from .utils import get_device_firmware_url, get_device_profile
+from .utils import get_device_firmware_url, get_device_profile_by_device
 
 _LOGGER = logging.getLogger(__name__)
 SCAN_INTERVAL = timedelta(days=1)
@@ -25,7 +25,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     conn = entry.runtime_data
-    profile = get_device_profile(conn.device)
+    profile = get_device_profile_by_device(conn.device)
 
     if profile:
         async_add_entities([SyncleoUpdate(conn, profile, entry)])

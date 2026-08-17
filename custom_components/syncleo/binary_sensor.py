@@ -8,7 +8,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from .devices import BinarySensorMixin
 
 from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
-from .utils import get_device_profile
+from .utils import get_device_profile_by_device
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     conn = entry.runtime_data
-    profile = get_device_profile(conn.device)
+    profile = get_device_profile_by_device(conn.device)
 
     if isinstance(profile, BinarySensorMixin) and profile.binary_sensors:
         entities = [

@@ -16,7 +16,7 @@ from pysyncleo.models import SyncleoUdpDevice
 
 from .const import CONF_PUBLIC_KEY, CONF_PROTOCOL, CONF_VENDOR, DOMAIN
 from .models import SyncleoConfigEntry, SyncleoDomainData
-from .utils import get_device_profile
+from .utils import get_device_profile_by_device
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -61,7 +61,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: SyncleoConfigEntry) -> b
 
     entry.runtime_data = connection
 
-    profile = get_device_profile(connection.device)
+    profile = get_device_profile_by_device(connection.device)
 
     if profile:
         platforms = profile.supported_platforms
@@ -85,7 +85,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: SyncleoConfigEntry) -> b
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     connection = entry.runtime_data
-    profile = get_device_profile(connection.device)
+    profile = get_device_profile_by_device(connection.device)
 
     unload_ok = True
 

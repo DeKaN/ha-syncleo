@@ -48,13 +48,17 @@ def parse_share_url(url: str) -> dict:
     }
 
 
-def get_device_profile(device: SyncleoUdpDevice) -> DeviceBaseProfile | None:
-    profile = DEVICE_PROFILES.get((device.vendor.lower(), device.device_type))
+def get_device_profile_by_device(device: SyncleoUdpDevice) -> DeviceBaseProfile | None:
+    return get_device_profile(device.vendor, device.device_type)
+
+
+def get_device_profile(vendor: str, device_type: int) -> DeviceBaseProfile | None:
+    profile = DEVICE_PROFILES.get((vendor.lower(), device_type))
     if not profile:
         _LOGGER.error(
             "No profile found for vendor '%s' type %s",
-            device.vendor,
-            device.device_type,
+            vendor,
+            device_type,
         )
     return profile
 
