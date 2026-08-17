@@ -15,6 +15,7 @@ from homeassistant.const import (
     CONF_URL,
 )
 from homeassistant.helpers.device_registry import format_mac
+from homeassistant.helpers.translation import async_get_translations
 
 from .const import (
     CONF_ATTRIBUTES,
@@ -27,6 +28,8 @@ from .const import (
     ZEROCONF_CURVE,
     ZEROCONF_DEVICE_TYPE,
     ZEROCONF_MAC_ADDRESS,
+    POLARIS_DEVICE,
+    HOMMYN_DEVICE,
 )
 from .utils import parse_share_url
 
@@ -110,8 +113,16 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         vendor_raw = self._discovered_properties.get(CONF_VENDOR) or "Syncleo"
         vendor_name = vendor_raw.capitalize()
+        device_type = self._discovered_properties.get(ZEROCONF_DEVICE_TYPE)
 
-        self.context["title_placeholders"] = {"host": host_str, "vendor": vendor_name}
+        if vendor_name == 'Polaris':
+            device_model = POLARIS_DEVICE[int(device_type)]
+        elif vendor_name == 'Rusclimate':
+            device_model = HOMMYN_DEVICE[int(device_type)]
+        else:
+            device_model = HOMMYN_DEVICE[0]
+
+        self.context["title_placeholders"] = {"name": f"{vendor_name} {device_model['model'].replace("_", "/")}"}
 
         return await self.async_step_zeroconf_confirm()
 
@@ -122,14 +133,21 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         vendor_raw = self._discovered_properties.get(CONF_VENDOR) or "Syncleo"
         vendor_name = vendor_raw.capitalize()
-
+        device_type = self._discovered_properties.get(ZEROCONF_DEVICE_TYPE)
+        if vendor_name == 'Polaris':
+            device_model = POLARIS_DEVICE[int(device_type)]
+        elif vendor_name == 'Rusclimate':
+            device_model = HOMMYN_DEVICE[int(device_type)]
+        else:
+            device_model = HOMMYN_DEVICE[0]
+            
         if user_input is not None:
             try:
                 parsed_data = parse_share_url(user_input[CONF_URL])
                 url_mac = format_mac(parsed_data[CONF_MAC])
                 url_device_type = parsed_data[CONF_DEVICE_CLASS]
 
-                _LOGGER.debug(f"Parsed URL data: {parsed_data}")
+                _LOGGER.info(f"Parsed URL data: {parsed_data}")
 
                 mac = self._discovered_properties.get(ZEROCONF_MAC_ADDRESS)
                 if mac and format_mac(mac) != url_mac:
@@ -173,7 +191,7 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_FIRMWARE: self._discovered_properties.get(CONF_FIRMWARE),
                         CONF_FRIENDLY_NAME: parsed_data[CONF_FRIENDLY_NAME],
                     }
-                    _LOGGER.debug(
+                    _LOGGER.info(
                         "Prepared entry data for device %s: %s",
                         host_str,
                         self._entry_data,
@@ -193,16 +211,41 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_URL): str,
                 }
             ),
-            description_placeholders={"host": host_str, "vendor": vendor_name},
+            description_placeholders={"name": f"{vendor_name} {device_model['model'].replace("_", "/")}"},
             errors=errors,
         )
 
     async def async_step_model_config(self, user_input=None) -> ConfigFlowResult:
         """Allow user to review and explicitly set the device manufacturer and model."""
+
+        vendor = self._entry_data.get(CONF_VENDOR, "syncleo")
+        suggested_model = self._entry_data.get(CONF_MODEL, "Unknown Model")
+
+        device_type = self._entry_data.get(CONF_DEVICE_CLASS, 0)
+        if vendor.capitalize() == 'Polaris':
+            device_model = POLARIS_DEVICE[device_type]
+        elif vendor.capitalize() == 'Rusclimate':
+            device_model = HOMMYN_DEVICE[device_type]
+        else:
+            device_model = HOMMYN_DEVICE[0]
+
+        suggested_manufacturer = vendor.capitalize()
+        if suggested_model == "Unknown Model":
+            suggested_model = device_model['model'].replace("_", "/")
+        suggested_class = await self.get_translated_type(device_model['class'])
+
+        _LOGGER.info(
+            "Calculated suggested manufacturer '%s', model '%s', class '%s'",
+            suggested_manufacturer,
+            suggested_model,
+            suggested_class,
+        )
+
         if user_input is not None:
             self._entry_data[CONF_MODEL] = user_input[CONF_MODEL]
             self._entry_data[CONF_MANUFACTURER] = user_input[CONF_MANUFACTURER]
-
+            self._entry_data[CONF_FRIENDLY_NAME] = user_input[CONF_FRIENDLY_NAME]
+            # Валидацию сделать на разрешенные символы !!!
             entry_title = self._entry_data.get(
                 CONF_FRIENDLY_NAME, user_input[CONF_MODEL]
             )
@@ -217,41 +260,25 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 data=self._entry_data,
             )
 
-        vendor = self._entry_data.get(CONF_VENDOR, "syncleo")
-        suggested_model = self._entry_data.get(CONF_MODEL, "Unknown Model")
-
-        _LOGGER.debug(
-            "Found device vendor '%s' and model '%s', trying to suggest manufacturer and model for user confirmation",
-            vendor,
-            suggested_model,
-        )
-
-        if vendor.lower() == "rusclimate" and "_" in suggested_model:
-            parts = suggested_model.split("_")
-            suggested_manufacturer = parts[0].capitalize()
-            suggested_model = " ".join([part.capitalize() for part in parts[1:]])
-        else:
-            suggested_manufacturer = vendor.capitalize()
-
-        _LOGGER.debug(
-            "Calculated suggested manufacturer '%s' and model '%s'",
-            suggested_manufacturer,
-            suggested_model,
-        )
 
         return self.async_show_form(
             step_id="model_config",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_MANUFACTURER, default=suggested_manufacturer
-                    ): str,
+                    vol.Required(CONF_MANUFACTURER, default=suggested_manufacturer): str,
                     vol.Required(CONF_MODEL, default=suggested_model): str,
+                    vol.Required(CONF_FRIENDLY_NAME, default=suggested_class): str,
                 }
             ),
-            description_placeholders={"vendor": vendor.capitalize()},
+            description_placeholders={"name": f"{vendor.capitalize()} {device_model['model'].replace("_", "/")}"},
         )
 
     async def async_step_user(self, user_input=None) -> ConfigFlowResult:
         """Manual setup is blocked; wait for network discovery."""
         return self.async_abort(reason="manual_setup_requires_discovery")
+
+    async def get_translated_type(self, device_type_lang):
+        language = self.hass.config.language
+        translations = await async_get_translations(self.hass, language, "common", {DOMAIN})
+        key = f"component.syncleo.common.{device_type_lang}"
+        return translations.get(key, device_type_lang)
