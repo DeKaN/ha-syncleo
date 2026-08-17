@@ -1,20 +1,20 @@
 {
   "config": {
-    "flow_title": "Discovered {vendor} Device",
     "step": {
       "zeroconf_confirm": {
-        "title": "Set up {vendor} Device",
-        "description": "A device was discovered at {host}. Please paste the 'Device Share URL' from the mobile app to complete setup.",
+        "title": "Set up {name} Device",
+        "description": "A device was discovered {name}. Please paste the 'Device Share URL' from the mobile app to complete setup.",
         "data": {
           "url": "Device Share URL"
         }
       },
       "model_config": {
         "title": "Enter Device Model",
-        "description": "Please confirm or edit the extracted device model. This helps Home Assistant correctly display and configure your {vendor} device.",
+        "description": "Please confirm or edit the extracted device model. This helps Home Assistant correctly display and configure your {name} device.",
         "data": {
           "manufacturer": "Manufacturer (e.g., Ballu, Electrolux, Polaris)",
-          "model": "Device Model"
+          "model": "Device Model",
+          "friendly_name": "Device Name"
         }
       }
     },
@@ -314,6 +314,40 @@
           "tea_time": "Tea time"
         }
       }
+    },
+    "light": {
+      "night": {
+        "name": "Night light"
+      }
     }
+  },
+  "common": {
+    "all": "Unknown",
+    "kettle": "Kettle",
+    "humidifier": "Humidifier",
+    "cooker": "Cooker",
+    "coffeemaker": "Coffeemaker",
+    "air_cleaner": "Air cleaner",
+    "irrigator": "Irrigator",
+    "air_fryer": "Air Fryer",
+    "boiler": "Boiler",
+    "heater": "Heater",
+    "cleaner": "Cleaner",
+    "blender": "Blender",
+    "cooktop": "Cooktop",
+    "cordless_cleaner": "Cordless cleaner",
+    "fan": "Fan",
+    "grill": "Grill",
+    "hair_care": "Hair care",
+    "hood": "Hood",
+    "iron": "Iron",
+    "kitchen_machine": "Kitchen machine",
+    "meat_grinder": "Meat grinder",
+    "other": "Smart Lid",
+    "oven": "Oven",
+    "steamer": "Steamer",
+    "toothbrush": "Toothbrush",
+    "air_conditioner": "Conditioner",
+    "thermostat": "Thermostat"
   }
 }

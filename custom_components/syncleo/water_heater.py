@@ -3,13 +3,29 @@ from typing import Any
 
 from homeassistant.components.water_heater import WaterHeaterEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import ATTR_TEMPERATURE, STATE_OFF, UnitOfTemperature
+from homeassistant.const import (
+    ATTR_TEMPERATURE,
+    STATE_OFF,
+    UnitOfTemperature,
+    CONF_DEVICE_CLASS,
+)
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from pysyncleo.commands import CmdTargetTemperature, CmdMode, UdpCommandType
 
-from .const import DOMAIN
+from .const import (
+    DOMAIN,
+    CONF_VENDOR,
+    KETTLE_MODE_BOILING,
+    KETTLE_MODE_BOILING_KEEP,
+    KETTLE_MODE_WARM_UP,
+    KETTLE_MODE_WARM_UP_KEEP,
+    KETTLE_MODE_IQ_BOILING,
+    KETTLE_MODE_TEA_TIME,
+    POLARIS_DEVICE,
+    HOMMYN_DEVICE,
+)
 from .devices import WaterHeaterProfile
 from .entity import SyncleoBaseEntity
 from .utils import get_device_profile
@@ -38,12 +54,18 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
     def __init__(self, connection, profile: WaterHeaterProfile, entry):
         """Initialize the water heater entity."""
         super().__init__(connection, profile, entry)
-
+        
+        if entry.data[CONF_VENDOR] == 'Polaris':
+            self._device_type_class = POLARIS_DEVICE[int(entry.data[CONF_DEVICE_CLASS])]["class"]
+        else:
+            self._device_type_class = HOMMYN_DEVICE[int(entry.data[CONF_DEVICE_CLASS])]["class"]
         self._profile = profile
         self._attr_unique_id = f"{self._device_unique_id}_{profile.profile_type}"
         self._attr_translation_key = f"{DOMAIN}_{profile.profile_type}"
         self._attr_min_temp = profile.min_temp
         self._attr_max_temp = profile.max_temp
+        self._attr_target_temperature_high = profile.max_temp
+        self._attr_target_temperature_low = profile.min_temp
         self._attr_target_temperature_step = profile.target_temp_step
         self._attr_supported_features = profile.supported_features
 
@@ -55,6 +77,15 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
         self._current_operation = STATE_OFF
         self._target_temp = None
         self._current_temp = None
+
+    @property
+    def state(self) -> str | None:
+        """Return the current state."""
+        return self._current_operation
+
+    @property
+    def supported_features(self) -> WaterHeaterEntityFeature:
+        return self._attr_supported_features
 
     @property
     def current_operation(self) -> str | None:
@@ -106,13 +137,38 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
         temp = kwargs.get(ATTR_TEMPERATURE)
         if temp is not None:
             temp = max(self._attr_min_temp, min(self._attr_max_temp, float(temp)))
-            await self.async_send_command(CmdTargetTemperature(temp))
-            self._current_temp = temp
+            
+            if self._device_type_class != "kettle":
+                await self.async_send_command(CmdTargetTemperature(temp))
+     
+            if self._device_type_class == "kettle" and self.current_operation == STATE_OFF:
+                await self.async_send_command(CmdTargetTemperature(temp))
+                if int(temp) == 100:
+                    await self.async_send_command(CmdMode(1))
+                else:
+                    await self.async_send_command(CmdMode(3))
+            
+            if self._device_type_class == "kettle" and self.current_operation in (KETTLE_MODE_WARM_UP, KETTLE_MODE_WARM_UP_KEEP, KETTLE_MODE_BOILING_KEEP): # Нагрев, Нагрев с удержанием, Кипячение с удержанием
+                if int(temp) == 100:
+                    await self.async_send_command(CmdMode(1))
+                else:
+                    await self.async_send_command(CmdTargetTemperature(temp))
+            
+            if self._device_type_class == "kettle" and self.current_operation in (KETTLE_MODE_BOILING, KETTLE_MODE_IQ_BOILING, KETTLE_MODE_TEA_TIME): # Кипячение, IQ Кипячение, Чайная церемония
+                if int(temp) < 100:
+                    await self.async_send_command(CmdTargetTemperature(temp))
+                    await self.async_send_command(CmdMode(3))
+
+            self._target_temp = temp
             self.async_write_ha_state()
 
     async def async_set_operation_mode(self, operation_mode: str) -> None:
         raw_val = self._op_mode_map.get(operation_mode)
         if raw_val is not None:
+            if raw_val > 1:
+                if int(self._target_temp) == 100 and operation_mode in (KETTLE_MODE_WARM_UP, KETTLE_MODE_WARM_UP_KEEP, KETTLE_MODE_BOILING_KEEP): # Нагрев, Нагрев с удержанием, Кипячение с удержанием
+                    self._target_temp = 95
+                await self.async_send_command(CmdTargetTemperature(self._target_temp))
             await self.async_send_command(CmdMode(raw_val))
             self._current_operation = operation_mode
             self.async_write_ha_state()

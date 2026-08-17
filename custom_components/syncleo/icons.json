@@ -2,6 +2,10 @@
   "entity": {
     "water_heater": {
       "syncleo_kettle": {
+        "default": "mdi:kettle",
+        "state": {
+          "off": "mdi:kettle-off"
+        },
         "state_attributes": {
           "operation_mode": {
             "state": {
@@ -14,6 +18,26 @@
               "tea_time": "mdi:leaf"
             }
           }
+        }
+      }
+    },
+    "switch": {
+      "volume": {
+        "default": "mdi:volume-high",
+        "state": {
+          "off": "mdi:volume-off"
+        }
+      },
+      "child_lock": {
+        "default": "mdi:lock-open-variant",
+        "state": {
+          "on": "mdi:lock"
+        }
+      },
+      "backlight": {
+        "default": "mdi:alarm-light",
+        "state": {
+          "off": "mdi:alarm-light-off"
         }
       }
     }
