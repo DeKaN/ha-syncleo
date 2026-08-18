@@ -1,4 +1,5 @@
 import logging
+
 from homeassistant.components.climate import ClimateEntity
 from homeassistant.components.climate.const import (
     PRESET_NONE,
@@ -10,9 +11,7 @@ from homeassistant.components.climate.const import (
 )
 from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
-
-from pysyncleo.commands import CmdTargetTemperature, CmdMode, CmdSpeed, UdpCommandType
-
+from pysyncleo.commands import CmdMode, CmdSpeed, CmdTargetTemperature, UdpCommandType
 
 from .const import PD_SWING_HORIZONTAL, PD_SWING_VERTICAL, TRANLATION_KEY_CLIMATE
 from .devices import ClimateProfile
@@ -66,10 +65,10 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         self._is_on = False
         self._current_hvac_mode = HVACMode.OFF
         self._current_preset_mode = PRESET_NONE if profile.preset_modes_map else None
-        self._target_temp = None
-        self._current_temp = None
-        self._current_humidity = None
-        self._fan_mode = None
+        self._target_temp: float | None = None
+        self._current_temp: float | None = None
+        self._current_humidity: float | None = None
+        self._fan_mode: str | None = None
 
     @property
     def hvac_mode(self) -> HVACMode:

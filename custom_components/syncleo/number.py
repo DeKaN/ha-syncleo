@@ -1,4 +1,5 @@
 import logging
+
 from homeassistant.components.number import NumberEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
@@ -53,7 +54,7 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
             self._attr_native_max_value = 100
             self._attr_native_step = 1
 
-        self._value = self._attr_native_min_value
+        self._value = float(self._attr_native_min_value)
 
     @property
     def native_value(self) -> float | None:

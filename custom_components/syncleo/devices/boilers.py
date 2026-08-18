@@ -17,13 +17,13 @@ from ..const import (
     FEATURE_KEEP_WARM,
     FEATURE_SMART_MODE,
     FEATURE_TANK,
-    PD_EXPENDABLES_ANODE,
     PD_DISPLAY_HALF_POWER,
+    PD_EXPENDABLES_ANODE,
     PD_LAST_PROGRAM,
     PD_TURN_ON,
     VENDOR_RUSCLIMATE,
 )
-from .profiles import BoilerProfile, SensorConfig, ProgramDataField
+from .profiles import BoilerProfile, ProgramDataField, SensorConfig
 
 PROFILES = [
     BoilerProfile(

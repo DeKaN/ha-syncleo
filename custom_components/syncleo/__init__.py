@@ -1,7 +1,6 @@
 import asyncio
 import logging
-from homeassistant.core import HomeAssistant
-from homeassistant.config_entries import ConfigEntry
+
 from homeassistant.const import (
     CONF_DEVICE_CLASS,
     CONF_IP_ADDRESS,
@@ -9,21 +8,46 @@ from homeassistant.const import (
     CONF_PORT,
     CONF_TOKEN,
 )
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers.instance_id import async_get
-
-from pysyncleo.transport import TransportManager
 from pysyncleo.models import SyncleoUdpDevice
+from pysyncleo.transport import TransportManager
 
-from .const import CONF_PUBLIC_KEY, CONF_PROTOCOL, CONF_VENDOR, DOMAIN
-from .models import SyncleoConfigEntry, SyncleoDomainData
+from .broadcaster import SyncleoVirtualZeroconfBroadcaster
+from .const import (
+    CONF_IS_VIRTUAL,
+    CONF_PROTOCOL,
+    CONF_PUBLIC_KEY,
+    CONF_SOURCE_ENTITY,
+    CONF_VENDOR,
+    DOMAIN,
+)
+from .models import SyncleoDomainData, SyncleoGenericConfigEntry
 from .utils import get_device_profile_by_device
 
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: SyncleoConfigEntry) -> bool:
+async def async_setup_entry(
+    hass: HomeAssistant, entry: SyncleoGenericConfigEntry
+) -> bool:
     """Set up Syncleo from a config entry."""
     assert entry.unique_id is not None
+
+    if entry.data.get(CONF_IS_VIRTUAL, False):
+        _LOGGER.info(
+            "Setting up Virtual Zeroconf Broadcaster for %s", entry.data[CONF_MAC]
+        )
+        source_entity = entry.data[CONF_SOURCE_ENTITY]
+        mac = entry.data[CONF_MAC]
+        port = entry.data[CONF_PORT]
+
+        broadcaster = SyncleoVirtualZeroconfBroadcaster(hass, source_entity, mac, port)
+        await broadcaster.async_start()
+
+        entry.runtime_data = broadcaster
+
+        return True
 
     lock_name = f"{DOMAIN}_setup_lock"
     if lock_name not in hass.data:
@@ -82,8 +106,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: SyncleoConfigEntry) -> b
     return True
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_unload_entry(
+    hass: HomeAssistant, entry: SyncleoGenericConfigEntry
+) -> bool:
     """Unload a config entry."""
+    if isinstance(entry.runtime_data, SyncleoVirtualZeroconfBroadcaster):
+        _LOGGER.info(
+            "Unloading Virtual Zeroconf Broadcaster for %s", entry.data[CONF_MAC]
+        )
+        broadcaster: SyncleoVirtualZeroconfBroadcaster = entry.runtime_data
+
+        await broadcaster.async_stop()
+        return True
+
     connection = entry.runtime_data
     profile = get_device_profile_by_device(connection.device)
 

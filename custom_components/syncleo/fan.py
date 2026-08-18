@@ -8,7 +8,6 @@ from homeassistant.util.percentage import (
     percentage_to_ranged_value,
     ranged_value_to_percentage,
 )
-
 from pysyncleo.commands import CmdMode, CmdSpeed, UdpCommandType
 
 from .const import TRANLATION_KEY_FAN
@@ -51,7 +50,7 @@ class SyncleoFan(SyncleoBaseEntity, FanEntity):
         self._rev_preset_map = {v: k for k, v in profile.preset_modes_map.items()}
 
         self._is_on = False
-        self._current_preset_mode = None
+        self._current_preset_mode: str | None = None
         self._raw_speed = 0
         self._speed_range = (1, profile.speed_count)
 

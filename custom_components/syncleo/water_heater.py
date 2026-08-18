@@ -6,14 +6,12 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_TEMPERATURE, STATE_OFF, UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-
-from pysyncleo.commands import CmdTargetTemperature, CmdMode, UdpCommandType
+from pysyncleo.commands import CmdMode, CmdTargetTemperature, UdpCommandType
 
 from .const import DOMAIN
 from .devices import WaterHeaterProfile
 from .entity import SyncleoBaseEntity
 from .utils import get_device_profile_by_device
-
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -53,8 +51,8 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
         self._attr_operation_list = list(self._op_mode_map.keys())
 
         self._current_operation = STATE_OFF
-        self._target_temp = None
-        self._current_temp = None
+        self._target_temp: float | None = None
+        self._current_temp: float | None = None
 
     @property
     def current_operation(self) -> str | None:

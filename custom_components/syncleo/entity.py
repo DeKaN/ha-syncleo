@@ -1,21 +1,22 @@
 import logging
-from typing import Dict
+from collections.abc import Callable
+from typing import ClassVar
 
 from homeassistant.const import CONF_MAC, CONF_MODEL
 from homeassistant.core import callback
-from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC, DeviceInfo
+from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.event import async_call_later
-
 from pysyncleo.commands import (
     CmdAccessControl,
     CmdAmount,
     CmdBacklight,
     CmdBss,
-    CmdCO2,
     CmdChildLock,
+    CmdCO2,
     CmdCurrentTemperature,
     CmdDamper,
+    CmdDataSource,
     CmdError,
     CmdExpendables,
     CmdInitDiagnostic,
@@ -40,9 +41,10 @@ from pysyncleo.enums import ConnectionState, UdpCommandType
 
 from .const import (
     CONF_FIRMWARE,
-    DOMAIN,
     CONF_MANUFACTURER,
+    DOMAIN,
     FEATURE_ACCESS_CONTROL,
+    FEATURE_ANTI_MELDEW,
     FEATURE_AURUS_PF_AUTO_OFF_DISPLAY,
     FEATURE_AURUS_PF_HALF_POWER,
     FEATURE_AURUS_SCREENSAVER_MODE,
@@ -50,7 +52,6 @@ from .const import (
     FEATURE_AURUS_VRF_ECO_MODE,
     FEATURE_AURUS_VRF_NOISELESS_MODE,
     FEATURE_BACKLIGHT,
-    FEATURE_ANTI_MELDEW,
     FEATURE_BREEZER_DAMPER,
     FEATURE_BREEZER_MELODY,
     FEATURE_BREEZER_TEMPERATURE,
@@ -59,6 +60,8 @@ from .const import (
     FEATURE_CURRENT_CO2,
     FEATURE_CURRENT_TEMPERATURE,
     FEATURE_DAMPER,
+    FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
+    FEATURE_ECO_AS_SMART_MODE,
     FEATURE_ERROR,
     FEATURE_EXPENDABLES_ANODE,
     FEATURE_EXPENDABLES_FILTER,
@@ -69,15 +72,14 @@ from .const import (
     FEATURE_GOLDSTAR_GSTI_FREEZE_PROTECTION,
     FEATURE_IONIZATION,
     FEATURE_KEEP_WARM,
+    FEATURE_KETTLE_TEMPERATURE_PRESET,
     FEATURE_NIGHT,
     FEATURE_POWER_LEVEL,
-    FEATURE_ECO_AS_SMART_MODE,
     FEATURE_RSSI,
-    FEATURE_SHUFT_SFMS_09_ANTI_MELDEW,
     FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
+    FEATURE_SHUFT_SFMS_09_ANTI_MELDEW,
     FEATURE_SMART_MODE,
     FEATURE_TANK,
-    FEATURE_KETTLE_TEMPERATURE_PRESET,
     FEATURE_TURBO,
     FEATURE_ULTRAVIOLET,
     FEATURE_VOLUME,
@@ -97,6 +99,7 @@ FEATURE_TO_COMMAND_MAP = {
     FEATURE_CURRENT_CO2: CmdCO2,
     FEATURE_CURRENT_TEMPERATURE: CmdCurrentTemperature,
     FEATURE_DAMPER: CmdDamper,
+    FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: CmdDataSource,
     FEATURE_ECO_AS_SMART_MODE: CmdSmartMode,
     FEATURE_ERROR: CmdError,
     FEATURE_EXPENDABLES_ANODE: CmdExpendables,
@@ -137,7 +140,7 @@ class SyncleoBaseEntity(Entity):
     """Base class for all Syncleo entities."""
 
     _attr_has_entity_name = True
-    _device_connection_states: dict[str, ConnectionState] = {}
+    _device_connection_states: ClassVar[dict[str, ConnectionState]] = {}
 
     def __init__(
         self, connection, profile: DeviceBaseProfile, entry: SyncleoConfigEntry
@@ -146,9 +149,9 @@ class SyncleoBaseEntity(Entity):
         self._profile = profile
         self._entry = entry
         self._device_unique_id = self._connection.device.mac_address
-        self._program_data_modes: Dict[int, bytearray] = {}
+        self._program_data_modes: dict[int, bytearray] = {}
         self._reconnect_attempts = 0
-        self._reconnect_unsubscribe = None
+        self._reconnect_unsubscribe: Callable[[], None] | None = None
 
     @property
     def available(self) -> bool:
@@ -244,11 +247,10 @@ class SyncleoBaseEntity(Entity):
             self._attr_unique_id,
             cmd,
         )
-        if cmd.command_type == UdpCommandType.PROGRAM_DATA:
-            if cmd.data:
-                self._program_data_modes[cmd.mode] = bytearray(cmd.data)
+        if cmd.command_type == UdpCommandType.PROGRAM_DATA and cmd.data:
+            self._program_data_modes[cmd.mode] = bytearray(cmd.data)
 
-                self.async_write_ha_state()
+            self.async_write_ha_state()
 
     def get_program_data(self, feature_key: str) -> bytes:
         field = self._profile.program_data_fields.get(feature_key)
@@ -321,7 +323,7 @@ class SyncleoBaseEntity(Entity):
         _LOGGER.info("Attempting to reconnect to %s...", self._device_unique_id)
         try:
             await self._connection.connect()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             _LOGGER.error(
                 "Reconnection attempt failed for %s: %s", self._device_unique_id, e
             )

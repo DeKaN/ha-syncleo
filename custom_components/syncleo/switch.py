@@ -3,12 +3,10 @@ import logging
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.core import HomeAssistant, callback
 
-
 from .devices import DeviceBaseProfile, SwitchMixin
 from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
 from .models import SyncleoConfigEntry
 from .utils import get_device_profile_by_device
-
 
 _LOGGER = logging.getLogger(__name__)
 

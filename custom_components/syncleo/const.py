@@ -10,10 +10,14 @@ FIRMVARE_HOST_BY_VENDOR = {
 
 CONF_ATTRIBUTES = "attributes"
 CONF_FIRMWARE = "firmware"
+CONF_IS_VIRTUAL = "is_virtual"
 CONF_MANUFACTURER = "manufacturer"
 CONF_PROTOCOL = "protocol"
 CONF_PUBLIC_KEY = "public"
+CONF_SOURCE_ENTITY = "source_entity"
 CONF_VENDOR = "vendor"
+
+DATASOURCE_PRESET_NONE = "datasource_preset_none"
 
 FAN_MAX = "max"
 FAN_MID_HIGH = "mid_high"
@@ -125,6 +129,8 @@ FEATURE_CHILD_LOCK = "child_lock"
 FEATURE_CURRENT_CO2 = "current_co2"
 FEATURE_CURRENT_TEMPERATURE = "current_temperature"
 FEATURE_DAMPER = "damper"
+FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE = "source_current_temperature"
+FEATURE_DATA_SOURCE_TARGET_TEMPERATURE = "source_target_temperature"
 FEATURE_ECO_AS_SMART_MODE = "energy_saving"
 FEATURE_ERROR = "error"
 FEATURE_EXPENDABLES_ANODE = "expendables_anode"
@@ -171,6 +177,10 @@ PROFILE_TYPE_KETTLE = "kettle"
 TRANLATION_KEY_CLIMATE = DOMAIN + "_climate"
 TRANLATION_KEY_FAN = DOMAIN + "_fan"
 
+VIRTUAL_DEVICE_TYPE = 46
+
+ZEROCONF_CURRENT_TEMPERATURE = "000000000000.temperature"
 ZEROCONF_CURVE = "curve"
 ZEROCONF_DEVICE_TYPE = "devtype"
 ZEROCONF_MAC_ADDRESS = "macaddr"
+ZEROCONF_TARGET_TEMPERATURE = "000000000000.target_temp"

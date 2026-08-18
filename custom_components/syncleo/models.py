@@ -1,8 +1,10 @@
 import asyncio
 from dataclasses import dataclass
-from homeassistant.config_entries import ConfigEntry
 
-from pysyncleo.transport import TransportManager, SyncleoConnection
+from homeassistant.config_entries import ConfigEntry
+from pysyncleo.transport import SyncleoConnection, TransportManager
+
+from .broadcaster import SyncleoVirtualZeroconfBroadcaster
 
 
 @dataclass
@@ -12,4 +14,7 @@ class SyncleoDomainData:
     ha_uuid: str
 
 
+type SyncleoGenericConfigEntry = ConfigEntry[
+    SyncleoConnection | SyncleoVirtualZeroconfBroadcaster
+]
 type SyncleoConfigEntry = ConfigEntry[SyncleoConnection]

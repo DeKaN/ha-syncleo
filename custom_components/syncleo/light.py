@@ -12,10 +12,9 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util.color import brightness_to_value, value_to_brightness
 
-from pysyncleo.commands import CmdBacklight
 from .devices import DeviceBaseProfile, LightMixin
 from .devices.profiles import LightConfig
-from .entity import SyncleoBaseEntity
+from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
 from .models import SyncleoConfigEntry
 from .utils import get_device_profile_by_device
 
@@ -43,7 +42,6 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
     """Representation of a Syncleo Light supporting both RGB and Brightness."""
 
     _attr_color_mode = ColorMode.RGB
-    _attr_supported_color_modes = {ColorMode.RGB}
 
     def __init__(
         self,
@@ -57,9 +55,11 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
         super().__init__(connection, profile, entry)
         self._feature_key = feature_key
         self._is_program_data = feature_key in profile.program_data_fields
+        self._cmd_class = FEATURE_TO_COMMAND_MAP.get(feature_key)
 
         self._attr_unique_id = f"{self._device_unique_id}_{feature_key}"
         self._attr_translation_key = feature_key
+        self._attr_supported_color_modes = {ColorMode.RGB}
 
         self._red_key = config.red_key
         self._green_key = config.green_key
@@ -117,8 +117,14 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
             and self._brightness_key in self._profile.program_data_fields
         ):
             updates[self._brightness_key] = bytes([target_level])
+        elif self._cmd_class:
+            await self.async_send_command(self._cmd_class(value=True))
         else:
-            await self.async_send_command(CmdBacklight(state=True))
+            _LOGGER.error(
+                "No command class or program data field defined for feature: %s",
+                self._feature_key,
+            )
+            return
 
         if updates:
             await self.async_set_program_data_fields(updates)
@@ -134,8 +140,14 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
             and self._brightness_key in self._profile.program_data_fields
         ):
             await self.async_set_program_data(self._brightness_key, bytes([0]))
+        elif self._cmd_class:
+            await self.async_send_command(self._cmd_class(value=False))
         else:
-            await self.async_send_command(CmdBacklight(state=False))
+            _LOGGER.error(
+                "No command class or program data field defined for feature: %s",
+                self._feature_key,
+            )
+            return
 
         self._current_level = 0
         self._is_on = False
@@ -160,7 +172,7 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
                     self._last_level = self._current_level
                 need_update = True
 
-        elif isinstance(cmd, CmdBacklight):
+        elif self._cmd_class and cmd.command_type == self._cmd_class.command_type:
             self._is_on = bool(cmd.value)
             self._current_level = self._brightness_max_level if self._is_on else 0
 

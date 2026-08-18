@@ -1,10 +1,11 @@
-from datetime import timedelta
 import logging
+from datetime import timedelta
+
 import aiohttp
 from awesomeversion import AwesomeVersion, AwesomeVersionException
 from homeassistant.components.update import (
-    UpdateEntity,
     UpdateDeviceClass,
+    UpdateEntity,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -75,5 +76,5 @@ class SyncleoUpdate(SyncleoBaseEntity, UpdateEntity):
             _LOGGER.debug("Timeout connecting to firmware update server")
         except aiohttp.ClientError as err:
             _LOGGER.debug("Network error checking firmware update: %s", err)
-        except Exception as err:
+        except Exception as err:  # noqa: BLE001
             _LOGGER.error("Unexpected error parsing firmware update JSON: %s", err)

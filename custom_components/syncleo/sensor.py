@@ -52,7 +52,7 @@ class SyncleoSensor(SyncleoBaseEntity, SensorEntity):
             config.entity_category != EntityCategory.DIAGNOSTIC
         )
 
-        self._value = None
+        self._value: float | None = None
 
     @property
     def native_value(self):
@@ -86,7 +86,7 @@ class SyncleoSensor(SyncleoBaseEntity, SensorEntity):
             else:
                 try:
                     value = self._value_fn(raw_value)
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     _LOGGER.warning("Sensor processing failed with error: %s", e)
                     value = None
 

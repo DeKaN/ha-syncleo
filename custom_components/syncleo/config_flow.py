@@ -1,9 +1,11 @@
 import logging
-import voluptuous as vol
+import random
+from typing import Any
 
+import voluptuous as vol
 from homeassistant import config_entries
+from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.config_entries import ConfigFlowResult
-from homeassistant.helpers.service_info.zeroconf import ZeroconfServiceInfo
 from homeassistant.const import (
     CONF_DEVICE_CLASS,
     CONF_FRIENDLY_NAME,
@@ -14,21 +16,25 @@ from homeassistant.const import (
     CONF_TOKEN,
     CONF_URL,
 )
+from homeassistant.helpers import selector
 from homeassistant.helpers.device_registry import format_mac
+from homeassistant.helpers.service_info.zeroconf import ZeroconfServiceInfo
 
 from .const import (
     CONF_ATTRIBUTES,
     CONF_FIRMWARE,
+    CONF_IS_VIRTUAL,
     CONF_MANUFACTURER,
-    DOMAIN,
-    CONF_VENDOR,
     CONF_PROTOCOL,
     CONF_PUBLIC_KEY,
+    CONF_SOURCE_ENTITY,
+    CONF_VENDOR,
+    DOMAIN,
     ZEROCONF_CURVE,
     ZEROCONF_DEVICE_TYPE,
     ZEROCONF_MAC_ADDRESS,
 )
-from .utils import parse_share_url
+from .utils import mask_value, parse_share_url
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -41,6 +47,9 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._discovered_port = None
         self._discovered_properties = {}
         self._entry_data = {}
+
+    def _mask_sensitive_data(self, data: dict[str, Any]) -> dict[str, Any]:
+        return {k: (mask_value(v) if k == CONF_TOKEN else v) for k, v in data.items()}
 
     async def async_step_zeroconf(
         self, discovery_info: ZeroconfServiceInfo
@@ -61,7 +70,9 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         await self.async_set_unique_id(formatted_mac)
 
         for entry in self._async_current_entries():
-            if entry.unique_id == formatted_mac:
+            if entry.data.get(CONF_MAC) == formatted_mac:
+                if entry.data.get(CONF_IS_VIRTUAL):
+                    return self.async_abort(reason="already_configured")
                 current_ip = entry.data.get(CONF_IP_ADDRESS)
                 new_ip = discovery_info.host
                 current_pubkey = entry.data.get(CONF_PUBLIC_KEY)
@@ -71,7 +82,7 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 current_port = entry.data.get(CONF_PORT)
                 new_port = discovery_info.port
 
-                updates = {}
+                updates: dict[str, Any] = {}
                 if current_ip != new_ip:
                     updates[CONF_IP_ADDRESS] = new_ip
 
@@ -129,7 +140,9 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 url_mac = format_mac(parsed_data[CONF_MAC])
                 url_device_type = parsed_data[CONF_DEVICE_CLASS]
 
-                _LOGGER.debug(f"Parsed URL data: {parsed_data}")
+                _LOGGER.debug(
+                    f"Parsed URL data: {self._mask_sensitive_data(parsed_data)}"
+                )
 
                 mac = self._discovered_properties.get(ZEROCONF_MAC_ADDRESS)
                 if mac and format_mac(mac) != url_mac:
@@ -176,7 +189,7 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     _LOGGER.debug(
                         "Prepared entry data for device %s: %s",
                         host_str,
-                        self._entry_data,
+                        self._mask_sensitive_data(self._entry_data),
                     )
 
                     return await self.async_step_model_config()
@@ -210,7 +223,7 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             _LOGGER.info(
                 "Creating config entry %s with data %s",
                 entry_title,
-                self._entry_data,
+                self._mask_sensitive_data(self._entry_data),
             )
             return self.async_create_entry(
                 title=entry_title,
@@ -253,5 +266,37 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_user(self, user_input=None) -> ConfigFlowResult:
-        """Manual setup is blocked; wait for network discovery."""
-        return self.async_abort(reason="manual_setup_requires_discovery")
+        """Manual setup only for virtual devices; wait for network discovery."""
+        if user_input is not None:
+            source_entity = user_input[CONF_SOURCE_ENTITY]
+
+            await self.async_set_unique_id(f"virtual_{source_entity}")
+            self._abort_if_unique_id_configured()
+
+            mac_bytes = [0x02] + [random.randint(0x00, 0xFF) for _ in range(5)]
+            virtual_mac = format_mac("".join(f"{x:02x}" for x in mac_bytes))
+            virtual_port = random.randint(40000, 49999)
+
+            return self.async_create_entry(
+                title=f"Virtual Sensor ({source_entity})",
+                data={
+                    CONF_SOURCE_ENTITY: source_entity,
+                    CONF_MAC: virtual_mac,
+                    CONF_PORT: virtual_port,
+                    CONF_IS_VIRTUAL: True,
+                    CONF_VENDOR: "Syncleo Custom",
+                    CONF_MODEL: "Virtual Temperature Broadcaster",
+                },
+            )
+
+        schema = vol.Schema(
+            {
+                vol.Required(CONF_SOURCE_ENTITY): selector.EntitySelector(
+                    selector.EntitySelectorConfig(
+                        domain="sensor", device_class=SensorDeviceClass.TEMPERATURE
+                    )
+                )
+            }
+        )
+
+        return self.async_show_form(step_id="user", data_schema=schema)

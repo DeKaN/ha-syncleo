@@ -6,7 +6,6 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .devices import BinarySensorMixin
-
 from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
 from .utils import get_device_profile_by_device
 

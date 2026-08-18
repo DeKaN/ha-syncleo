@@ -1,16 +1,16 @@
 import logging
 import urllib.parse
+
 from homeassistant.const import (
     CONF_DEVICE_CLASS,
     CONF_FRIENDLY_NAME,
     CONF_MAC,
     CONF_TOKEN,
 )
-
 from pysyncleo.models import SyncleoUdpDevice
 
-from .devices import DEVICE_PROFILES, DeviceBaseProfile
 from .const import CONF_ATTRIBUTES, CONF_VENDOR, FIRMVARE_HOST_BY_VENDOR
+from .devices import DEVICE_PROFILES, DeviceBaseProfile
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -65,3 +65,17 @@ def get_device_profile(vendor: str, device_type: int) -> DeviceBaseProfile | Non
 
 def get_device_firmware_url(profile: DeviceBaseProfile) -> str:
     return f"https://{FIRMVARE_HOST_BY_VENDOR[profile.vendor]}/{profile.vendor}/{profile.device_type}/slots/latest.json"
+
+
+def mask_value(value: str | None, visible_symbols: int = 4) -> str | None:
+    """Mask a sensitive string, keeping characters visible at both ends."""
+    if not value:
+        return value
+
+    total_len = len(value)
+
+    if total_len <= visible_symbols * 2:
+        return "*" * total_len
+
+    mask_len = total_len - (visible_symbols * 2)
+    return f"{value[:visible_symbols]}{'*' * mask_len}{value[-visible_symbols:]}"

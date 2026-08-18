@@ -16,6 +16,13 @@
           "manufacturer": "Manufacturer (e.g., Ballu, Electrolux, Polaris)",
           "model": "Device Model"
         }
+      },
+      "user": {
+        "title": "Add temperature sensor broadcasting",
+        "description": "Adds broadcasting temperature sensor to devices. It allows to use any your sensor instead of device built-in for climate control.",
+        "data": {
+          "source_entity": "Temperature sensor"
+        }
       }
     },
     "error": {
@@ -202,6 +209,12 @@
           "power_50": "50%",
           "power_75": "75%",
           "power_100": "100%"
+        }
+      },
+      "source_current_temperature": {
+        "name": "Temperature Source",
+        "state": {
+          "datasource_preset_none": "Internal Sensor"
         }
       }
     },

@@ -1,6 +1,8 @@
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Tuple
-from homeassistant.components.climate.const import HVACMode, ClimateEntityFeature
+from typing import Any
+
+from homeassistant.components.climate.const import ClimateEntityFeature, HVACMode
 from homeassistant.components.fan import FanEntityFeature
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.components.water_heater import WaterHeaterEntityFeature
@@ -9,7 +11,6 @@ from homeassistant.const import (
     EntityCategory,
     Platform,
 )
-
 from pysyncleo.enums import UdpCommandType
 from pysyncleo.models import DiagnosticStatus
 
@@ -35,8 +36,6 @@ class NumberBounds:
 class NumberConfig(NumberBounds):
     """Configuration for dedicated command numbers."""
 
-    pass
-
 
 @dataclass(kw_only=True)
 class ProgramDataField(NumberBounds):
@@ -52,16 +51,16 @@ class LightConfig:
     red_key: str
     green_key: str
     blue_key: str
-    brightness_key: Optional[str] = None
+    brightness_key: str | None = None
     brightness_levels: int = 255
 
 
 @dataclass(kw_only=True)
 class SelectConfig:
-    options_map: Dict[str, int]
+    options_map: dict[str, int]
 
     @property
-    def options(self) -> List[str]:
+    def options(self) -> list[str]:
         return list(self.options_map.keys())
 
 
@@ -91,7 +90,7 @@ RSSI_SENSOR_CONFIG = SensorConfig(
 @dataclass(kw_only=True)
 class PlatformProviderBase:
     @property
-    def supported_platforms(self) -> List[Platform]:
+    def supported_platforms(self) -> list[Platform]:
         return [Platform.UPDATE]
 
 
@@ -100,7 +99,7 @@ class BinarySensorMixin(PlatformProviderBase):
     binary_sensors: list[str] = field(default_factory=list)
 
     @property
-    def supported_platforms(self) -> List[Platform]:
+    def supported_platforms(self) -> list[Platform]:
         platforms = super().supported_platforms
         return (
             platforms + [Platform.BINARY_SENSOR] if self.binary_sensors else platforms
@@ -109,38 +108,38 @@ class BinarySensorMixin(PlatformProviderBase):
 
 @dataclass(kw_only=True)
 class LightMixin(PlatformProviderBase):
-    lights: Dict[str, LightConfig] = field(default_factory=dict)
+    lights: dict[str, LightConfig] = field(default_factory=dict)
 
     @property
-    def supported_platforms(self) -> List[Platform]:
+    def supported_platforms(self) -> list[Platform]:
         platforms = super().supported_platforms
         return platforms + [Platform.LIGHT] if self.lights else platforms
 
 
 @dataclass(kw_only=True)
 class NumberMixin(PlatformProviderBase):
-    numbers: List[str] = field(default_factory=list)
+    numbers: list[str] = field(default_factory=list)
     number_configs: dict[str, NumberConfig] = field(default_factory=dict)
 
     @property
-    def supported_platforms(self) -> List[Platform]:
+    def supported_platforms(self) -> list[Platform]:
         platforms = super().supported_platforms
         return platforms + [Platform.NUMBER] if self.numbers else platforms
 
 
 @dataclass(kw_only=True)
 class SelectMixin(PlatformProviderBase):
-    selects: Dict[str, SelectConfig] = field(default_factory=dict)
+    selects: dict[str, SelectConfig] = field(default_factory=dict)
 
     @property
-    def supported_platforms(self) -> List[Platform]:
+    def supported_platforms(self) -> list[Platform]:
         platforms = super().supported_platforms
         return platforms + [Platform.SELECT] if self.selects else platforms
 
 
 @dataclass(kw_only=True)
 class SensorMixin(PlatformProviderBase):
-    sensors: Dict[str, SensorConfig] = field(default_factory=dict)
+    sensors: dict[str, SensorConfig] = field(default_factory=dict)
 
     def __post_init__(self):
         if self.sensors is None:
@@ -149,17 +148,17 @@ class SensorMixin(PlatformProviderBase):
             self.sensors[FEATURE_RSSI] = RSSI_SENSOR_CONFIG
 
     @property
-    def supported_platforms(self) -> List[Platform]:
+    def supported_platforms(self) -> list[Platform]:
         platforms = super().supported_platforms
         return platforms + [Platform.SENSOR] if self.sensors else platforms
 
 
 @dataclass(kw_only=True)
 class SwitchMixin(PlatformProviderBase):
-    switches: List[str] = field(default_factory=list)
+    switches: list[str] = field(default_factory=list)
 
     @property
-    def supported_platforms(self) -> List[Platform]:
+    def supported_platforms(self) -> list[Platform]:
         platforms = super().supported_platforms
         return platforms + [Platform.SWITCH] if self.switches else platforms
 
@@ -171,10 +170,11 @@ class DeviceBaseProfile(PlatformProviderBase):
     vendor: str
     device_type: int
     profile_type: str
-    program_data_fields: Dict[str, ProgramDataField] = field(default_factory=dict)
+    program_data_fields: dict[str, ProgramDataField] = field(default_factory=dict)
+    data_source_features: list[str] = field(default_factory=list)
 
     @property
-    def lookup_key(self) -> Tuple[str, int]:
+    def lookup_key(self) -> tuple[str, int]:
         return (self.vendor, self.device_type)
 
 
@@ -191,11 +191,11 @@ class BreezerProfile(
 
     supported_features: FanEntityFeature
     speed_count: int
-    preset_modes_map: Dict[str, int] = field(default_factory=dict)
+    preset_modes_map: dict[str, int] = field(default_factory=dict)
     default_preset_mode: str
 
     @property
-    def supported_platforms(self) -> List[Platform]:
+    def supported_platforms(self) -> list[Platform]:
         return super().supported_platforms + [Platform.FAN]
 
 
@@ -215,20 +215,20 @@ class ClimateProfile(
     target_temp_step: float
     supported_features: ClimateEntityFeature
 
-    hvac_modes_map: Dict[HVACMode, int]
+    hvac_modes_map: dict[HVACMode, int]
     default_hvac_mode: HVACMode
 
-    cmd_current_humidity: Optional[UdpCommandType] = None
+    cmd_current_humidity: UdpCommandType | None = None
 
-    preset_modes_map: Dict[str, int] = field(default_factory=dict)
+    preset_modes_map: dict[str, int] = field(default_factory=dict)
 
-    cmd_fan_mode: Optional[UdpCommandType] = None
-    fan_modes_map: Dict[str, int] = field(default_factory=dict)
+    cmd_fan_mode: UdpCommandType | None = None
+    fan_modes_map: dict[str, int] = field(default_factory=dict)
 
-    supported_swing_modes: List[str] = field(default_factory=list)
+    supported_swing_modes: list[str] = field(default_factory=list)
 
     @property
-    def supported_platforms(self) -> List[Platform]:
+    def supported_platforms(self) -> list[Platform]:
         return super().supported_platforms + [Platform.CLIMATE]
 
 
@@ -249,11 +249,11 @@ class WaterHeaterProfile(
     target_temp_step: float
     supported_features: WaterHeaterEntityFeature
 
-    operation_modes_map: Dict[str, int]
+    operation_modes_map: dict[str, int]
     default_operation_mode: str
 
     @property
-    def supported_platforms(self) -> List[Platform]:
+    def supported_platforms(self) -> list[Platform]:
         return super().supported_platforms + [Platform.WATER_HEATER]
 
 
@@ -279,7 +279,7 @@ class AirConditionerProfile(ClimateProfile):
         | ClimateEntityFeature.TURN_ON
         | ClimateEntityFeature.TURN_OFF
     )
-    cmd_fan_mode: Optional[UdpCommandType] = UdpCommandType.SPEED
+    cmd_fan_mode: UdpCommandType | None = UdpCommandType.SPEED
 
 
 @dataclass(kw_only=True)
@@ -300,7 +300,7 @@ class KettleProfile(WaterHeaterProfile):
     min_temp: int = 30
     max_temp: int = 100
     target_temp_step: float = 5.0
-    supported_features: int = (
+    supported_features: WaterHeaterEntityFeature = (
         WaterHeaterEntityFeature.TARGET_TEMPERATURE
         | WaterHeaterEntityFeature.OPERATION_MODE
         | WaterHeaterEntityFeature.ON_OFF
