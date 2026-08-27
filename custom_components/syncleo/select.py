@@ -100,7 +100,7 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
             if self._current_option != reported_mac:
                 self._current_option = reported_mac
                 self.async_write_ha_state()
-                return
+            return
 
         elif self._is_program_data:
             data = self.get_program_data(self._feature_key)

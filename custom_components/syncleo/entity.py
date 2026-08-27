@@ -169,7 +169,7 @@ class SyncleoBaseEntity(Entity):
             self._reconnect_unsubscribe = None
 
     async def async_send_command(self, cmd) -> None:
-        _LOGGER.info("Sending command %s", cmd)
+        _LOGGER.debug("Sending command %s", cmd)
         await self._connection.send_command(cmd)
         await self._async_set_device_target()
 
@@ -180,7 +180,7 @@ class SyncleoBaseEntity(Entity):
             if domain_data and domain_data.ha_uuid
             else CmdTargetId()
         )
-        _LOGGER.info("Also sending command %s", command)
+        _LOGGER.debug("Also sending command %s", command)
         await self._connection.send_command(command)
 
     @callback
@@ -242,7 +242,7 @@ class SyncleoBaseEntity(Entity):
 
     @callback
     def _handle_device_update(self, cmd):
-        _LOGGER.info(
+        _LOGGER.debug(
             "Start handling update for device %s, received command: %s",
             self._attr_unique_id,
             cmd,
