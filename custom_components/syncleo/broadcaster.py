@@ -21,7 +21,6 @@ from .const import (
     ZEROCONF_CURVE,
     ZEROCONF_DEVICE_TYPE,
     ZEROCONF_MAC_ADDRESS,
-    ZEROCONF_TARGET_TEMPERATURE,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -43,7 +42,6 @@ class SyncleoVirtualZeroconfBroadcaster:
         self._is_registered: bool = False
 
         self._properties: dict[str, str] = {
-            ZEROCONF_TARGET_TEMPERATURE: "0.0",
             CONF_PUBLIC_KEY: hashlib.sha256(self.mac.encode()).hexdigest(),
             ZEROCONF_CURVE: "29",
             CONF_VENDOR: VENDOR_RUSCLIMATE,

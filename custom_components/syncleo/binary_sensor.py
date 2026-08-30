@@ -51,7 +51,7 @@ class SyncleoBinarySensor(SyncleoBaseEntity, BinarySensorEntity):
         is_on = self._is_on
 
         if self._cmd_class and cmd.command_type == self._cmd_class.command_type:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Handle update for device %s, received command: %s",
                 self._attr_unique_id,
                 cmd,

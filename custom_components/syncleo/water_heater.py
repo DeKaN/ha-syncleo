@@ -87,7 +87,7 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
             update_needed = True
 
         if update_needed:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Handled update for device %s, received command: %s",
                 self._attr_unique_id,
                 cmd,

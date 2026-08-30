@@ -66,7 +66,7 @@ class SyncleoSensor(SyncleoBaseEntity, SensorEntity):
         value = self._value
         if self._is_program_data:
             data = self.get_program_data(self._feature_key)
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Handle program data update for device %s, received data: %s",
                 self._attr_unique_id,
                 data.hex(),
@@ -74,7 +74,7 @@ class SyncleoSensor(SyncleoBaseEntity, SensorEntity):
             value = int.from_bytes(data, byteorder="little") if data else None
 
         elif self._cmd_class and cmd.command_type == self._cmd_class.command_type:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Handle update for device %s, received command: %s",
                 self._attr_unique_id,
                 cmd,

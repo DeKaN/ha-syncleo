@@ -41,6 +41,8 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
             config = profile.program_data_fields[feature_key]
         elif isinstance(profile, NumberMixin) and feature_key in profile.number_configs:
             config = profile.number_configs.get(feature_key)
+        else:
+            config = None
 
         if config:
             self._attr_native_min_value = int(config.min_value)
@@ -80,7 +82,7 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
                 self._attr_native_min_value,
                 min(self._attr_native_max_value, parsed_value),
             )
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Handle program data update for device %s, raw: %s, parsed: %s, processed: %s",
                 self._attr_unique_id,
                 data.hex(),
@@ -89,7 +91,7 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
             )
         elif self._cmd_class and cmd.command_type == self._cmd_class.command_type:
             value = float(cmd.value)
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Handle command update for device %s, raw: %s, processed: %s",
                 self._attr_unique_id,
                 cmd.value,

@@ -96,7 +96,7 @@ class SyncleoFan(SyncleoBaseEntity, FanEntity):
             )
 
         if update_needed:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Handled update for device %s, received command: %s",
                 self._attr_unique_id,
                 cmd,

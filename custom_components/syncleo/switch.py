@@ -55,7 +55,7 @@ class SyncleoSwitch(SyncleoBaseEntity, SwitchEntity):
 
         if self._is_program_data:
             data = self.get_program_data(self._feature_key)
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Handle program data update for device %s, received data: %s",
                 self._attr_unique_id,
                 data.hex(),
@@ -63,7 +63,7 @@ class SyncleoSwitch(SyncleoBaseEntity, SwitchEntity):
             is_on = int.from_bytes(data, byteorder="little") != 0 if data else False
 
         elif self._cmd_class and cmd.command_type == self._cmd_class.command_type:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Handle update for device %s, received command: %s",
                 self._attr_unique_id,
                 cmd,

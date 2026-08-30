@@ -165,7 +165,7 @@ PROFILES = [
             FEATURE_ERROR,
             FEATURE_VOLUME,
         ],
-        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
+        numbers=[FEATURE_POWER_LEVEL],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=5),
         },
@@ -232,10 +232,19 @@ PROFILES = [
             ),
             PD_TURN_ON: ProgramDataField(mode=4, offset=0),
         },
+        data_source_features=[
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
+            FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
+        ],
         binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
         numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=10),
+        },
+        selects={
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
+                options_map={},
+            ),
         },
         switches=[
             FEATURE_BACKLIGHT,
@@ -267,10 +276,19 @@ PROFILES = [
             ),
             PD_TURN_ON: ProgramDataField(mode=4, offset=0),
         },
+        data_source_features=[
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
+            FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
+        ],
         binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
         numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=10),
+        },
+        selects={
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
+                options_map={},
+            ),
         },
         switches=[
             FEATURE_BACKLIGHT,
@@ -415,10 +433,19 @@ PROFILES = [
             ),
             PD_TURN_ON: ProgramDataField(mode=4, offset=0),
         },
+        data_source_features=[
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
+            FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
+        ],
         binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
         numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=10),
+        },
+        selects={
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
+                options_map={},
+            ),
         },
         switches=[
             FEATURE_BACKLIGHT,
@@ -450,10 +477,19 @@ PROFILES = [
             ),
             PD_TURN_ON: ProgramDataField(mode=4, offset=0),
         },
+        data_source_features=[
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
+            FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
+        ],
         binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
         numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=10),
+        },
+        selects={
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
+                options_map={},
+            ),
         },
         switches=[
             FEATURE_BACKLIGHT,
@@ -498,6 +534,10 @@ PROFILES = [
                 mode=12, offset=4, size=4, min_value=0, max_value=4294967295
             ),
         },
+        data_source_features=[
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
+            FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
+        ],
         binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
         numbers=[
             FEATURE_POWER_LEVEL,
@@ -517,6 +557,9 @@ PROFILES = [
                     PRESET_AURUS_SCREENSAVER_MODE_3: 2,
                     PRESET_AURUS_SCREENSAVER_MODE_5: 3,
                 },
+            ),
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
+                options_map={},
             ),
         },
         switches=[

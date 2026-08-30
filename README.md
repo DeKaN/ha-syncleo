@@ -28,9 +28,22 @@ Or
 1. Click Install below the found integration.
 
 Then add device via these steps:
-1. Wait for autodiscovery.
+1. Wait for autodiscovery (it's important).
 1. Paste "Share URL" from mobile app at adding device.
 1. Fix Vendor/Model if needed.
+
+## Virtual Temperature Sensor
+By default, heaters use their internal sensor to measure room temperature and control heating level. Because sensor is near the heater, this internal reading can be inaccurate. Also, heaters support combining into a group, where one of them is broacasting temperature from its sensor to others.
+The Virtual Temperature sensor solves this by allowing you to link any Home Assistant temperature sensor (e.g., a Zigbee room thermometer) directly to the heater over the local network using mDNS as real device does.
+
+How to set it up:
+1. Create the Virtual Sensor:
+    1. Go to Settings > Devices & Services > Add Integration and search for Syncleo.
+    1. Choose the existing Home Assistant temperature entity you want to use as the source for Virtual Sensor. This creates a virtual mDNS broadcaster on your network. Attention: this is a virtual device with minimum of implementation, don't add it in a mobile app!
+1. Link the sensor to heater:
+    1. Go to your Syncleo Heater's device page in Home Assistant.
+    1. Locate the "Temperature Source" dropdown menu.
+    1. Change it from the internal sensor to the newly created Virtual Sensor.
 
 <!---->
 [hacs]: https://github.com/hacs/integration

@@ -123,7 +123,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
             raw_val = int(cmd.value)
             resolved_mode = self._rev_hvac_map.get(raw_val)
             resolved_preset = self._rev_presets_map.get(raw_val)
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Mode change for device %s: raw=%s, resolved_mode=%s, resolved_preset=%s",
                 self._attr_unique_id,
                 raw_val,
@@ -173,7 +173,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
             update_needed = True
 
         if update_needed:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Handled update for device %s, received command: %s",
                 self._attr_unique_id,
                 cmd,
