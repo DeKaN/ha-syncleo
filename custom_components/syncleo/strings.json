@@ -69,6 +69,10 @@
             "state": {
               "anti_frost": "Anti Frost",
               "manual": "Manual",
+              "auto": "Auto",
+              "night": "Sleep",
+              "turbo": "Turbo",
+              "ventilation": "Fan",
               "vacation": "Vacation"
             }
           }

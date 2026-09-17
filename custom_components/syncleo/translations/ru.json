@@ -69,6 +69,10 @@
             "state": {
               "anti_frost": "Anti Frost",
               "manual": "Ручной",
+              "auto": "Авто",
+              "night": "Ночной",
+              "turbo": "Турбо",
+              "ventilation": "Вентиляция",
               "vacation": "Отпуск"
             }
           }
