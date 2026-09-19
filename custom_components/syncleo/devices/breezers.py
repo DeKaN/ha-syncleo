@@ -12,6 +12,7 @@ from pysyncleo.enums import UdpCommandType
 
 from ..const import (
     FEATURE_BACKLIGHT,
+    FEATURE_BREEZER_AUTO_OFF_BACKLIGHT,
     FEATURE_BREEZER_DAMPER,
     FEATURE_BREEZER_MELODY,
     FEATURE_BREEZER_TEMPERATURE,
@@ -333,7 +334,7 @@ PROFILES = [
                 }
             ),
         },
-        switches=[FEATURE_BACKLIGHT, FEATURE_VOLUME],
+        switches=[FEATURE_BREEZER_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         sensors={
             FEATURE_CURRENT_TEMPERATURE: SensorConfig(
                 device_class=SensorDeviceClass.TEMPERATURE,
