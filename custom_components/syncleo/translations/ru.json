@@ -244,11 +244,11 @@
       "aurus_vrf_noiseless_mode": {
         "name": "Бесшумный"
       },
+      "auto_off_backlight": {
+        "name": "Автоотключение подсветки"
+      },
       "backlight": {
         "name": "Подсветка"
-      },
-      "breezer_auto_off_backlight": {
-        "name": "Автоотключение подсветки"
       },
       "breeze_away": {
         "name": "Деликативный обдув"

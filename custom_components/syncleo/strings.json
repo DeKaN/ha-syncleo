@@ -244,11 +244,11 @@
       "aurus_vrf_noiseless_mode": {
         "name": "Noiseless"
       },
+      "auto_off_backlight": {
+        "name": "Auto-off backlight"
+      },
       "backlight": {
         "name": "Backlight"
-      },
-      "breezer_auto_off_backlight": {
-        "name": "Auto-off backlight"
       },
       "breeze_away": {
         "name": "Breeze Away"

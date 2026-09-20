@@ -69,6 +69,10 @@
             "state": {
               "anti_frost": "Anti Frost",
               "manual": "Manual",
+              "auto": "Auto",
+              "night": "Sleep",
+              "turbo": "Turbo",
+              "ventilation": "Fan",
               "vacation": "Vacation"
             }
           }
@@ -240,11 +244,11 @@
       "aurus_vrf_noiseless_mode": {
         "name": "Noiseless"
       },
+      "auto_off_backlight": {
+        "name": "Auto-off backlight"
+      },
       "backlight": {
         "name": "Backlight"
-      },
-      "breezer_auto_off_backlight": {
-        "name": "Auto-off backlight"
       },
       "breeze_away": {
         "name": "Breeze Away"
