@@ -69,6 +69,10 @@
             "state": {
               "anti_frost": "Anti Frost",
               "manual": "Ручной",
+              "auto": "Авто",
+              "night": "Ночной",
+              "turbo": "Турбо",
+              "ventilation": "Вентиляция",
               "vacation": "Отпуск"
             }
           }
@@ -239,6 +243,9 @@
       },
       "aurus_vrf_noiseless_mode": {
         "name": "Бесшумный"
+      },
+      "auto_off_backlight": {
+        "name": "Автоотключение подсветки"
       },
       "backlight": {
         "name": "Подсветка"

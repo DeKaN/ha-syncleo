@@ -1,3 +1,4 @@
+from homeassistant.components.climate.const import ClimateEntityFeature, HVACMode
 from homeassistant.components.fan import FanEntityFeature
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.const import (
@@ -6,8 +7,10 @@ from homeassistant.const import (
     STATE_OFF,
     UnitOfTemperature,
 )
+from pysyncleo.enums import UdpCommandType
 
 from ..const import (
+    FEATURE_AUTO_OFF_BACKLIGHT,
     FEATURE_BACKLIGHT,
     FEATURE_BREEZER_DAMPER,
     FEATURE_BREEZER_MELODY,
@@ -43,6 +46,7 @@ from ..const import (
 )
 from .profiles import (
     BreezerProfile,
+    ClimateProfile,
     NumberConfig,
     ProgramDataField,
     SelectConfig,
@@ -266,15 +270,25 @@ PROFILES = [
             ),
         },
     ),
-    BreezerProfile(
+    ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=69,
         profile_type=PROFILE_TYPE_BREEZER,
-        supported_features=FanEntityFeature.SET_SPEED
-        | FanEntityFeature.PRESET_MODE
-        | FanEntityFeature.TURN_OFF
-        | FanEntityFeature.TURN_ON,
-        speed_count=7,
+        min_temp=5,
+        max_temp=25,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.PRESET_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.FAN_ONLY,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
@@ -282,7 +296,16 @@ PROFILES = [
             PRESET_TURBO: 4,
             PRESET_VENTILATION: 5,
         },
-        default_preset_mode=PRESET_AUTO,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            "1": 1,
+            "2": 2,
+            "3": 3,
+            "4": 4,
+            "5": 5,
+            "6": 6,
+            "7": 7,
+        },
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -310,7 +333,7 @@ PROFILES = [
                 }
             ),
         },
-        switches=[FEATURE_BACKLIGHT, FEATURE_VOLUME],
+        switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         sensors={
             FEATURE_CURRENT_TEMPERATURE: SensorConfig(
                 device_class=SensorDeviceClass.TEMPERATURE,
