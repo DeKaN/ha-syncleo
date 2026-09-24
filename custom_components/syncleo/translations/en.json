@@ -36,6 +36,15 @@
   },
   "entity": {
     "binary_sensor": {
+      "breezer_damper": {
+        "name": "Recirculation"
+      },
+      "co2_installed": {
+        "name": "CO₂ sensor installed"
+      },
+      "heater_installed": {
+        "name": "Heater installed"
+      },
       "access_control": {
         "name": "Access Control"
       },
