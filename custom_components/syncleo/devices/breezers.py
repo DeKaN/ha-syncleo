@@ -5,7 +5,6 @@ from homeassistant.const import (
     CONCENTRATION_PARTS_PER_MILLION,
     PERCENTAGE,
     STATE_OFF,
-    UnitOfTemperature,
 )
 from pysyncleo.enums import UdpCommandType
 
@@ -16,7 +15,6 @@ from ..const import (
     FEATURE_BREEZER_MELODY,
     FEATURE_BREEZER_TEMPERATURE,
     FEATURE_CURRENT_CO2,
-    FEATURE_CURRENT_TEMPERATURE,
     FEATURE_ERROR,
     FEATURE_EXPENDABLES_FILTER,
     FEATURE_EXPENDABLES_PREFILTER,
@@ -212,11 +210,6 @@ PROFILES = [
         },
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         sensors={
-            FEATURE_CURRENT_TEMPERATURE: SensorConfig(
-                device_class=SensorDeviceClass.TEMPERATURE,
-                state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=UnitOfTemperature.CELSIUS,
-            ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 required_program_data_field=PD_CO2_INSTALLED,
                 device_class=SensorDeviceClass.CO2,
@@ -362,11 +355,6 @@ PROFILES = [
         },
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         sensors={
-            FEATURE_CURRENT_TEMPERATURE: SensorConfig(
-                device_class=SensorDeviceClass.TEMPERATURE,
-                state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=UnitOfTemperature.CELSIUS,
-            ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 required_program_data_field=PD_CO2_INSTALLED,
                 device_class=SensorDeviceClass.CO2,
