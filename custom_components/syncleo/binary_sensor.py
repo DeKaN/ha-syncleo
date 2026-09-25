@@ -4,7 +4,6 @@ from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from pysyncleo.enums import UdpCommandType
 
 from .devices import BinarySensorMixin
 from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
@@ -52,15 +51,6 @@ class SyncleoBinarySensor(SyncleoBaseEntity, BinarySensorEntity):
         is_on = self._is_on
 
         if self._is_program_data:
-            field = self._profile.program_data_fields[self._feature_key]
-            if (
-                cmd.command_type != UdpCommandType.PROGRAM_DATA
-                or cmd.mode != field.mode
-                or not cmd.data
-                or len(cmd.data) < field.offset + field.size
-            ):
-                return
-
             data = self.get_program_data(self._feature_key)
             is_on = int.from_bytes(data, byteorder="little") != 0
 
