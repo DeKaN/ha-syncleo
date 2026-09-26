@@ -370,4 +370,74 @@ PROFILES = [
             ),
         },
     ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=106,
+        profile_type=PROFILE_TYPE_BREEZER,
+        min_temp=5,
+        max_temp=25,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.PRESET_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.FAN_ONLY,
+        preset_modes_map={
+            PRESET_MANUAL: 1,
+            PRESET_AUTO: 2,
+            PRESET_NIGHT: 3,
+            PRESET_TURBO: 4,
+            PRESET_VENTILATION: 5,
+        },
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            "1": 1,
+            "2": 2,
+            "3": 3,
+            "4": 4,
+            "5": 5,
+        },
+        program_data_fields={
+            PD_HEATER_INSTALLED: ProgramDataField(mode=0),
+            PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
+            PD_TURN_ON: ProgramDataField(mode=1, offset=0),
+            PD_NIGHT_SPEED: ProgramDataField(
+                mode=1, offset=1, min_value=1, max_value=3
+            ),
+            PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
+        },
+        binary_sensors=[
+            FEATURE_ERROR,
+            PD_BREEZER_DAMPER,
+            PD_CO2_INSTALLED,
+            PD_HEATER_INSTALLED,
+        ],
+        switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
+        sensors={
+            FEATURE_CURRENT_TEMPERATURE: SensorConfig(
+                device_class=SensorDeviceClass.TEMPERATURE,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfTemperature.CELSIUS,
+            ),
+            FEATURE_CURRENT_CO2: SensorConfig(
+                device_class=SensorDeviceClass.CO2,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+            ),
+            FEATURE_EXPENDABLES_FILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                ),
+            ),
+        },
+    ),
 ]
