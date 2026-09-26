@@ -7,10 +7,12 @@ from homeassistant.components.climate.const import (
     SWING_HORIZONTAL,
     SWING_OFF,
     SWING_VERTICAL,
+    ClimateEntityFeature,
     HVACMode,
 )
 from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.exceptions import ServiceValidationError
 from pysyncleo.commands import CmdMode, CmdSpeed, CmdTargetTemperature, UdpCommandType
 
 from .const import PD_SWING_HORIZONTAL, PD_SWING_VERTICAL, TRANLATION_KEY_CLIMATE
@@ -45,7 +47,6 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         self._attr_min_temp = profile.min_temp
         self._attr_max_temp = profile.max_temp
         self._attr_target_temperature_step = profile.target_temp_step
-        self._attr_supported_features = profile.supported_features
 
         self._attr_hvac_modes = list(profile.hvac_modes_map.keys())
 
@@ -55,9 +56,6 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
         if profile.fan_modes_map:
             self._attr_fan_modes = list(profile.fan_modes_map.keys())
-
-        if profile.preset_modes_map:
-            self._attr_preset_modes = list(profile.preset_modes_map.keys())
 
         if profile.supported_swing_modes:
             self._attr_swing_modes = profile.supported_swing_modes
@@ -78,8 +76,37 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
     def preset_mode(self) -> str | None:
         return self._current_preset_mode
 
+    def _requirement_is_absent(self, feature_key: str | None) -> bool:
+        """Only a received zero confirms that optional hardware is absent."""
+        if feature_key is None:
+            return False
+        data = self.get_known_program_data(feature_key)
+        return data is not None and int.from_bytes(data, byteorder="little") == 0
+
+    @property
+    def preset_modes(self) -> list[str] | None:
+        if not self._profile.preset_modes_map:
+            return None
+
+        return [
+            preset
+            for preset in self._profile.preset_modes_map
+            if not self._requirement_is_absent(
+                self._profile.preset_mode_requirements.get(preset)
+            )
+        ]
+
+    @property
+    def supported_features(self) -> ClimateEntityFeature:
+        features = self._profile.supported_features
+        if self._requirement_is_absent(self._profile.target_temperature_requirement):
+            features &= ~ClimateEntityFeature.TARGET_TEMPERATURE
+        return features
+
     @property
     def target_temperature(self) -> float | None:
+        if not self.supported_features & ClimateEntityFeature.TARGET_TEMPERATURE:
+            return None
         return self._target_temp
 
     @property
@@ -195,6 +222,9 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
             self.async_write_ha_state()
 
     async def async_set_temperature(self, **kwargs):
+        if not self.supported_features & ClimateEntityFeature.TARGET_TEMPERATURE:
+            raise ServiceValidationError("Target temperature control is not available")
+
         temp = kwargs.get(ATTR_TEMPERATURE)
         if temp is not None:
             temp = max(self._attr_min_temp, min(self._attr_max_temp, float(temp)))
@@ -223,6 +253,9 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         )
 
     async def async_set_preset_mode(self, preset_mode: str) -> None:
+        if preset_mode not in (self.preset_modes or []):
+            raise ServiceValidationError(f"Preset mode {preset_mode} is not available")
+
         raw_val = self._profile.preset_modes_map.get(preset_mode)
         if raw_val is not None:
             await self.async_send_command(CmdMode(raw_val))

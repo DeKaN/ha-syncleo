@@ -5,7 +5,6 @@ from homeassistant.const import (
     CONCENTRATION_PARTS_PER_MILLION,
     PERCENTAGE,
     STATE_OFF,
-    UnitOfTemperature,
 )
 from pysyncleo.enums import UdpCommandType
 
@@ -16,7 +15,6 @@ from ..const import (
     FEATURE_BREEZER_MELODY,
     FEATURE_BREEZER_TEMPERATURE,
     FEATURE_CURRENT_CO2,
-    FEATURE_CURRENT_TEMPERATURE,
     FEATURE_ERROR,
     FEATURE_EXPENDABLES_FILTER,
     FEATURE_EXPENDABLES_PREFILTER,
@@ -146,15 +144,27 @@ PROFILES = [
             ),
         },
     ),
-    BreezerProfile(
+    ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=32,
         profile_type=PROFILE_TYPE_BREEZER,
-        supported_features=FanEntityFeature.SET_SPEED
-        | FanEntityFeature.PRESET_MODE
-        | FanEntityFeature.TURN_OFF
-        | FanEntityFeature.TURN_ON,
-        speed_count=7,
+        min_temp=5,
+        max_temp=25,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.PRESET_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.FAN_ONLY,
+        preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
+        target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
@@ -162,7 +172,16 @@ PROFILES = [
             PRESET_TURBO: 4,
             PRESET_VENTILATION: 5,
         },
-        default_preset_mode=PRESET_AUTO,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            "1": 1,
+            "2": 2,
+            "3": 3,
+            "4": 4,
+            "5": 5,
+            "6": 6,
+            "7": 7,
+        },
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -174,18 +193,25 @@ PROFILES = [
         },
         binary_sensors=[
             FEATURE_ERROR,
-            PD_BREEZER_DAMPER,
             PD_CO2_INSTALLED,
             PD_HEATER_INSTALLED,
         ],
-        switches=[FEATURE_BACKLIGHT, FEATURE_VOLUME],
-        sensors={
-            FEATURE_CURRENT_TEMPERATURE: SensorConfig(
-                device_class=SensorDeviceClass.TEMPERATURE,
-                state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=UnitOfTemperature.CELSIUS,
+        selects={
+            FEATURE_BREEZER_MELODY: SelectConfig(
+                options_map={
+                    STATE_OFF: 0,
+                    PRESET_MELODY_RAIN_SOUND: 1,
+                    PRESET_MELODY_SEA_SOUND: 2,
+                    PRESET_MELODY_FOREST_SOUND: 3,
+                    PRESET_MELODY_BIRDS_SINGING: 4,
+                    PRESET_MELODY_FIREPLACE_SOUND: 5,
+                }
             ),
+        },
+        switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
+        sensors={
             FEATURE_CURRENT_CO2: SensorConfig(
+                required_program_data_field=PD_CO2_INSTALLED,
                 device_class=SensorDeviceClass.CO2,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
@@ -195,13 +221,6 @@ PROFILES = [
                 unit_of_measurement=PERCENTAGE,
                 value_fn=lambda val: (
                     val[0] if isinstance(val, list) and len(val) > 0 else None
-                ),
-            ),
-            FEATURE_EXPENDABLES_PREFILTER: SensorConfig(
-                state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=PERCENTAGE,
-                value_fn=lambda val: (
-                    val[1] if isinstance(val, list) and len(val) > 1 else None
                 ),
             ),
         },
@@ -289,6 +308,8 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
+        preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
+        target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
@@ -317,7 +338,6 @@ PROFILES = [
         },
         binary_sensors=[
             FEATURE_ERROR,
-            PD_BREEZER_DAMPER,
             PD_CO2_INSTALLED,
             PD_HEATER_INSTALLED,
         ],
@@ -335,12 +355,8 @@ PROFILES = [
         },
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         sensors={
-            FEATURE_CURRENT_TEMPERATURE: SensorConfig(
-                device_class=SensorDeviceClass.TEMPERATURE,
-                state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=UnitOfTemperature.CELSIUS,
-            ),
             FEATURE_CURRENT_CO2: SensorConfig(
+                required_program_data_field=PD_CO2_INSTALLED,
                 device_class=SensorDeviceClass.CO2,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,

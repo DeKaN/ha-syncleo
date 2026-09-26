@@ -254,16 +254,25 @@ class SyncleoBaseEntity(Entity):
 
             self.async_write_ha_state()
 
-    def get_program_data(self, feature_key: str) -> bytes:
+    def get_known_program_data(self, feature_key: str) -> bytes | None:
+        """Return the received field, or None if its complete value is unknown."""
         field = self._profile.program_data_fields.get(feature_key)
         if not field:
-            return b""
+            return None
 
         data = self._program_data_modes.get(field.mode)
         if data and len(data) >= field.offset + field.size:
             return bytes(data[field.offset : field.offset + field.size])
 
-        return bytes(field.size)
+        return None
+
+    def get_program_data(self, feature_key: str) -> bytes:
+        """Read a field with the legacy zero fallback for existing entities."""
+        data = self.get_known_program_data(feature_key)
+        if data is not None:
+            return data
+        field = self._profile.program_data_fields.get(feature_key)
+        return bytes(field.size) if field else b""
 
     async def async_set_program_data(self, feature_key: str, value: bytes):
         await self.async_set_program_data_fields({feature_key: value})
