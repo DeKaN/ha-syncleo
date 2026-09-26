@@ -2,6 +2,7 @@ from homeassistant.components.climate.const import ClimateEntityFeature, HVACMod
 from homeassistant.components.fan import FanEntityFeature
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.const import (
+    CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
     CONCENTRATION_PARTS_PER_MILLION,
     PERCENTAGE,
     STATE_OFF,
@@ -10,11 +11,11 @@ from pysyncleo.enums import UdpCommandType
 
 from ..const import (
     FEATURE_AUTO_OFF_BACKLIGHT,
-    FEATURE_BACKLIGHT,
     FEATURE_BREEZER_DAMPER,
     FEATURE_BREEZER_MELODY,
     FEATURE_BREEZER_TEMPERATURE,
     FEATURE_CURRENT_CO2,
+    FEATURE_CURRENT_PM2,
     FEATURE_ERROR,
     FEATURE_EXPENDABLES_FILTER,
     FEATURE_EXPENDABLES_PREFILTER,
@@ -93,22 +94,43 @@ PROFILES = [
             ),
         },
     ),
-    BreezerProfile(
+    ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=30,
         profile_type=PROFILE_TYPE_BREEZER,
-        supported_features=FanEntityFeature.SET_SPEED
-        | FanEntityFeature.PRESET_MODE
-        | FanEntityFeature.TURN_OFF
-        | FanEntityFeature.TURN_ON,
-        speed_count=8,
+        min_temp=5,
+        max_temp=25,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.PRESET_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.FAN_ONLY,
+        target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
+            PRESET_VENTILATION: 5,
         },
-        default_preset_mode=PRESET_AUTO,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            "1": 1,
+            "2": 2,
+            "3": 3,
+            "4": 4,
+            "5": 5,
+            "6": 6,
+            "7": 7,
+        },
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_UV_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -118,16 +140,26 @@ PROFILES = [
             ),
             PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
         },
-        binary_sensors=[FEATURE_ERROR],
+        binary_sensors=[FEATURE_ERROR, PD_HEATER_INSTALLED],
         numbers=[PD_NIGHT_SPEED],
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_AUTO_OFF_BACKLIGHT,
             FEATURE_IONIZATION,
             FEATURE_ULTRAVIOLET,
             FEATURE_VOLUME,
             PD_BREEZER_DAMPER,
         ],
         sensors={
+            FEATURE_CURRENT_PM2: SensorConfig(
+                device_class=SensorDeviceClass.PM25,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+            ),
+            FEATURE_CURRENT_CO2: SensorConfig(
+                device_class=SensorDeviceClass.CO2,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+            ),
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=PERCENTAGE,
@@ -225,22 +257,43 @@ PROFILES = [
             ),
         },
     ),
-    BreezerProfile(
+    ClimateProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=59,
         profile_type=PROFILE_TYPE_BREEZER,
-        supported_features=FanEntityFeature.SET_SPEED
-        | FanEntityFeature.PRESET_MODE
-        | FanEntityFeature.TURN_OFF
-        | FanEntityFeature.TURN_ON,
-        speed_count=8,
+        min_temp=5,
+        max_temp=25,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.PRESET_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.FAN_ONLY,
+        target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
+            PRESET_VENTILATION: 5,
         },
-        default_preset_mode=PRESET_AUTO,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={
+            "1": 1,
+            "2": 2,
+            "3": 3,
+            "4": 4,
+            "5": 5,
+            "6": 6,
+            "7": 7,
+        },
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_UV_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -251,7 +304,7 @@ PROFILES = [
             PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
             PD_BREEZER_AUTO_INTENSITY: ProgramDataField(mode=1, offset=3),
         },
-        binary_sensors=[FEATURE_ERROR],
+        binary_sensors=[FEATURE_ERROR, PD_HEATER_INSTALLED],
         numbers=[PD_NIGHT_SPEED],
         selects={
             FEATURE_BREEZER_MELODY: SelectConfig(
@@ -266,13 +319,23 @@ PROFILES = [
             ),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_AUTO_OFF_BACKLIGHT,
             FEATURE_IONIZATION,
             FEATURE_ULTRAVIOLET,
             FEATURE_VOLUME,
             PD_BREEZER_DAMPER,
         ],
         sensors={
+            FEATURE_CURRENT_PM2: SensorConfig(
+                device_class=SensorDeviceClass.PM25,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+            ),
+            FEATURE_CURRENT_CO2: SensorConfig(
+                device_class=SensorDeviceClass.CO2,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+            ),
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=PERCENTAGE,
