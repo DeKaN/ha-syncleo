@@ -6,6 +6,8 @@ from .kettles import PROFILES as KETTLE_PROFILES
 from .profiles import (
     BinarySensorMixin,
     BreezerProfile,
+    ButtonConfig,
+    ButtonMixin,
     ClimateProfile,
     DeviceBaseProfile,
     LightMixin,
@@ -35,6 +37,8 @@ __all__ = [
     "DEVICE_PROFILES",
     "BinarySensorMixin",
     "BreezerProfile",
+    "ButtonConfig",
+    "ButtonMixin",
     "ClimateProfile",
     "DeviceBaseProfile",
     "LightMixin",

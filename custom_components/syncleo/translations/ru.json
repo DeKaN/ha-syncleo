@@ -35,6 +35,11 @@
     }
   },
   "entity": {
+    "button": {
+      "reset_filter": {
+        "name": "Сброс ресурса фильтра"
+      }
+    },
     "binary_sensor": {
       "breezer_damper": {
         "name": "Рециркуляция"

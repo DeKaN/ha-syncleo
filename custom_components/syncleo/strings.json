@@ -35,6 +35,11 @@
     }
   },
   "entity": {
+    "button": {
+      "reset_filter": {
+        "name": "Reset filter life"
+      }
+    },
     "binary_sensor": {
       "breezer_damper": {
         "name": "Recirculation"

@@ -5,7 +5,9 @@ from homeassistant.const import (
     CONCENTRATION_PARTS_PER_MILLION,
     PERCENTAGE,
     STATE_OFF,
+    EntityCategory,
 )
+from pysyncleo.commands import CmdExpendables
 from pysyncleo.enums import UdpCommandType
 
 from ..const import (
@@ -19,6 +21,7 @@ from ..const import (
     FEATURE_EXPENDABLES_FILTER,
     FEATURE_EXPENDABLES_PREFILTER,
     FEATURE_IONIZATION,
+    FEATURE_RESET_FILTER,
     FEATURE_ULTRAVIOLET,
     FEATURE_VOLUME,
     PD_BREEZER_AUTO_INTENSITY,
@@ -44,6 +47,7 @@ from ..const import (
 )
 from .profiles import (
     BreezerProfile,
+    ButtonConfig,
     ClimateProfile,
     NumberConfig,
     ProgramDataField,
@@ -191,6 +195,13 @@ PROFILES = [
             ),
             PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
         },
+        buttons={
+            FEATURE_RESET_FILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(0),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+        },
         binary_sensors=[
             FEATURE_ERROR,
             PD_CO2_INSTALLED,
@@ -335,6 +346,13 @@ PROFILES = [
                 mode=1, offset=1, min_value=1, max_value=3
             ),
             PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
+        },
+        buttons={
+            FEATURE_RESET_FILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(0),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
         },
         binary_sensors=[
             FEATURE_ERROR,
