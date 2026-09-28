@@ -11,6 +11,7 @@ from homeassistant.const import (
     EntityCategory,
     Platform,
 )
+from pysyncleo.commands import UdpCommand
 from pysyncleo.enums import UdpCommandType
 from pysyncleo.models import DiagnosticStatus
 
@@ -53,6 +54,13 @@ class LightConfig:
     blue_key: str
     brightness_key: str | None = None
     brightness_levels: int = 255
+
+
+@dataclass(kw_only=True)
+class ButtonConfig:
+    command_factory: Callable[[], UdpCommand]
+    entity_category: EntityCategory | None = None
+    entity_registry_enabled_default: bool = True
 
 
 @dataclass(kw_only=True)
@@ -105,6 +113,16 @@ class BinarySensorMixin(PlatformProviderBase):
         return (
             platforms + [Platform.BINARY_SENSOR] if self.binary_sensors else platforms
         )
+
+
+@dataclass(kw_only=True)
+class ButtonMixin(PlatformProviderBase):
+    buttons: dict[str, ButtonConfig] = field(default_factory=dict)
+
+    @property
+    def supported_platforms(self) -> list[Platform]:
+        platforms = super().supported_platforms
+        return platforms + [Platform.BUTTON] if self.buttons else platforms
 
 
 @dataclass(kw_only=True)
@@ -203,6 +221,7 @@ class BreezerProfile(
 @dataclass(kw_only=True)
 class ClimateProfile(
     DeviceBaseProfile,
+    ButtonMixin,
     BinarySensorMixin,
     NumberMixin,
     SelectMixin,
