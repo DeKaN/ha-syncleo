@@ -105,7 +105,7 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
         if temp is not None:
             temp = max(self._attr_min_temp, min(self._attr_max_temp, float(temp)))
             await self.async_send_command(CmdTargetTemperature(temp))
-            self._current_temp = temp
+            self._target_temp = temp
             self.async_write_ha_state()
 
     async def async_set_operation_mode(self, operation_mode: str) -> None:
