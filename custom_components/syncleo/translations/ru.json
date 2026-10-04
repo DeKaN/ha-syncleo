@@ -220,6 +220,9 @@
       "current_co2": {
         "name": "CO2 - ppm"
       },
+      "current_pm2": {
+        "name": "PM2.5"
+      },
       "current_temperature": {
         "name": "Температура притока"
       },
