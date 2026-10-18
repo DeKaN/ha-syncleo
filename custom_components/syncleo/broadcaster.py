@@ -83,7 +83,7 @@ class SyncleoVirtualZeroconfBroadcaster:
         current_temp = state and self._parse_temp(state)
 
         if current_temp is not None:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Got new temperature '%s' from %s", current_temp, self.source_entity_id
             )
 
