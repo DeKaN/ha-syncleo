@@ -134,6 +134,7 @@ PROFILES = [
             "5": 5,
             "6": 6,
             "7": 7,
+            "8": 8,
         },
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
@@ -311,6 +312,7 @@ PROFILES = [
             "5": 5,
             "6": 6,
             "7": 7,
+            "8": 8,
         },
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
