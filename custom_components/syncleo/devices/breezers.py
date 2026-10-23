@@ -247,10 +247,6 @@ PROFILES = [
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
             PD_TURN_ON: ProgramDataField(mode=1, offset=0),
-            PD_NIGHT_SPEED: ProgramDataField(
-                mode=1, offset=1, min_value=1, max_value=3
-            ),
-            PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
         },
         buttons={
             FEATURE_RESET_FILTER: ButtonConfig(
@@ -440,10 +436,6 @@ PROFILES = [
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
             PD_TURN_ON: ProgramDataField(mode=1, offset=0),
-            PD_NIGHT_SPEED: ProgramDataField(
-                mode=1, offset=1, min_value=1, max_value=3
-            ),
-            PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
         },
         buttons={
             FEATURE_RESET_FILTER: ButtonConfig(
