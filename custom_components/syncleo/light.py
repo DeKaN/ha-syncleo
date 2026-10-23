@@ -11,10 +11,19 @@ from homeassistant.components.light import (
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util.color import brightness_to_value, value_to_brightness
+from pysyncleo.commands import SyncleoRawCommand
+from pysyncleo.enums import UdpCommandType
 
+from .const import FEATURE_BACKLIGHT
 from .devices import DeviceBaseProfile, LightMixin
-from .devices.profiles import LightConfig
+from .devices.profiles import HumidifierProfile, LightConfig
 from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
+from .humidifier_logic import (
+    brightness_to_level,
+    decode_backlight,
+    encode_backlight,
+    level_to_brightness,
+)
 from .models import SyncleoConfigEntry
 from .utils import get_device_profile_by_device
 
@@ -30,11 +39,18 @@ async def async_setup_entry(
     conn = entry.runtime_data
     profile = get_device_profile_by_device(conn.device)
 
+    entities: list[LightEntity] = []
+
     if isinstance(profile, LightMixin) and profile.lights:
-        entities = [
+        entities.extend(
             SyncleoLight(conn, profile, entry, light_key, config)
             for light_key, config in profile.lights.items()
-        ]
+        )
+
+    if isinstance(profile, HumidifierProfile) and profile.backlight:
+        entities.append(SyncleoBacklightLight(conn, profile, entry))
+
+    if entities:
         async_add_entities(entities)
 
 
@@ -187,3 +203,73 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
 
         if need_update:
             self.async_write_ha_state()
+
+
+class SyncleoBacklightLight(SyncleoBaseEntity, LightEntity):
+    """Humidifier backlight: 8-byte register with level (0..3) and RGB colour."""
+
+    _attr_color_mode = ColorMode.RGB
+    _MAX_LEVEL = 3
+
+    def __init__(
+        self,
+        connection,
+        profile: DeviceBaseProfile,
+        entry: SyncleoConfigEntry,
+    ) -> None:
+        super().__init__(connection, profile, entry)
+        self._attr_supported_color_modes = {ColorMode.RGB}
+        self._attr_unique_id = f"{self._device_unique_id}_{FEATURE_BACKLIGHT}"
+        self._attr_translation_key = FEATURE_BACKLIGHT
+        self._level = 0
+        self._last_level = self._MAX_LEVEL
+        self._rgb: tuple[int, int, int] = (255, 255, 255)
+
+    @property
+    def is_on(self) -> bool:
+        return self._level > 0
+
+    @property
+    def brightness(self) -> int:
+        return level_to_brightness(self._level, self._MAX_LEVEL)
+
+    @property
+    def rgb_color(self) -> tuple[int, int, int]:
+        return self._rgb
+
+    async def _async_write_backlight(self, level: int, rgb: tuple[int, int, int]):
+        cmd = SyncleoRawCommand(encode_backlight(level, rgb))
+        cmd.command_type = UdpCommandType.BACKLIGHT
+        await self.async_send_command(cmd)
+        self._level = level
+        self._rgb = rgb
+        if level > 0:
+            self._last_level = level
+        self.async_write_ha_state()
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        if ATTR_BRIGHTNESS in kwargs:
+            level = brightness_to_level(kwargs[ATTR_BRIGHTNESS], self._MAX_LEVEL)
+        else:
+            level = self._last_level
+        if level <= 0:
+            level = self._last_level
+        rgb = tuple(kwargs[ATTR_RGB_COLOR]) if ATTR_RGB_COLOR in kwargs else self._rgb
+        await self._async_write_backlight(level, rgb)  # type: ignore[arg-type]
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        await self._async_write_backlight(0, self._rgb)
+
+    @callback
+    def _handle_device_update(self, cmd) -> None:
+        super()._handle_device_update(cmd)
+        if cmd.command_type != UdpCommandType.BACKLIGHT:
+            return
+        state = decode_backlight(getattr(cmd, "raw", b""))
+        if state is None:
+            return
+        self._level = state.level
+        self._rgb = state.rgb
+        if state.level > 0:
+            self._last_level = state.level
+        self.async_write_ha_state()
