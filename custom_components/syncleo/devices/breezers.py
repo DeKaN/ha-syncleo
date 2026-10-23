@@ -7,6 +7,7 @@ from homeassistant.const import (
     PERCENTAGE,
     STATE_OFF,
     EntityCategory,
+    # UnitOfDensity,  # Not available in the minimum supported HA 2026.5.0.
     UnitOfTime,
 )
 from pysyncleo.commands import CmdExpendables
@@ -233,6 +234,8 @@ PROFILES = [
                 device_class=SensorDeviceClass.PM25,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                # TODO: migrate before HA 2027.8 removes the legacy constant.
+                # unit_of_measurement=UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
             ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 device_class=SensorDeviceClass.CO2,
@@ -473,6 +476,8 @@ PROFILES = [
                 device_class=SensorDeviceClass.PM25,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                # TODO: migrate before HA 2027.8 removes the legacy constant.
+                # unit_of_measurement=UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
             ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 device_class=SensorDeviceClass.CO2,
