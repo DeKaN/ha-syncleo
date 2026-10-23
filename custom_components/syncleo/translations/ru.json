@@ -217,6 +217,9 @@
       }
     },
     "sensor": {
+      "remaining_time": {
+        "name": "Счетчик времени турбо"
+      },
       "current_co2": {
         "name": "CO2 - ppm"
       },

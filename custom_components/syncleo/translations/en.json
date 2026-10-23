@@ -147,6 +147,9 @@
       }
     },
     "sensor": {
+      "remaining_time": {
+        "name": "Turbo timer"
+      },
       "current_co2": {
         "name": "CO2 - ppm"
       },
