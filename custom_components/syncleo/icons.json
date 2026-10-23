@@ -16,6 +16,20 @@
           }
         }
       }
+    },
+    "humidifier": {
+      "syncleo_humidifier": {
+        "default": "mdi:air-humidifier"
+      }
+    },
+    "binary_sensor": {
+      "water_shortage": {
+        "default": "mdi:water-alert",
+        "state": {
+          "on": "mdi:water-alert",
+          "off": "mdi:water-check"
+        }
+      }
     }
   }
 }

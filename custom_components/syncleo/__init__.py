@@ -14,6 +14,7 @@ from pysyncleo.models import SyncleoUdpDevice
 from pysyncleo.transport import TransportManager
 
 from .broadcaster import SyncleoVirtualZeroconfBroadcaster
+from .compat import ensure_backlight_raw_payload
 from .const import (
     CONF_IS_VIRTUAL,
     CONF_PROTOCOL,
@@ -26,6 +27,8 @@ from .models import SyncleoDomainData, SyncleoGenericConfigEntry
 from .utils import get_device_profile_by_device
 
 _LOGGER = logging.getLogger(__name__)
+
+ensure_backlight_raw_payload()
 
 
 async def async_setup_entry(

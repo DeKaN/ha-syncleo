@@ -19,6 +19,7 @@ dev = [
     "homeassistant-stubs>=2026.5.0",
     "mypy==1.20.2",
     "pre-commit>=4.6.2",
+    "pytest>=9.1.1",
     "ruff>=0.16.4",
 ]
 [tool.mypy]
@@ -27,3 +28,6 @@ platform = "linux"
 follow_imports = "normal"
 ignore_missing_imports = true
 check_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -64,6 +64,9 @@
       },
       "volume": {
         "name": "Звук"
+      },
+      "water_shortage": {
+        "name": "Нет воды или бака"
       }
     },
     "climate": {
@@ -144,6 +147,30 @@
       },
       "vacation_temperature": {
         "name": "Температура режима Отпуск"
+      },
+      "humidifier_yoga_asanas": {
+        "name": "Йога: количество асан"
+      },
+      "humidifier_yoga_duration": {
+        "name": "Йога: длительность"
+      },
+      "humidifier_meditation_hour": {
+        "name": "Медитация: час начала"
+      },
+      "humidifier_meditation_minute": {
+        "name": "Медитация: минута начала"
+      },
+      "humidifier_prana_inhale": {
+        "name": "Прана: вдох"
+      },
+      "humidifier_prana_hold_in": {
+        "name": "Прана: задержка после вдоха"
+      },
+      "humidifier_prana_exhale": {
+        "name": "Прана: выдох"
+      },
+      "humidifier_prana_hold_out": {
+        "name": "Прана: задержка после выдоха"
       }
     },
     "select": {
@@ -214,6 +241,55 @@
         "state": {
           "datasource_preset_none": "Встроенный датчик"
         }
+      },
+      "humidifier_speed": {
+        "name": "Скорость",
+        "state": {
+          "min": "Минимальная",
+          "mid": "Средняя",
+          "max": "Максимальная"
+        }
+      },
+      "humidifier_fitness_duration": {
+        "name": "Фитнес: длительность",
+        "state": {
+          "15": "15 мин",
+          "30": "30 мин",
+          "60": "60 мин"
+        }
+      },
+      "humidifier_meditation_duration": {
+        "name": "Медитация: длительность",
+        "state": {
+          "8": "8 мин",
+          "16": "16 мин",
+          "24": "24 мин"
+        }
+      },
+      "humidifier_prana_cycles": {
+        "name": "Прана: циклы",
+        "state": {
+          "5": "5",
+          "10": "10",
+          "15": "15",
+          "20": "20"
+        }
+      },
+      "humidifier_prana_duration": {
+        "name": "Прана: длительность",
+        "state": {
+          "3": "3 с",
+          "6": "6 с",
+          "12": "12 с",
+          "24": "24 с"
+        }
+      },
+      "humidifier_prana_exercise": {
+        "name": "Прана авто: упражнение",
+        "state": {
+          "a1": "A1",
+          "a2": "A2"
+        }
       }
     },
     "sensor": {
@@ -237,6 +313,12 @@
       },
       "tank": {
         "name": "Бак"
+      },
+      "current_humidity": {
+        "name": "Влажность"
+      },
+      "humidifier_temperature": {
+        "name": "Температура"
       }
     },
     "switch": {
@@ -329,6 +411,9 @@
       },
       "warm_stream": {
         "name": "Тёплый воздушный поток"
+      },
+      "humidifier_meditation_repeat": {
+        "name": "Медитация: повтор каждый день"
       }
     },
     "water_heater": {
@@ -350,6 +435,33 @@
           "iq_boiling": "IQ кипячение",
           "tea_time": "Чайная церемония"
         }
+      }
+    },
+    "humidifier": {
+      "syncleo_humidifier": {
+        "state_attributes": {
+          "mode": {
+            "state": {
+              "manual": "Ручной",
+              "continuous": "Постоянно (CO)",
+              "auto": "Авто",
+              "night": "Ночной",
+              "baby": "Детский",
+              "health": "Здоровье",
+              "fitness": "Фитнес",
+              "yoga": "Йога",
+              "meditation": "Медитация",
+              "prana_manual": "Прана ручной",
+              "prana_auto": "Прана авто",
+              "aroma": "Арома"
+            }
+          }
+        }
+      }
+    },
+    "light": {
+      "backlight": {
+        "name": "Подсветка"
       }
     }
   }
