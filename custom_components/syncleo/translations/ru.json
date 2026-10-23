@@ -217,6 +217,15 @@
       }
     },
     "sensor": {
+      "gateway_latency": {
+        "name": "Задержка до шлюза"
+      },
+      "gateway_packet_loss": {
+        "name": "Потери пакетов до шлюза"
+      },
+      "mqtt_latency": {
+        "name": "Задержка MQTT"
+      },
       "remaining_time": {
         "name": "Счетчик времени турбо"
       },
