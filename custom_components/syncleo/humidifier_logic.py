@@ -114,9 +114,21 @@ def plan_set_humidity(
 
 
 def plan_turn_on(
-    model: HumidifierModel, last_on_mode: int, last_on_target: int | None
+    model: HumidifierModel,
+    last_on_mode: int,
+    last_on_target: int | None,
+    pending_target: int | None = None,
 ) -> list[Command]:
-    """Return register writes needed to turn on, restoring the last mode."""
+    """Return register writes needed to turn on, restoring the last mode.
+
+    A pending (already normalized) target set while the device was off wins:
+    the device is switched to manual mode with that target.
+    """
+    if pending_target is not None:
+        return [
+            ("mode", model.modes_map[model.manual_mode]),
+            ("target", pending_target),
+        ]
     commands: list[Command] = [("mode", last_on_mode)]
     if (
         last_on_mode == model.modes_map[model.manual_mode]
@@ -162,11 +174,6 @@ def decode_backlight(raw: bytes, levels: int = 3) -> BacklightState | None:
     if rgb == (0, 0, 0):
         rgb = (255, 255, 255)
     return BacklightState(level=min(levels, max(raw[0], raw[1])), rgb=rgb)
-
-
-def encode_backlight(level: int, rgb: tuple[int, int, int]) -> bytes:
-    """Encode level and colour to the backlight register (top and bottom equal)."""
-    return bytes([level, level, *rgb, *rgb])
 
 
 def encode_backlight_raw(level: int, color_bytes: bytes) -> bytes:

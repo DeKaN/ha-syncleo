@@ -69,6 +69,8 @@ class SyncleoHumidifier(SyncleoBaseEntity, HumidifierEntity):
         self._last_on_mode: int = self._model.modes_map[self._model.manual_mode]
         self._last_on_target: int | None = None
         self._last_manual_target: int = DEFAULT_MANUAL_TARGET
+        # Target set via set_humidity while off; applied by the next turn_on.
+        self._pending_target: int | None = None
 
     @property
     def _is_off(self) -> bool:
@@ -122,6 +124,8 @@ class SyncleoHumidifier(SyncleoBaseEntity, HumidifierEntity):
 
         if cmd.command_type == UdpCommandType.MODE:
             self._device_mode = int(cmd.value)
+            if self._device_mode != self._model.off_mode:
+                self._pending_target = None
             self._remember()
             update_needed = True
 
@@ -159,9 +163,14 @@ class SyncleoHumidifier(SyncleoBaseEntity, HumidifierEntity):
         self.async_write_ha_state()
 
     async def async_turn_on(self, **kwargs: Any) -> None:
-        await self._async_execute(
-            plan_turn_on(self._model, self._last_on_mode, self._last_on_target)
+        commands = plan_turn_on(
+            self._model,
+            self._last_on_mode,
+            self._last_on_target,
+            self._pending_target,
         )
+        self._pending_target = None
+        await self._async_execute(commands)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         await self._async_execute([("mode", self._model.off_mode)])
@@ -181,6 +190,7 @@ class SyncleoHumidifier(SyncleoBaseEntity, HumidifierEntity):
             # Device is off or unknown: remember the target for the next turn_on
             # instead of powering the device on.
             target = normalize_humidity(self._model, humidity)
+            self._pending_target = target
             self._last_manual_target = target
             self._last_on_mode = self._model.modes_map[self._model.manual_mode]
             self._last_on_target = target

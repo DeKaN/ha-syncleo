@@ -85,6 +85,8 @@ def test_plan_turn_on(logic, model):
     assert logic.plan_turn_on(model, 7, None) == [("mode", 7)]
     assert logic.plan_turn_on(model, 1, 85) == [("mode", 1), ("target", 85)]
     assert logic.plan_turn_on(model, 1, 50) == [("mode", 1)]
+    assert logic.plan_turn_on(model, 7, None, 55) == [("mode", 1), ("target", 55)]
+    assert logic.plan_turn_on(model, 1, 85, 60) == [("mode", 1), ("target", 60)]
 
 
 def test_water_shortage(logic, model):
@@ -104,7 +106,6 @@ def test_backlight_roundtrip(logic):
     assert default.level == 0
     assert default.rgb == (255, 255, 255)
     assert logic.decode_backlight(b"\x01") is None
-    assert logic.encode_backlight(2, (255, 0, 0)) == bytes.fromhex("0202ff0000ff0000")
 
 
 def test_brightness_mapping(logic):
