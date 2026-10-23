@@ -139,6 +139,17 @@ def plan_turn_on(
     return commands
 
 
+def is_shortage_target(
+    model: HumidifierModel, device_mode: int | None, target: int | None
+) -> bool:
+    """Return True for target 0 in a humidity mode (what a water shortage reports)."""
+    if device_mode is None or device_mode == model.off_mode:
+        return False
+    if any(model.modes_map[name] == device_mode for name in model.program_modes):
+        return False
+    return target == 0
+
+
 def is_water_shortage(
     model: HumidifierModel,
     device_mode: int | None,
@@ -148,11 +159,7 @@ def is_water_shortage(
     """Infer water shortage: the device runs a humidity mode with target and speed 0."""
     if device_mode is None or target is None or speed is None:
         return None
-    if device_mode == model.off_mode:
-        return False
-    if any(model.modes_map[name] == device_mode for name in model.program_modes):
-        return False
-    return target == 0 and speed == 0
+    return speed == 0 and is_shortage_target(model, device_mode, target)
 
 
 @dataclass(frozen=True)

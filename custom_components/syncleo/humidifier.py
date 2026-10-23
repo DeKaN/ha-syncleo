@@ -17,6 +17,7 @@ from .entity import SyncleoBaseEntity
 from .humidifier_logic import (
     Command,
     available_modes,
+    is_shortage_target,
     normalize_humidity,
     plan_set_humidity,
     plan_set_mode,
@@ -88,6 +89,8 @@ class SyncleoHumidifier(SyncleoBaseEntity, HumidifierEntity):
             return None
         if self._is_off:
             return resolve_mode(self._model, self._last_on_mode, self._last_on_target)
+        if is_shortage_target(self._model, self._device_mode, self._target):
+            return resolve_mode(self._model, self._device_mode, self._last_on_target)
         return resolve_mode(self._model, self._device_mode, self._target)
 
     @property
@@ -106,6 +109,8 @@ class SyncleoHumidifier(SyncleoBaseEntity, HumidifierEntity):
         if mode is None:
             return
         model = self._model
+        if is_shortage_target(model, mode, self._target):
+            return
         if mode != model.off_mode:
             self._last_on_mode = mode
             self._last_on_target = self._target

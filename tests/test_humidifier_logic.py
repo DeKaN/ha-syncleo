@@ -114,3 +114,21 @@ def test_brightness_mapping(logic):
     assert logic.brightness_to_level(1) == 1
     assert logic.brightness_to_level(128) == 2
     assert logic.brightness_to_level(255) == 3
+
+
+@pytest.mark.parametrize(
+    ("device_mode", "target", "expected"),
+    [
+        (1, 0, True),
+        (2, 0, True),
+        (1, 85, False),
+        (1, 55, False),
+        (9, 0, False),
+        (11, 0, False),
+        (0, 0, False),
+        (None, 0, False),
+        (1, None, False),
+    ],
+)
+def test_is_shortage_target(logic, model, device_mode, target, expected):
+    assert logic.is_shortage_target(model, device_mode, target) is expected
