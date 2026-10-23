@@ -86,6 +86,7 @@ PD_AURUS_A_AIR_CLEAN = "aurus_a_air_clean"
 PD_AURUS_SCREENSAVER_MODE = "aurus_screensaver_mode"
 PD_BREEZER_AUTO_INTENSITY = "breezer_auto_intensity"
 PD_BREEZER_DAMPER = "breezer_damper"
+PD_BREEZER_DAMPER_STATE = "breezer_damper_state"
 
 PRESET_ANTI_FROST = "anti_frost"
 PRESET_AUTO = "auto"

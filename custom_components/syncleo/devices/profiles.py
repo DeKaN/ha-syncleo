@@ -45,6 +45,7 @@ class ProgramDataField(NumberBounds):
     mode: int
     offset: int = 0
     size: int = 1
+    default_value: int = 0
 
 
 @dataclass
@@ -80,6 +81,12 @@ class SensorConfig:
     unit_of_measurement: str | None = None
     entity_category: EntityCategory | None = None
     value_fn: Callable[[Any], Any] = lambda x: x
+
+
+@dataclass(kw_only=True)
+class SwitchConfig:
+    optimistic: bool = True
+    required_program_data_field: str | None = None
 
 
 RSSI_SENSOR_CONFIG = SensorConfig(
@@ -175,6 +182,7 @@ class SensorMixin(PlatformProviderBase):
 @dataclass(kw_only=True)
 class SwitchMixin(PlatformProviderBase):
     switches: list[str] = field(default_factory=list)
+    switch_configs: dict[str, SwitchConfig] = field(default_factory=dict)
 
     @property
     def supported_platforms(self) -> list[Platform]:
@@ -237,6 +245,7 @@ class ClimateProfile(
 
     hvac_modes_map: dict[HVACMode, int]
     default_hvac_mode: HVACMode
+    turn_on_program_data_field: str | None = None
 
     cmd_current_humidity: UdpCommandType | None = None
 

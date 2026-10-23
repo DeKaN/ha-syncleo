@@ -27,6 +27,7 @@ from ..const import (
     FEATURE_VOLUME,
     PD_BREEZER_AUTO_INTENSITY,
     PD_BREEZER_DAMPER,
+    PD_BREEZER_DAMPER_STATE,
     PD_CO2_INSTALLED,
     PD_COOLDOWN,
     PD_HEATER_INSTALLED,
@@ -54,6 +55,7 @@ from .profiles import (
     ProgramDataField,
     SelectConfig,
     SensorConfig,
+    SwitchConfig,
 )
 
 PROFILES = [
@@ -114,16 +116,16 @@ PROFILES = [
         ),
         hvac_modes_map={
             HVACMode.OFF: 0,
-            HVACMode.FAN_ONLY: 5,
+            HVACMode.FAN_ONLY: 1,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_program_data_field=PD_TURN_ON,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
-            PRESET_VENTILATION: 5,
         },
         cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
@@ -141,9 +143,9 @@ PROFILES = [
             PD_UV_INSTALLED: ProgramDataField(mode=0, offset=1),
             PD_TURN_ON: ProgramDataField(mode=1, offset=0),
             PD_NIGHT_SPEED: ProgramDataField(
-                mode=1, offset=1, min_value=1, max_value=3
+                mode=1, offset=1, min_value=1, max_value=3, default_value=1
             ),
-            PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
+            PD_BREEZER_DAMPER_STATE: ProgramDataField(mode=1, offset=2),
         },
         buttons={
             FEATURE_RESET_FILTER: ButtonConfig(
@@ -159,8 +161,14 @@ PROFILES = [
             FEATURE_IONIZATION,
             FEATURE_ULTRAVIOLET,
             FEATURE_VOLUME,
-            PD_BREEZER_DAMPER,
+            FEATURE_BREEZER_DAMPER,
         ],
+        switch_configs={
+            FEATURE_BREEZER_DAMPER: SwitchConfig(optimistic=False),
+            FEATURE_ULTRAVIOLET: SwitchConfig(
+                required_program_data_field=PD_UV_INSTALLED
+            ),
+        },
         sensors={
             FEATURE_CURRENT_PM2: SensorConfig(
                 device_class=SensorDeviceClass.PM25,
@@ -292,16 +300,16 @@ PROFILES = [
         ),
         hvac_modes_map={
             HVACMode.OFF: 0,
-            HVACMode.FAN_ONLY: 5,
+            HVACMode.FAN_ONLY: 1,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_program_data_field=PD_TURN_ON,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
-            PRESET_VENTILATION: 5,
         },
         cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
@@ -319,10 +327,12 @@ PROFILES = [
             PD_UV_INSTALLED: ProgramDataField(mode=0, offset=1),
             PD_TURN_ON: ProgramDataField(mode=1, offset=0),
             PD_NIGHT_SPEED: ProgramDataField(
-                mode=1, offset=1, min_value=1, max_value=3
+                mode=1, offset=1, min_value=1, max_value=3, default_value=1
             ),
-            PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
-            PD_BREEZER_AUTO_INTENSITY: ProgramDataField(mode=1, offset=3),
+            PD_BREEZER_DAMPER_STATE: ProgramDataField(mode=1, offset=2),
+            PD_BREEZER_AUTO_INTENSITY: ProgramDataField(
+                mode=1, offset=3, min_value=1, max_value=3, default_value=1
+            ),
         },
         buttons={
             FEATURE_RESET_FILTER: ButtonConfig(
@@ -332,7 +342,7 @@ PROFILES = [
             ),
         },
         binary_sensors=[FEATURE_ERROR, PD_HEATER_INSTALLED],
-        numbers=[PD_NIGHT_SPEED],
+        numbers=[PD_NIGHT_SPEED, PD_BREEZER_AUTO_INTENSITY],
         selects={
             FEATURE_BREEZER_MELODY: SelectConfig(
                 options_map={
@@ -350,8 +360,14 @@ PROFILES = [
             FEATURE_IONIZATION,
             FEATURE_ULTRAVIOLET,
             FEATURE_VOLUME,
-            PD_BREEZER_DAMPER,
+            FEATURE_BREEZER_DAMPER,
         ],
+        switch_configs={
+            FEATURE_BREEZER_DAMPER: SwitchConfig(optimistic=False),
+            FEATURE_ULTRAVIOLET: SwitchConfig(
+                required_program_data_field=PD_UV_INSTALLED
+            ),
+        },
         sensors={
             FEATURE_CURRENT_PM2: SensorConfig(
                 device_class=SensorDeviceClass.PM25,

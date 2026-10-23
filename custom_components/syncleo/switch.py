@@ -2,6 +2,7 @@ import logging
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.exceptions import ServiceValidationError
 
 from .devices import DeviceBaseProfile, SwitchMixin
 from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
@@ -38,13 +39,32 @@ class SyncleoSwitch(SyncleoBaseEntity, SwitchEntity):
         self._feature_key = feature_key
         self._is_program_data = feature_key in profile.program_data_fields
         self._cmd_class = FEATURE_TO_COMMAND_MAP.get(feature_key)
+        config = (
+            profile.switch_configs.get(feature_key)
+            if isinstance(profile, SwitchMixin)
+            else None
+        )
+        self._optimistic = config.optimistic if config is not None else True
+        self._required_program_data_field = (
+            config.required_program_data_field if config is not None else None
+        )
 
         self._attr_unique_id = f"{self._device_unique_id}_{feature_key}"
         self._attr_translation_key = feature_key
-        self._is_on = False
+        self._is_on: bool | None = False if self._optimistic else None
+
+    def _requirement_is_absent(self) -> bool:
+        if self._required_program_data_field is None:
+            return False
+        data = self.get_known_program_data(self._required_program_data_field)
+        return data is not None and int.from_bytes(data, byteorder="little") == 0
 
     @property
-    def is_on(self) -> bool:
+    def available(self) -> bool:
+        return super().available and not self._requirement_is_absent()
+
+    @property
+    def is_on(self) -> bool | None:
         return self._is_on
 
     @callback
@@ -79,6 +99,11 @@ class SyncleoSwitch(SyncleoBaseEntity, SwitchEntity):
             self.async_write_ha_state()
 
     async def _async_switch_set_state(self, value: bool):
+        if self._requirement_is_absent():
+            raise ServiceValidationError(
+                "Switch is not available because required hardware is not installed"
+            )
+
         if self._is_program_data:
             field_size = self._profile.program_data_fields[self._feature_key].size
             await self.async_set_program_data(
@@ -93,8 +118,9 @@ class SyncleoSwitch(SyncleoBaseEntity, SwitchEntity):
             )
             return
 
-        self._is_on = value
-        self.async_write_ha_state()
+        if self._optimistic:
+            self._is_on = value
+            self.async_write_ha_state()
 
     async def async_turn_on(self, **kwargs):
         await self._async_switch_set_state(True)
