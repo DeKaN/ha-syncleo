@@ -29,6 +29,7 @@ from ..const import (
     FEATURE_MQTT_LATENCY,
     FEATURE_REMAINING_TIME,
     FEATURE_RESET_FILTER,
+    FEATURE_RESET_PREFILTER,
     FEATURE_ULTRAVIOLET,
     FEATURE_VOLUME,
     PD_BREEZER_AUTO_INTENSITY,
@@ -155,7 +156,12 @@ PROFILES = [
         },
         buttons={
             FEATURE_RESET_FILTER: ButtonConfig(
-                command_factory=lambda: CmdExpendables(0, 0),
+                command_factory=lambda: CmdExpendables(0, 100),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_PREFILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(100, 0),
                 entity_category=EntityCategory.CONFIG,
                 entity_registry_enabled_default=False,
             ),
@@ -377,7 +383,12 @@ PROFILES = [
         },
         buttons={
             FEATURE_RESET_FILTER: ButtonConfig(
-                command_factory=lambda: CmdExpendables(0, 0),
+                command_factory=lambda: CmdExpendables(0, 100),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_PREFILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(100, 0),
                 entity_category=EntityCategory.CONFIG,
                 entity_registry_enabled_default=False,
             ),

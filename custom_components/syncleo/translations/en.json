@@ -38,6 +38,9 @@
     "button": {
       "reset_filter": {
         "name": "Reset filter life"
+      },
+      "reset_prefilter": {
+        "name": "Reset prefilter life"
       }
     },
     "binary_sensor": {
