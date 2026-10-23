@@ -51,8 +51,10 @@ class SyncleoBinarySensor(SyncleoBaseEntity, BinarySensorEntity):
         is_on = self._is_on
 
         if self._is_program_data:
-            data = self.get_program_data(self._feature_key)
-            is_on = int.from_bytes(data, byteorder="little") != 0
+            data = self.get_known_program_data(self._feature_key)
+            is_on = (
+                None if data is None else int.from_bytes(data, byteorder="little") != 0
+            )
 
         elif self._cmd_class and cmd.command_type == self._cmd_class.command_type:
             _LOGGER.debug(

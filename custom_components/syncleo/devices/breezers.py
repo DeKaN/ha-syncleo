@@ -156,7 +156,11 @@ PROFILES = [
                 entity_registry_enabled_default=False,
             ),
         },
-        binary_sensors=[FEATURE_ERROR, PD_HEATER_INSTALLED],
+        binary_sensors=[
+            FEATURE_ERROR,
+            PD_HEATER_INSTALLED,
+            PD_BREEZER_DAMPER_STATE,
+        ],
         numbers=[PD_NIGHT_SPEED],
         switches=[
             FEATURE_AUTO_OFF_BACKLIGHT,
@@ -348,7 +352,11 @@ PROFILES = [
                 entity_registry_enabled_default=False,
             ),
         },
-        binary_sensors=[FEATURE_ERROR, PD_HEATER_INSTALLED],
+        binary_sensors=[
+            FEATURE_ERROR,
+            PD_HEATER_INSTALLED,
+            PD_BREEZER_DAMPER_STATE,
+        ],
         numbers=[PD_NIGHT_SPEED, PD_BREEZER_AUTO_INTENSITY],
         selects={
             FEATURE_BREEZER_MELODY: SelectConfig(
