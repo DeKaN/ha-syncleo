@@ -238,6 +238,8 @@ class ClimateProfile(
     hvac_modes_map: dict[HVACMode, int]
     default_hvac_mode: HVACMode
 
+    turn_on_command_factory: Callable[[], UdpCommand] | None = None
+
     cmd_current_humidity: UdpCommandType | None = None
 
     preset_modes_map: dict[str, int] = field(default_factory=dict)
