@@ -7,6 +7,7 @@ from homeassistant.const import (
     PERCENTAGE,
     STATE_OFF,
     EntityCategory,
+    UnitOfTime,
 )
 from pysyncleo.commands import CmdExpendables
 from pysyncleo.enums import UdpCommandType
@@ -22,6 +23,7 @@ from ..const import (
     FEATURE_EXPENDABLES_FILTER,
     FEATURE_EXPENDABLES_PREFILTER,
     FEATURE_IONIZATION,
+    FEATURE_REMAINING_TIME,
     FEATURE_RESET_FILTER,
     FEATURE_ULTRAVIOLET,
     FEATURE_VOLUME,
@@ -170,6 +172,11 @@ PROFILES = [
             ),
         },
         sensors={
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.MINUTES,
+                value_fn=lambda seconds: seconds / 60,
+            ),
             FEATURE_CURRENT_PM2: SensorConfig(
                 device_class=SensorDeviceClass.PM25,
                 state_class=SensorStateClass.MEASUREMENT,
@@ -369,6 +376,11 @@ PROFILES = [
             ),
         },
         sensors={
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.MINUTES,
+                value_fn=lambda seconds: seconds / 60,
+            ),
             FEATURE_CURRENT_PM2: SensorConfig(
                 device_class=SensorDeviceClass.PM25,
                 state_class=SensorStateClass.MEASUREMENT,

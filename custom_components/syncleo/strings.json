@@ -165,6 +165,9 @@
       "expendables_prefilter": {
         "name": "Prefilter resource"
       },
+      "remaining_time": {
+        "name": "Turbo timer"
+      },
       "tank": {
         "name": "Water Tank"
       }

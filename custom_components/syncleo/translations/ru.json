@@ -235,6 +235,9 @@
       "expendables_prefilter": {
         "name": "Ресурс префильтра"
       },
+      "remaining_time": {
+        "name": "Счетчик времени турбо"
+      },
       "tank": {
         "name": "Бак"
       }
