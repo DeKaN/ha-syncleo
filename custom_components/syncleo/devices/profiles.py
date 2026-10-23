@@ -20,8 +20,10 @@ from ..const import (
     PROFILE_TYPE_AC,
     PROFILE_TYPE_BOILER,
     PROFILE_TYPE_HEATER,
+    PROFILE_TYPE_HUMIDIFIER,
     PROFILE_TYPE_KETTLE,
 )
+from ..humidifier_logic import HumidifierModel
 
 
 @dataclass(kw_only=True)
@@ -329,38 +331,35 @@ class KettleProfile(WaterHeaterProfile):
     )
 
 
+@dataclass(kw_only=True)
+class HumidifierProfile(
+    DeviceBaseProfile,
+    BinarySensorMixin,
+    NumberMixin,
+    SelectMixin,
+    SensorMixin,
+    SwitchMixin,
+):
+    """Profile for Humidifiers."""
+
+    profile_type: str = PROFILE_TYPE_HUMIDIFIER
+    model: HumidifierModel
+    backlight: bool = False
+    water_shortage_sensor: bool = False
+
+    @property
+    def supported_platforms(self) -> list[Platform]:
+        platforms = super().supported_platforms + [Platform.HUMIDIFIER]
+        if self.backlight:
+            platforms.append(Platform.LIGHT)
+        if self.water_shortage_sensor and Platform.BINARY_SENSOR not in platforms:
+            platforms.append(Platform.BINARY_SENSOR)
+        return platforms
+
+
 # ==========================================
 #     TEMPLATES FOR FUTURE DEVICE PROFILES
 # ==========================================
-
-# @dataclass(kw_only=True)
-# class HumidifierProfile(DeviceBaseProfile):
-#     """Profile for Humidifiers."""
-
-#     min_humidity: int
-#     max_humidity: int
-#     supported_features: HumidifierEntityFeature
-#     cmd_mode: UdpCommandType
-#     modes_map: Dict[str, int]
-#     cmd_target_humidity: UdpCommandType
-#     cmd_current_humidity: Optional[UdpCommandType] = None
-#     switches: List[str] = field(default_factory=list)
-#     sensors: List[str] = field(default_factory=list)
-#     speed_map: Dict[str, int] = field(default_factory=dict)
-
-#     @property
-#     def supported_platforms(self) -> List[Platform]:
-#         platforms = [Platform.HUMIDIFIER]
-
-#         if self.switches:
-#             platforms.append(Platform.SWITCH)
-#         if self.sensors:
-#             platforms.append(Platform.SENSOR)
-#         if self.speed_map:
-#             platforms.append(Platform.SELECT)
-
-#         return platforms
-
 
 # @dataclass(kw_only=True)
 # class FanProfile(DeviceBaseProfile):
