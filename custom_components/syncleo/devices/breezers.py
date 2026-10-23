@@ -65,6 +65,17 @@ from .profiles import (
     SwitchConfig,
 )
 
+
+def decode_asp200_current_temperature(value: float) -> float:
+    """Correct the signed integer byte used by ASP-200."""
+    if value < 128:
+        return value
+
+    integer = int(value)
+    fraction = round(value - integer, 2)
+    return round(integer - 256 - fraction, 2)
+
+
 PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
@@ -127,6 +138,7 @@ PROFILES = [
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
+        current_temperature_value_fn=decode_asp200_current_temperature,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
             PRESET_MANUAL: 1,
@@ -351,6 +363,7 @@ PROFILES = [
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
+        current_temperature_value_fn=decode_asp200_current_temperature,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
             PRESET_MANUAL: 1,

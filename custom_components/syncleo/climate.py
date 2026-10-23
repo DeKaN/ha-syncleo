@@ -182,7 +182,12 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
             update_needed = True
 
         elif cmd.command_type == UdpCommandType.TEMPERATURE:
-            self._current_temp = float(cmd.value)
+            temperature = float(cmd.value)
+            value_fn = self._profile.current_temperature_value_fn
+
+            self._current_temp = (
+                value_fn(temperature) if value_fn is not None else temperature
+            )
             update_needed = True
 
         elif (
