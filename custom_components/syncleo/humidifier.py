@@ -7,11 +7,9 @@ from homeassistant.components.humidifier import (
     HumidifierEntityFeature,
 )
 from homeassistant.core import HomeAssistant, callback
-from pysyncleo.commands import (
-    CmdMode,
-    CmdTargetHumidity,
-    UdpCommandType,
-)
+from homeassistant.exceptions import ServiceValidationError
+from pysyncleo.commands import CmdMode, CmdTargetHumidity
+from pysyncleo.enums import UdpCommandType
 
 from .const import TRANLATION_KEY_HUMIDIFIER
 from .devices import HumidifierProfile
@@ -19,6 +17,7 @@ from .entity import SyncleoBaseEntity
 from .humidifier_logic import (
     Command,
     available_modes,
+    normalize_humidity,
     plan_set_humidity,
     plan_set_mode,
     plan_turn_on,
@@ -57,12 +56,12 @@ class SyncleoHumidifier(SyncleoBaseEntity, HumidifierEntity):
     ):
         super().__init__(connection, profile, entry)
 
-        self._profile = profile
         self._model = profile.model
         self._attr_unique_id = f"{self._device_unique_id}_humidifier"
         self._attr_available_modes = available_modes(self._model)
         self._attr_min_humidity = self._model.min_humidity
         self._attr_max_humidity = self._model.max_humidity
+        self._attr_target_humidity_step = self._model.humidity_step
 
         self._device_mode: int | None = None
         self._target: int | None = None
@@ -168,11 +167,23 @@ class SyncleoHumidifier(SyncleoBaseEntity, HumidifierEntity):
         await self._async_execute([("mode", self._model.off_mode)])
 
     async def async_set_mode(self, mode: str) -> None:
-        await self._async_execute(
-            plan_set_mode(self._model, mode, self._target, self._last_manual_target)
-        )
+        try:
+            commands = plan_set_mode(
+                self._model, mode, self._target, self._last_manual_target
+            )
+        except ValueError as err:
+            raise ServiceValidationError(f"Unknown humidifier mode: {mode}") from err
+        await self._async_execute(commands)
 
     async def async_set_humidity(self, humidity: int) -> None:
-        await self._async_execute(
-            plan_set_humidity(self._model, humidity, self._device_mode)
-        )
+        commands = plan_set_humidity(self._model, humidity, self._device_mode)
+        if not commands:
+            # Device is off or unknown: remember the target for the next turn_on
+            # instead of powering the device on.
+            target = normalize_humidity(self._model, humidity)
+            self._last_manual_target = target
+            self._last_on_mode = self._model.modes_map[self._model.manual_mode]
+            self._last_on_target = target
+            self.async_write_ha_state()
+            return
+        await self._async_execute(commands)

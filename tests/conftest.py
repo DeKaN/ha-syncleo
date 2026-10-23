@@ -1,4 +1,8 @@
-"""Load the HA-free humidifier logic by file path (Home Assistant is not installed)."""
+"""Load the HA-free humidifier logic by file path.
+
+Loading by path avoids importing the package ``__init__``, which imports the
+Home Assistant runtime.
+"""
 
 import importlib.util
 import sys

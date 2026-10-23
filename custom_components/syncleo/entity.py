@@ -106,6 +106,7 @@ FEATURE_TO_COMMAND_MAP = {
     FEATURE_BSS: CmdBss,
     FEATURE_CHILD_LOCK: CmdChildLock,
     FEATURE_CURRENT_CO2: CmdCO2,
+    FEATURE_CURRENT_HUMIDITY: CmdCurrentHumidity,
     FEATURE_CURRENT_PM2: CmdPM2,
     FEATURE_CURRENT_TEMPERATURE: CmdCurrentTemperature,
     FEATURE_DAMPER: CmdDamper,
@@ -140,7 +141,6 @@ FEATURE_TO_COMMAND_MAP = {
     FEATURE_GOLDSTAR_GSTI_CLEAN: CmdPlaceholder2,
     FEATURE_GOLDSTAR_GSTI_DAMPER: CmdDamper,
     FEATURE_GOLDSTAR_GSTI_FREEZE_PROTECTION: CmdPlaceholder3,
-    FEATURE_CURRENT_HUMIDITY: CmdCurrentHumidity,
     FEATURE_HUMIDIFIER_SPEED: CmdSpeed,
     FEATURE_HUMIDIFIER_TEMPERATURE: CmdCurrentTemperature,
     # Program-data switches must be in this map to pass the switch filter

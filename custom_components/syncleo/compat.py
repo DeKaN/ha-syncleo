@@ -5,6 +5,8 @@ from pysyncleo.commands import CmdBacklight
 _PATCH_MARKER = "_syncleo_raw_patched"
 
 
+# This shim exists because pysyncleo.commands.CmdBacklight keeps only a bool;
+# remove it once pysyncleo keeps the raw payload itself.
 def ensure_backlight_raw_payload() -> None:
     """Make CmdBacklight keep the raw payload next to its bool value (idempotent).
 
@@ -20,4 +22,4 @@ def ensure_backlight_raw_payload() -> None:
         self.raw = bytes(payload)
 
     setattr(deserialize, _PATCH_MARKER, True)
-    CmdBacklight.deserialize = deserialize  # type: ignore[method-assign]
+    CmdBacklight.deserialize = deserialize

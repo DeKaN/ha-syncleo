@@ -21,7 +21,7 @@ from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
 from .humidifier_logic import (
     brightness_to_level,
     decode_backlight,
-    encode_backlight,
+    encode_backlight_raw,
     level_to_brightness,
 )
 from .models import SyncleoConfigEntry
@@ -224,6 +224,9 @@ class SyncleoBacklightLight(SyncleoBaseEntity, LightEntity):
         self._level = 0
         self._last_level = self._MAX_LEVEL
         self._rgb: tuple[int, int, int] = (255, 255, 255)
+        # Raw colour bytes from the device; 000000 means device default and is
+        # written back unchanged unless the caller passes a colour.
+        self._color_bytes = bytes(3)
 
     @property
     def is_on(self) -> bool:
@@ -237,12 +240,18 @@ class SyncleoBacklightLight(SyncleoBaseEntity, LightEntity):
     def rgb_color(self) -> tuple[int, int, int]:
         return self._rgb
 
-    async def _async_write_backlight(self, level: int, rgb: tuple[int, int, int]):
-        cmd = SyncleoRawCommand(encode_backlight(level, rgb))
+    async def _async_write_backlight(self, level: int, color_bytes: bytes):
+        cmd = SyncleoRawCommand(encode_backlight_raw(level, color_bytes))
         cmd.command_type = UdpCommandType.BACKLIGHT
         await self.async_send_command(cmd)
         self._level = level
-        self._rgb = rgb
+        self._color_bytes = bytes(color_bytes[:3])
+        if self._color_bytes != bytes(3):
+            self._rgb = (
+                self._color_bytes[0],
+                self._color_bytes[1],
+                self._color_bytes[2],
+            )
         if level > 0:
             self._last_level = level
         self.async_write_ha_state()
@@ -254,11 +263,15 @@ class SyncleoBacklightLight(SyncleoBaseEntity, LightEntity):
             level = self._last_level
         if level <= 0:
             level = self._last_level
-        rgb = tuple(kwargs[ATTR_RGB_COLOR]) if ATTR_RGB_COLOR in kwargs else self._rgb
-        await self._async_write_backlight(level, rgb)  # type: ignore[arg-type]
+        if ATTR_RGB_COLOR in kwargs:
+            r, g, b = kwargs[ATTR_RGB_COLOR]
+            color_bytes = bytes((r, g, b))
+        else:
+            color_bytes = self._color_bytes
+        await self._async_write_backlight(level, color_bytes)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
-        await self._async_write_backlight(0, self._rgb)
+        await self._async_write_backlight(0, self._color_bytes)
 
     @callback
     def _handle_device_update(self, cmd) -> None:
@@ -270,6 +283,7 @@ class SyncleoBacklightLight(SyncleoBaseEntity, LightEntity):
             return
         self._level = state.level
         self._rgb = state.rgb
+        self._color_bytes = bytes(cmd.raw[2:5])
         if state.level > 0:
             self._last_level = state.level
         self.async_write_ha_state()

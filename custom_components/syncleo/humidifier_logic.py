@@ -62,6 +62,8 @@ def visible_target(
     mode = resolve_mode(model, device_mode, target)
     if mode is None or mode == model.continuous_mode or mode in model.program_modes:
         return None
+    if target is None or not model.min_humidity <= target <= model.max_humidity:
+        return None
     return target
 
 
@@ -87,13 +89,24 @@ def plan_set_mode(
     return commands
 
 
+def normalize_humidity(model: HumidifierModel, humidity: float) -> int:
+    """Round humidity to the model step and clamp it to the supported range."""
+    step = model.humidity_step
+    target = round(humidity / step) * step
+    return int(max(model.min_humidity, min(model.max_humidity, target)))
+
+
 def plan_set_humidity(
     model: HumidifierModel, humidity: float, device_mode: int | None
 ) -> list[Command]:
-    """Return register writes needed to set the target humidity."""
-    step = model.humidity_step
-    target = round(humidity / step) * step
-    target = max(model.min_humidity, min(model.max_humidity, target))
+    """Return register writes needed to set the target humidity.
+
+    Returns no writes while the device is off (or its state is unknown): setting
+    the humidity must not power the device on.
+    """
+    if device_mode is None or device_mode == model.off_mode:
+        return []
+    target = normalize_humidity(model, humidity)
     manual_value = model.modes_map[model.manual_mode]
     if device_mode == manual_value:
         return [("target", target)]
@@ -138,19 +151,28 @@ class BacklightState:
     rgb: tuple[int, int, int]
 
 
-def decode_backlight(raw: bytes) -> BacklightState | None:
-    """Decode the 8-byte backlight register; zero colour means default (white)."""
+def decode_backlight(raw: bytes, levels: int = 3) -> BacklightState | None:
+    """Decode the 8-byte backlight register; zero colour means default (white).
+
+    The level is clamped to 0..levels.
+    """
     if len(raw) < 8:
         return None
     rgb = (raw[2], raw[3], raw[4])
     if rgb == (0, 0, 0):
         rgb = (255, 255, 255)
-    return BacklightState(level=max(raw[0], raw[1]), rgb=rgb)
+    return BacklightState(level=min(levels, max(raw[0], raw[1])), rgb=rgb)
 
 
 def encode_backlight(level: int, rgb: tuple[int, int, int]) -> bytes:
     """Encode level and colour to the backlight register (top and bottom equal)."""
     return bytes([level, level, *rgb, *rgb])
+
+
+def encode_backlight_raw(level: int, color_bytes: bytes) -> bytes:
+    """Encode level and the raw 3 colour bytes (written back unchanged)."""
+    color = bytes(color_bytes[:3])
+    return bytes([level, level]) + color + color
 
 
 def level_to_brightness(level: int, levels: int = 3) -> int:

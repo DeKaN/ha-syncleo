@@ -26,6 +26,38 @@ def test_visible_target(logic, model):
     assert logic.visible_target(model, 0, 0) is None
 
 
+@pytest.mark.parametrize("device_mode", [6, 7, 8])
+def test_visible_target_program_modes_hide_co_target(logic, model, device_mode):
+    assert logic.visible_target(model, device_mode, 85) is None
+
+
+@pytest.mark.parametrize("device_mode", [1, 2])
+def test_visible_target_hides_zero_target_on_water_shortage(logic, model, device_mode):
+    assert logic.visible_target(model, device_mode, 0) is None
+
+
+def test_plan_set_humidity_does_not_power_on(logic, model):
+    assert logic.plan_set_humidity(model, 55, 0) == []
+    assert logic.plan_set_humidity(model, 55, None) == []
+
+
+def test_normalize_humidity(logic, model):
+    assert logic.normalize_humidity(model, 42) == 40
+    assert logic.normalize_humidity(model, 95) == 80
+    assert logic.normalize_humidity(model, 10) == 30
+
+
+def test_encode_backlight_raw_preserves_default_colour(logic):
+    assert logic.encode_backlight_raw(2, bytes(3)) == bytes.fromhex("0202000000000000")
+    assert logic.encode_backlight_raw(1, bytes([255, 0, 0])) == bytes.fromhex(
+        "0101ff0000ff0000"
+    )
+
+
+def test_decode_backlight_clamps_level(logic):
+    assert logic.decode_backlight(bytes.fromhex("0909ff0000ff0000")).level == 3
+
+
 def test_plan_set_mode(logic, model):
     assert logic.plan_set_mode(model, "continuous", 50, 55) == [
         ("mode", 1),
