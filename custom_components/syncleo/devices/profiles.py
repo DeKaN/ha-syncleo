@@ -239,6 +239,7 @@ class ClimateProfile(
     default_hvac_mode: HVACMode
 
     turn_on_command_factory: Callable[[], UdpCommand] | None = None
+    current_temperature_value_fn: Callable[[float], float] | None = None
 
     cmd_current_humidity: UdpCommandType | None = None
 
