@@ -491,7 +491,8 @@ PROFILES = [
             ),
             FEATURE_REMAINING_TIME: SensorConfig(
                 device_class=SensorDeviceClass.DURATION,
-                unit_of_measurement=UnitOfTime.SECONDS,
+                unit_of_measurement=UnitOfTime.MINUTES,
+                value_fn=lambda seconds: seconds / 60,
             ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 required_program_data_field=PD_CO2_INSTALLED,
