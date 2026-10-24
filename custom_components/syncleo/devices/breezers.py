@@ -122,6 +122,7 @@ def create_asp90_profile(device_type: int) -> ClimateProfile:
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
         default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
+        use_turn_on_for_default_hvac_mode=True,
         current_temperature_value_fn=decode_asp90_current_temperature,
         preset_modes_map=presets,
         cmd_fan_mode=UdpCommandType.SPEED,

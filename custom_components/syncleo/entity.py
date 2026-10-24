@@ -277,8 +277,12 @@ class SyncleoBaseEntity(Entity):
         field = self._profile.program_data_fields.get(feature_key)
         return bytes(field.size) if field else b""
 
-    async def async_set_program_data(self, feature_key: str, value: bytes):
-        await self.async_set_program_data_fields({feature_key: value})
+    async def async_set_program_data(
+        self, feature_key: str, value: bytes, *, update_cache: bool = True
+    ):
+        await self.async_set_program_data_fields(
+            {feature_key: value}, update_cache=update_cache
+        )
 
     async def async_set_program_data_fields(
         self, updates: dict[str, bytes], *, update_cache: bool = True
@@ -320,6 +324,7 @@ class SyncleoBaseEntity(Entity):
                                 config.size, byteorder="little"
                             )
                         )
+
                 cached_data = self._program_data_modes.get(field.mode)
                 if cached_data is not None:
                     data[: len(cached_data)] = cached_data
@@ -333,7 +338,7 @@ class SyncleoBaseEntity(Entity):
             if update_cache:
                 self._program_data_modes[mode] = data
 
-        if modes_to_update and update_cache:
+        if modes_to_update:
             self.async_write_ha_state()
 
     async def _async_reconnect(self):

@@ -182,10 +182,12 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
             update_needed = True
 
         elif cmd.command_type == UdpCommandType.TEMPERATURE:
-            value = float(cmd.value)
-            if self._profile.current_temperature_value_fn is not None:
-                value = self._profile.current_temperature_value_fn(value)
-            self._current_temp = value
+            temperature = float(cmd.value)
+            value_fn = self._profile.current_temperature_value_fn
+
+            self._current_temp = (
+                value_fn(temperature) if value_fn is not None else temperature
+            )
             update_needed = True
 
         elif (
@@ -210,14 +212,22 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
             )
             self.async_write_ha_state()
 
-    async def async_turn_on(self, **kwargs):
-        if field_key := self._profile.turn_on_program_data_field:
+    async def async_turn_on(self, **kwargs) -> None:
+        factory = self._profile.turn_on_command_factory
+        if factory is not None:
+            await self.async_send_command(factory())
+            return
+
+        field_key = self._profile.turn_on_program_data_field
+        if field_key is not None:
             field = self._profile.program_data_fields[field_key]
-            await self.async_set_program_data_fields(
-                {field_key: (1).to_bytes(field.size, byteorder="little")},
+            await self.async_set_program_data(
+                field_key,
+                (1).to_bytes(field.size, byteorder="little"),
                 update_cache=False,
             )
             return
+
         await self.async_set_hvac_mode(self._profile.default_hvac_mode)
 
     async def async_turn_off(self, **kwargs):
@@ -225,7 +235,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode):
         if (
-            self._profile.turn_on_program_data_field
+            self._profile.use_turn_on_for_default_hvac_mode
             and hvac_mode == self._profile.default_hvac_mode
         ):
             await self.async_turn_on()
