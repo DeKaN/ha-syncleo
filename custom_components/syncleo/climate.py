@@ -212,7 +212,12 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
             )
             self.async_write_ha_state()
 
-    async def async_turn_on(self, **kwargs):
+    async def async_turn_on(self, **kwargs) -> None:
+        factory = self._profile.turn_on_command_factory
+        if factory is not None:
+            await self.async_send_command(factory())
+            return
+
         field_key = self._profile.turn_on_program_data_field
         if field_key is not None:
             field = self._profile.program_data_fields[field_key]
@@ -229,6 +234,12 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         await self.async_set_hvac_mode(HVACMode.OFF)
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode):
+        if (
+            self._profile.use_turn_on_for_default_hvac_mode
+            and hvac_mode == self._profile.default_hvac_mode
+        ):
+            await self.async_turn_on()
+            return
         raw_val = self._profile.hvac_modes_map.get(hvac_mode)
         if raw_val is not None:
             await self.async_send_command(CmdMode(raw_val))
