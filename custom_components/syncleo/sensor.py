@@ -56,8 +56,8 @@ async def async_setup_entry(
                 ):
                     continue
 
-                data = cmd.data[field.offset : field.offset + field.size]
-                if int.from_bytes(data, byteorder="little") != 0:
+                data = field.read_value(cmd.data)
+                if data is not None and int.from_bytes(data, byteorder="little") != 0:
                     entity = SyncleoSensor(conn, profile, entry, key, config)
                     entity._program_data_modes[cmd.mode] = bytearray(cmd.data)
                     discovered.append(entity)
