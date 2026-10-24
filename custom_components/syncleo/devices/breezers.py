@@ -7,9 +7,12 @@ from homeassistant.const import (
     PERCENTAGE,
     STATE_OFF,
     EntityCategory,
+    # UnitOfDensity,  # Not available in the minimum supported HA 2026.5.0.
+    UnitOfTime,
 )
 from pysyncleo.commands import CmdExpendables
 from pysyncleo.enums import UdpCommandType
+from pysyncleo.models import DiagnosticStatus
 
 from ..const import (
     FEATURE_AUTO_OFF_BACKLIGHT,
@@ -21,12 +24,18 @@ from ..const import (
     FEATURE_ERROR,
     FEATURE_EXPENDABLES_FILTER,
     FEATURE_EXPENDABLES_PREFILTER,
+    FEATURE_GATEWAY_LATENCY,
+    FEATURE_GATEWAY_PACKET_LOSS,
     FEATURE_IONIZATION,
+    FEATURE_MQTT_LATENCY,
+    FEATURE_REMAINING_TIME,
     FEATURE_RESET_FILTER,
+    FEATURE_RESET_PREFILTER,
     FEATURE_ULTRAVIOLET,
     FEATURE_VOLUME,
     PD_BREEZER_AUTO_INTENSITY,
     PD_BREEZER_DAMPER,
+    PD_BREEZER_DAMPER_STATE,
     PD_CO2_INSTALLED,
     PD_COOLDOWN,
     PD_HEATER_INSTALLED,
@@ -54,7 +63,19 @@ from .profiles import (
     ProgramDataField,
     SelectConfig,
     SensorConfig,
+    SwitchConfig,
 )
+
+
+def decode_asp200_current_temperature(value: float) -> float:
+    """Correct the signed integer byte used by ASP-200."""
+    if value < 128:
+        return value
+
+    integer = int(value)
+    fraction = round(value - integer, 2)
+    return round(integer - 256 - fraction, 2)
+
 
 PROFILES = [
     BreezerProfile(
@@ -114,16 +135,17 @@ PROFILES = [
         ),
         hvac_modes_map={
             HVACMode.OFF: 0,
-            HVACMode.FAN_ONLY: 5,
+            HVACMode.FAN_ONLY: 1,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_program_data_field=PD_TURN_ON,
+        current_temperature_value_fn=decode_asp200_current_temperature,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
-            PRESET_VENTILATION: 5,
         },
         cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
@@ -141,31 +163,79 @@ PROFILES = [
             PD_UV_INSTALLED: ProgramDataField(mode=0, offset=1),
             PD_TURN_ON: ProgramDataField(mode=1, offset=0),
             PD_NIGHT_SPEED: ProgramDataField(
-                mode=1, offset=1, min_value=1, max_value=3
+                mode=1, offset=1, min_value=1, max_value=3, default_value=1
             ),
-            PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
+            PD_BREEZER_DAMPER_STATE: ProgramDataField(mode=1, offset=2),
         },
         buttons={
             FEATURE_RESET_FILTER: ButtonConfig(
-                command_factory=lambda: CmdExpendables(0, 0),
+                command_factory=lambda: CmdExpendables(0, 100),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_PREFILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(100, 0),
                 entity_category=EntityCategory.CONFIG,
                 entity_registry_enabled_default=False,
             ),
         },
-        binary_sensors=[FEATURE_ERROR, PD_HEATER_INSTALLED],
+        binary_sensors=[
+            FEATURE_ERROR,
+            PD_HEATER_INSTALLED,
+            PD_BREEZER_DAMPER_STATE,
+        ],
         numbers=[PD_NIGHT_SPEED],
         switches=[
             FEATURE_AUTO_OFF_BACKLIGHT,
             FEATURE_IONIZATION,
             FEATURE_ULTRAVIOLET,
             FEATURE_VOLUME,
-            PD_BREEZER_DAMPER,
+            FEATURE_BREEZER_DAMPER,
         ],
+        switch_configs={
+            FEATURE_BREEZER_DAMPER: SwitchConfig(optimistic=False),
+            FEATURE_ULTRAVIOLET: SwitchConfig(
+                required_program_data_field=PD_UV_INSTALLED
+            ),
+        },
         sensors={
+            FEATURE_GATEWAY_LATENCY: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfTime.MILLISECONDS,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                value_fn=lambda status: (
+                    status.gw_ping if isinstance(status, DiagnosticStatus) else None
+                ),
+            ),
+            FEATURE_GATEWAY_PACKET_LOSS: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                value_fn=lambda status: (
+                    status.gw_loss if isinstance(status, DiagnosticStatus) else None
+                ),
+            ),
+            FEATURE_MQTT_LATENCY: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfTime.MILLISECONDS,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                value_fn=lambda status: (
+                    status.mqtt_ping if isinstance(status, DiagnosticStatus) else None
+                ),
+            ),
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.MINUTES,
+                value_fn=lambda seconds: seconds / 60,
+            ),
             FEATURE_CURRENT_PM2: SensorConfig(
                 device_class=SensorDeviceClass.PM25,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                # TODO: migrate before HA 2027.8 removes the legacy constant.
+                # unit_of_measurement=UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
             ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 device_class=SensorDeviceClass.CO2,
@@ -292,16 +362,17 @@ PROFILES = [
         ),
         hvac_modes_map={
             HVACMode.OFF: 0,
-            HVACMode.FAN_ONLY: 5,
+            HVACMode.FAN_ONLY: 1,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_program_data_field=PD_TURN_ON,
+        current_temperature_value_fn=decode_asp200_current_temperature,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
-            PRESET_VENTILATION: 5,
         },
         cmd_fan_mode=UdpCommandType.SPEED,
         fan_modes_map={
@@ -319,20 +390,31 @@ PROFILES = [
             PD_UV_INSTALLED: ProgramDataField(mode=0, offset=1),
             PD_TURN_ON: ProgramDataField(mode=1, offset=0),
             PD_NIGHT_SPEED: ProgramDataField(
-                mode=1, offset=1, min_value=1, max_value=3
+                mode=1, offset=1, min_value=1, max_value=3, default_value=1
             ),
-            PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
-            PD_BREEZER_AUTO_INTENSITY: ProgramDataField(mode=1, offset=3),
+            PD_BREEZER_DAMPER_STATE: ProgramDataField(mode=1, offset=2),
+            PD_BREEZER_AUTO_INTENSITY: ProgramDataField(
+                mode=1, offset=3, min_value=1, max_value=3, default_value=1
+            ),
         },
         buttons={
             FEATURE_RESET_FILTER: ButtonConfig(
-                command_factory=lambda: CmdExpendables(0, 0),
+                command_factory=lambda: CmdExpendables(0, 100),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_PREFILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(100, 0),
                 entity_category=EntityCategory.CONFIG,
                 entity_registry_enabled_default=False,
             ),
         },
-        binary_sensors=[FEATURE_ERROR, PD_HEATER_INSTALLED],
-        numbers=[PD_NIGHT_SPEED],
+        binary_sensors=[
+            FEATURE_ERROR,
+            PD_HEATER_INSTALLED,
+            PD_BREEZER_DAMPER_STATE,
+        ],
+        numbers=[PD_NIGHT_SPEED, PD_BREEZER_AUTO_INTENSITY],
         selects={
             FEATURE_BREEZER_MELODY: SelectConfig(
                 options_map={
@@ -350,13 +432,52 @@ PROFILES = [
             FEATURE_IONIZATION,
             FEATURE_ULTRAVIOLET,
             FEATURE_VOLUME,
-            PD_BREEZER_DAMPER,
+            FEATURE_BREEZER_DAMPER,
         ],
+        switch_configs={
+            FEATURE_BREEZER_DAMPER: SwitchConfig(optimistic=False),
+            FEATURE_ULTRAVIOLET: SwitchConfig(
+                required_program_data_field=PD_UV_INSTALLED
+            ),
+        },
         sensors={
+            FEATURE_GATEWAY_LATENCY: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfTime.MILLISECONDS,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                value_fn=lambda status: (
+                    status.gw_ping if isinstance(status, DiagnosticStatus) else None
+                ),
+            ),
+            FEATURE_GATEWAY_PACKET_LOSS: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                value_fn=lambda status: (
+                    status.gw_loss if isinstance(status, DiagnosticStatus) else None
+                ),
+            ),
+            FEATURE_MQTT_LATENCY: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfTime.MILLISECONDS,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                value_fn=lambda status: (
+                    status.mqtt_ping if isinstance(status, DiagnosticStatus) else None
+                ),
+            ),
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.MINUTES,
+                value_fn=lambda seconds: seconds / 60,
+            ),
             FEATURE_CURRENT_PM2: SensorConfig(
                 device_class=SensorDeviceClass.PM25,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                # TODO: migrate before HA 2027.8 removes the legacy constant.
+                # unit_of_measurement=UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
             ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 device_class=SensorDeviceClass.CO2,

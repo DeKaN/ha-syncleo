@@ -38,11 +38,17 @@
     "button": {
       "reset_filter": {
         "name": "Reset filter life"
+      },
+      "reset_prefilter": {
+        "name": "Reset prefilter life"
       }
     },
     "binary_sensor": {
       "breezer_damper": {
         "name": "Recirculation"
+      },
+      "breezer_damper_state": {
+        "name": "Open window mode"
       },
       "co2_installed": {
         "name": "CO₂ sensor installed"
@@ -164,6 +170,18 @@
       },
       "expendables_prefilter": {
         "name": "Prefilter resource"
+      },
+      "gateway_latency": {
+        "name": "Gateway latency"
+      },
+      "gateway_packet_loss": {
+        "name": "Gateway packet loss"
+      },
+      "mqtt_latency": {
+        "name": "MQTT latency"
+      },
+      "remaining_time": {
+        "name": "Turbo timer"
       },
       "tank": {
         "name": "Water Tank"
