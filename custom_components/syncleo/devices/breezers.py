@@ -7,9 +7,11 @@ from homeassistant.const import (
     PERCENTAGE,
     STATE_OFF,
     EntityCategory,
+    UnitOfTime,
 )
-from pysyncleo.commands import CmdExpendables
+from pysyncleo.commands import CmdExpendables, CmdProgramData
 from pysyncleo.enums import UdpCommandType
+from pysyncleo.models import DiagnosticStatus
 
 from ..const import (
     FEATURE_AUTO_OFF_BACKLIGHT,
@@ -21,7 +23,11 @@ from ..const import (
     FEATURE_ERROR,
     FEATURE_EXPENDABLES_FILTER,
     FEATURE_EXPENDABLES_PREFILTER,
+    FEATURE_GATEWAY_LATENCY,
+    FEATURE_GATEWAY_PACKET_LOSS,
     FEATURE_IONIZATION,
+    FEATURE_MQTT_LATENCY,
+    FEATURE_REMAINING_TIME,
     FEATURE_RESET_FILTER,
     FEATURE_ULTRAVIOLET,
     FEATURE_VOLUME,
@@ -55,6 +61,17 @@ from .profiles import (
     SelectConfig,
     SensorConfig,
 )
+
+
+def decode_asp100_current_temperature(value: float) -> float:
+    """Correct the signed integer byte used by ASP-100."""
+    if value < 128:
+        return value
+
+    integer = int(value)
+    fraction = round(value - integer, 2)
+    return round(integer - 256 - fraction, 2)
+
 
 PROFILES = [
     BreezerProfile(
@@ -207,6 +224,7 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_command_factory=lambda: CmdProgramData(mode=1, data=b"\x01\x01\x00"),
         preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
@@ -230,10 +248,6 @@ PROFILES = [
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
             PD_TURN_ON: ProgramDataField(mode=1, offset=0),
-            PD_NIGHT_SPEED: ProgramDataField(
-                mode=1, offset=1, min_value=1, max_value=3
-            ),
-            PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
         },
         buttons={
             FEATURE_RESET_FILTER: ButtonConfig(
@@ -247,20 +261,39 @@ PROFILES = [
             PD_CO2_INSTALLED,
             PD_HEATER_INSTALLED,
         ],
-        selects={
-            FEATURE_BREEZER_MELODY: SelectConfig(
-                options_map={
-                    STATE_OFF: 0,
-                    PRESET_MELODY_RAIN_SOUND: 1,
-                    PRESET_MELODY_SEA_SOUND: 2,
-                    PRESET_MELODY_FOREST_SOUND: 3,
-                    PRESET_MELODY_BIRDS_SINGING: 4,
-                    PRESET_MELODY_FIREPLACE_SOUND: 5,
-                }
-            ),
-        },
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         sensors={
+            FEATURE_GATEWAY_LATENCY: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfTime.MILLISECONDS,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                value_fn=lambda status: (
+                    status.gw_ping if isinstance(status, DiagnosticStatus) else None
+                ),
+            ),
+            FEATURE_GATEWAY_PACKET_LOSS: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                value_fn=lambda status: (
+                    status.gw_loss if isinstance(status, DiagnosticStatus) else None
+                ),
+            ),
+            FEATURE_MQTT_LATENCY: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfTime.MILLISECONDS,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                value_fn=lambda status: (
+                    status.mqtt_ping if isinstance(status, DiagnosticStatus) else None
+                ),
+            ),
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.MINUTES,
+                value_fn=lambda seconds: seconds / 60,
+            ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 required_program_data_field=PD_CO2_INSTALLED,
                 device_class=SensorDeviceClass.CO2,
@@ -398,6 +431,8 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_command_factory=lambda: CmdProgramData(mode=1, data=b"\x01\x01\x00"),
+        current_temperature_value_fn=decode_asp100_current_temperature,
         preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
@@ -421,10 +456,6 @@ PROFILES = [
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
             PD_TURN_ON: ProgramDataField(mode=1, offset=0),
-            PD_NIGHT_SPEED: ProgramDataField(
-                mode=1, offset=1, min_value=1, max_value=3
-            ),
-            PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
         },
         buttons={
             FEATURE_RESET_FILTER: ButtonConfig(
@@ -452,6 +483,37 @@ PROFILES = [
         },
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         sensors={
+            FEATURE_GATEWAY_LATENCY: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfTime.MILLISECONDS,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                value_fn=lambda status: (
+                    status.gw_ping if isinstance(status, DiagnosticStatus) else None
+                ),
+            ),
+            FEATURE_GATEWAY_PACKET_LOSS: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                value_fn=lambda status: (
+                    status.gw_loss if isinstance(status, DiagnosticStatus) else None
+                ),
+            ),
+            FEATURE_MQTT_LATENCY: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfTime.MILLISECONDS,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                value_fn=lambda status: (
+                    status.mqtt_ping if isinstance(status, DiagnosticStatus) else None
+                ),
+            ),
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.MINUTES,
+                value_fn=lambda seconds: seconds / 60,
+            ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 required_program_data_field=PD_CO2_INSTALLED,
                 device_class=SensorDeviceClass.CO2,

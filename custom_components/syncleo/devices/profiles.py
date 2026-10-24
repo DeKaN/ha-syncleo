@@ -45,6 +45,7 @@ class ProgramDataField(NumberBounds):
     mode: int
     offset: int = 0
     size: int = 1
+    default_value: int = 0
 
 
 @dataclass
@@ -237,6 +238,11 @@ class ClimateProfile(
 
     hvac_modes_map: dict[HVACMode, int]
     default_hvac_mode: HVACMode
+    turn_on_program_data_field: str | None = None
+    use_turn_on_for_default_hvac_mode: bool = False
+
+    turn_on_command_factory: Callable[[], UdpCommand] | None = None
+    current_temperature_value_fn: Callable[[float], float] | None = None
 
     cmd_current_humidity: UdpCommandType | None = None
 
