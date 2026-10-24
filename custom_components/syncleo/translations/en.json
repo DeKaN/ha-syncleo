@@ -36,6 +36,9 @@
   },
   "entity": {
     "button": {
+      "activate_options": {
+        "name": "Activate options"
+      },
       "reset_filter": {
         "name": "Reset filter life"
       }
@@ -147,6 +150,9 @@
       }
     },
     "sensor": {
+      "remaining_time": {
+        "name": "Turbo time remaining"
+      },
       "current_co2": {
         "name": "CO2 - ppm"
       },

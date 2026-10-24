@@ -33,6 +33,7 @@ from pysyncleo.commands import (
     CmdTank,
     CmdTargetId,
     CmdTargetTemperature,
+    CmdTargetTime,
     CmdTurbo,
     CmdUltraviolet,
     CmdVolume,
@@ -78,6 +79,7 @@ from .const import (
     FEATURE_KETTLE_TEMPERATURE_PRESET,
     FEATURE_NIGHT,
     FEATURE_POWER_LEVEL,
+    FEATURE_REMAINING_TIME,
     FEATURE_RSSI,
     FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
     FEATURE_SHUFT_SFMS_09_ANTI_MELDEW,
@@ -116,6 +118,7 @@ FEATURE_TO_COMMAND_MAP = {
     FEATURE_POWER_LEVEL: CmdSpeed,
     FEATURE_SMART_MODE: CmdSmartMode,
     FEATURE_RSSI: CmdInitDiagnostic,
+    FEATURE_REMAINING_TIME: CmdTargetTime,
     FEATURE_TANK: CmdTank,
     FEATURE_TURBO: CmdTurbo,
     FEATURE_ULTRAVIOLET: CmdUltraviolet,
@@ -264,10 +267,7 @@ class SyncleoBaseEntity(Entity):
             return None
 
         data = self._program_data_modes.get(field.mode)
-        if data and len(data) >= field.offset + field.size:
-            return bytes(data[field.offset : field.offset + field.size])
-
-        return None
+        return field.read_value(data) if data is not None else None
 
     def get_program_data(self, feature_key: str) -> bytes:
         """Read a field with the legacy zero fallback for existing entities."""
@@ -277,10 +277,16 @@ class SyncleoBaseEntity(Entity):
         field = self._profile.program_data_fields.get(feature_key)
         return bytes(field.size) if field else b""
 
-    async def async_set_program_data(self, feature_key: str, value: bytes):
-        await self.async_set_program_data_fields({feature_key: value})
+    async def async_set_program_data(
+        self, feature_key: str, value: bytes, *, update_cache: bool = True
+    ):
+        await self.async_set_program_data_fields(
+            {feature_key: value}, update_cache=update_cache
+        )
 
-    async def async_set_program_data_fields(self, updates: dict[str, bytes]) -> None:
+    async def async_set_program_data_fields(
+        self, updates: dict[str, bytes], *, update_cache: bool = True
+    ) -> None:
         modes_to_update: dict[int, bytearray] = {}
 
         for feature_key, val in updates.items():
@@ -310,14 +316,18 @@ class SyncleoBaseEntity(Entity):
                     default=field.offset + field.size,
                 )
 
-                cached_data = self._program_data_modes.get(field.mode)
+                data = bytearray(mode_length)
+                for config in self._profile.program_data_fields.values():
+                    if config.mode == field.mode:
+                        data[config.offset : config.offset + config.size] = (
+                            config.default_value.to_bytes(
+                                config.size, byteorder="little"
+                            )
+                        )
 
-                if cached_data is None:
-                    data = bytearray(mode_length)
-                else:
-                    data = bytearray(cached_data)
-                    if len(data) < mode_length:
-                        data.extend(b"\x00" * (mode_length - len(data)))
+                cached_data = self._program_data_modes.get(field.mode)
+                if cached_data is not None:
+                    data[: len(cached_data)] = cached_data
 
                 modes_to_update[field.mode] = data
 
@@ -325,7 +335,8 @@ class SyncleoBaseEntity(Entity):
 
         for mode, data in modes_to_update.items():
             await self.async_send_command(CmdProgramData(data=bytes(data), mode=mode))
-            self._program_data_modes[mode] = data
+            if update_cache:
+                self._program_data_modes[mode] = data
 
         if modes_to_update:
             self.async_write_ha_state()

@@ -7,11 +7,13 @@ from homeassistant.const import (
     PERCENTAGE,
     STATE_OFF,
     EntityCategory,
+    UnitOfTime,
 )
-from pysyncleo.commands import CmdExpendables
+from pysyncleo.commands import CmdExpendables, CmdProgramData
 from pysyncleo.enums import UdpCommandType
 
 from ..const import (
+    FEATURE_ACTIVATE_OPTIONS,
     FEATURE_AUTO_OFF_BACKLIGHT,
     FEATURE_BREEZER_DAMPER,
     FEATURE_BREEZER_MELODY,
@@ -22,6 +24,7 @@ from ..const import (
     FEATURE_EXPENDABLES_FILTER,
     FEATURE_EXPENDABLES_PREFILTER,
     FEATURE_IONIZATION,
+    FEATURE_REMAINING_TIME,
     FEATURE_RESET_FILTER,
     FEATURE_ULTRAVIOLET,
     FEATURE_VOLUME,
@@ -55,6 +58,106 @@ from .profiles import (
     SelectConfig,
     SensorConfig,
 )
+
+
+def decode_asp90_current_temperature(value: float) -> float:
+    """Decode ASP-90's signed integer byte after pysyncleo's float parser."""
+    if value < 128:
+        return value
+    integer = int(value)
+    fraction = round(value - integer, 2)
+    return round(integer - 256 - fraction, 2)
+
+
+def create_asp90_profile(device_type: int) -> ClimateProfile:
+    """Build static capabilities from the ASP-90 type selected by its firmware."""
+    has_co2 = device_type in (105, 107)
+    has_heater = device_type in (105, 106)
+    features = (
+        ClimateEntityFeature.FAN_MODE
+        | ClimateEntityFeature.PRESET_MODE
+        | ClimateEntityFeature.TURN_ON
+        | ClimateEntityFeature.TURN_OFF
+    )
+    if has_heater:
+        features |= ClimateEntityFeature.TARGET_TEMPERATURE
+
+    presets = {PRESET_MANUAL: 1}
+    numbers = [PD_NIGHT_SPEED]
+    sensors = {}
+    if has_co2:
+        presets[PRESET_AUTO] = 2
+        numbers.append(PD_BREEZER_AUTO_INTENSITY)
+        sensors[FEATURE_CURRENT_CO2] = SensorConfig(
+            device_class=SensorDeviceClass.CO2,
+            state_class=SensorStateClass.MEASUREMENT,
+            unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+        )
+    presets.update({PRESET_NIGHT: 3, PRESET_TURBO: 4})
+    sensors.update(
+        {
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.MINUTES,
+                value_fn=lambda seconds: seconds / 60,
+            ),
+            FEATURE_EXPENDABLES_FILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[1] if isinstance(val, list) and len(val) > 1 else None
+                ),
+            ),
+        }
+    )
+
+    return ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=device_type,
+        profile_type=PROFILE_TYPE_BREEZER,
+        min_temp=5,
+        max_temp=25,
+        target_temp_step=1.0,
+        supported_features=features,
+        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
+        default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_program_data_field=PD_TURN_ON,
+        use_turn_on_for_default_hvac_mode=True,
+        current_temperature_value_fn=decode_asp90_current_temperature,
+        preset_modes_map=presets,
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={"1": 1, "2": 2, "3": 3, "4": 4, "5": 5},
+        program_data_fields={
+            PD_TURN_ON: ProgramDataField(mode=1),
+            PD_NIGHT_SPEED: ProgramDataField(
+                mode=1, offset=1, min_value=1, max_value=3, default_value=1
+            ),
+            # Offset 2 is ignored on writes; retain it in received blocks.
+            PD_BREEZER_AUTO_INTENSITY: ProgramDataField(
+                mode=1, offset=3, min_value=1, max_value=3, default_value=1
+            ),
+            # Option bits are status only; capabilities are fixed by device_type.
+            PD_CO2_INSTALLED: ProgramDataField(mode=2, bitmask=0x01),
+            PD_HEATER_INSTALLED: ProgramDataField(mode=2, bitmask=0x02),
+        },
+        binary_sensors=[FEATURE_ERROR, PD_CO2_INSTALLED, PD_HEATER_INSTALLED],
+        numbers=numbers,
+        switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
+        buttons={
+            FEATURE_ACTIVATE_OPTIONS: ButtonConfig(
+                command_factory=lambda: CmdProgramData(data=b"\x01", mode=2),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_FILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(100, 0),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+        },
+        sensors=sensors,
+    )
+
 
 PROFILES = [
     BreezerProfile(
@@ -467,4 +570,8 @@ PROFILES = [
             ),
         },
     ),
+    create_asp90_profile(102),
+    create_asp90_profile(105),
+    create_asp90_profile(106),
+    create_asp90_profile(107),
 ]

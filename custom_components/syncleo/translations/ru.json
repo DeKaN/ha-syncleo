@@ -36,6 +36,9 @@
   },
   "entity": {
     "button": {
+      "activate_options": {
+        "name": "Активация опций"
+      },
       "reset_filter": {
         "name": "Сброс ресурса фильтра"
       }
@@ -217,6 +220,9 @@
       }
     },
     "sensor": {
+      "remaining_time": {
+        "name": "Счётчик времени турбо"
+      },
       "current_co2": {
         "name": "CO2 - ppm"
       },
