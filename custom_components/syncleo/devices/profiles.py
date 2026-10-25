@@ -7,15 +7,20 @@ from homeassistant.components.fan import FanEntityFeature
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.components.water_heater import WaterHeaterEntityFeature
 from homeassistant.const import (
+    PERCENTAGE,
     SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
     EntityCategory,
     Platform,
+    UnitOfTime,
 )
 from pysyncleo.commands import UdpCommand
 from pysyncleo.enums import UdpCommandType
 from pysyncleo.models import DiagnosticStatus
 
 from ..const import (
+    FEATURE_GATEWAY_LATENCY,
+    FEATURE_GATEWAY_PACKET_LOSS,
+    FEATURE_MQTT_LATENCY,
     FEATURE_RSSI,
     PROFILE_TYPE_AC,
     PROFILE_TYPE_BOILER,
@@ -97,6 +102,37 @@ RSSI_SENSOR_CONFIG = SensorConfig(
 )
 
 
+DEFAULT_SENSOR_CONFIGS = {
+    FEATURE_RSSI: RSSI_SENSOR_CONFIG,
+    FEATURE_GATEWAY_LATENCY: SensorConfig(
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit_of_measurement=UnitOfTime.MILLISECONDS,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda status: (
+            status.gw_ping if isinstance(status, DiagnosticStatus) else None
+        ),
+    ),
+    FEATURE_GATEWAY_PACKET_LOSS: SensorConfig(
+        state_class=SensorStateClass.MEASUREMENT,
+        unit_of_measurement=PERCENTAGE,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda status: (
+            status.gw_loss if isinstance(status, DiagnosticStatus) else None
+        ),
+    ),
+    FEATURE_MQTT_LATENCY: SensorConfig(
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit_of_measurement=UnitOfTime.MILLISECONDS,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda status: (
+            status.mqtt_ping if isinstance(status, DiagnosticStatus) else None
+        ),
+    ),
+}
+
+
 @dataclass(kw_only=True)
 class PlatformProviderBase:
     @property
@@ -164,8 +200,8 @@ class SensorMixin(PlatformProviderBase):
     def __post_init__(self):
         if self.sensors is None:
             self.sensors = {}
-        if FEATURE_RSSI not in self.sensors:
-            self.sensors[FEATURE_RSSI] = RSSI_SENSOR_CONFIG
+        for feature, config in DEFAULT_SENSOR_CONFIGS.items():
+            self.sensors.setdefault(feature, config)
 
     @property
     def supported_platforms(self) -> list[Platform]:

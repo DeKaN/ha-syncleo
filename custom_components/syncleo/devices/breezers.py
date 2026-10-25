@@ -11,7 +11,6 @@ from homeassistant.const import (
 )
 from pysyncleo.commands import CmdExpendables, CmdProgramData
 from pysyncleo.enums import UdpCommandType
-from pysyncleo.models import DiagnosticStatus
 
 from ..const import (
     FEATURE_AUTO_OFF_BACKLIGHT,
@@ -23,10 +22,7 @@ from ..const import (
     FEATURE_ERROR,
     FEATURE_EXPENDABLES_FILTER,
     FEATURE_EXPENDABLES_PREFILTER,
-    FEATURE_GATEWAY_LATENCY,
-    FEATURE_GATEWAY_PACKET_LOSS,
     FEATURE_IONIZATION,
-    FEATURE_MQTT_LATENCY,
     FEATURE_REMAINING_TIME,
     FEATURE_RESET_FILTER,
     FEATURE_ULTRAVIOLET,
@@ -263,32 +259,6 @@ PROFILES = [
         ],
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         sensors={
-            FEATURE_GATEWAY_LATENCY: SensorConfig(
-                device_class=SensorDeviceClass.DURATION,
-                state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=UnitOfTime.MILLISECONDS,
-                entity_category=EntityCategory.DIAGNOSTIC,
-                value_fn=lambda status: (
-                    status.gw_ping if isinstance(status, DiagnosticStatus) else None
-                ),
-            ),
-            FEATURE_GATEWAY_PACKET_LOSS: SensorConfig(
-                state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=PERCENTAGE,
-                entity_category=EntityCategory.DIAGNOSTIC,
-                value_fn=lambda status: (
-                    status.gw_loss if isinstance(status, DiagnosticStatus) else None
-                ),
-            ),
-            FEATURE_MQTT_LATENCY: SensorConfig(
-                device_class=SensorDeviceClass.DURATION,
-                state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=UnitOfTime.MILLISECONDS,
-                entity_category=EntityCategory.DIAGNOSTIC,
-                value_fn=lambda status: (
-                    status.mqtt_ping if isinstance(status, DiagnosticStatus) else None
-                ),
-            ),
             FEATURE_REMAINING_TIME: SensorConfig(
                 device_class=SensorDeviceClass.DURATION,
                 unit_of_measurement=UnitOfTime.MINUTES,
@@ -483,32 +453,6 @@ PROFILES = [
         },
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         sensors={
-            FEATURE_GATEWAY_LATENCY: SensorConfig(
-                device_class=SensorDeviceClass.DURATION,
-                state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=UnitOfTime.MILLISECONDS,
-                entity_category=EntityCategory.DIAGNOSTIC,
-                value_fn=lambda status: (
-                    status.gw_ping if isinstance(status, DiagnosticStatus) else None
-                ),
-            ),
-            FEATURE_GATEWAY_PACKET_LOSS: SensorConfig(
-                state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=PERCENTAGE,
-                entity_category=EntityCategory.DIAGNOSTIC,
-                value_fn=lambda status: (
-                    status.gw_loss if isinstance(status, DiagnosticStatus) else None
-                ),
-            ),
-            FEATURE_MQTT_LATENCY: SensorConfig(
-                device_class=SensorDeviceClass.DURATION,
-                state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=UnitOfTime.MILLISECONDS,
-                entity_category=EntityCategory.DIAGNOSTIC,
-                value_fn=lambda status: (
-                    status.mqtt_ping if isinstance(status, DiagnosticStatus) else None
-                ),
-            ),
             FEATURE_REMAINING_TIME: SensorConfig(
                 device_class=SensorDeviceClass.DURATION,
                 unit_of_measurement=UnitOfTime.MINUTES,
