@@ -38,11 +38,17 @@
     "button": {
       "reset_filter": {
         "name": "Сброс ресурса фильтра"
+      },
+      "reset_prefilter": {
+        "name": "Сброс ресурса префильтра"
       }
     },
     "binary_sensor": {
       "breezer_damper": {
         "name": "Рециркуляция"
+      },
+      "breezer_damper_state": {
+        "name": "Режим открытого окна"
       },
       "co2_installed": {
         "name": "Датчик CO₂ установлен"
