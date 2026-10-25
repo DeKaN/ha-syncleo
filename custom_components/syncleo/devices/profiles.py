@@ -50,7 +50,6 @@ class ProgramDataField(NumberBounds):
     mode: int
     offset: int = 0
     size: int = 1
-    default_value: int = 0
 
 
 @dataclass

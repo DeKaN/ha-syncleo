@@ -320,14 +320,6 @@ class SyncleoBaseEntity(Entity):
                 )
 
                 data = bytearray(mode_length)
-                for config in self._profile.program_data_fields.values():
-                    if config.mode == field.mode:
-                        data[config.offset : config.offset + config.size] = (
-                            config.default_value.to_bytes(
-                                config.size, byteorder="little"
-                            )
-                        )
-
                 cached_data = self._program_data_modes.get(field.mode)
                 if cached_data is not None:
                     data[: len(cached_data)] = cached_data
