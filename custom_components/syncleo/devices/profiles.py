@@ -275,8 +275,6 @@ class ClimateProfile(
     default_hvac_mode: HVACMode
     turn_on_program_data_field: str | None = None
 
-    current_temperature_value_fn: Callable[[float], float] | None = None
-
     cmd_current_humidity: UdpCommandType | None = None
 
     preset_modes_map: dict[str, int] = field(default_factory=dict)
