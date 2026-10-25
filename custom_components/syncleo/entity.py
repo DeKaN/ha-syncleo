@@ -273,10 +273,7 @@ class SyncleoBaseEntity(Entity):
             return None
 
         data = self._program_data_modes.get(field.mode)
-        if data and len(data) >= field.offset + field.size:
-            return bytes(data[field.offset : field.offset + field.size])
-
-        return None
+        return field.read_value(data) if data is not None else None
 
     def get_program_data(self, feature_key: str) -> bytes:
         """Read a field with the legacy zero fallback for existing entities."""

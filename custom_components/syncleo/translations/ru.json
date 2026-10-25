@@ -36,8 +36,14 @@
   },
   "entity": {
     "button": {
+      "activate_options": {
+        "name": "Активация опций"
+      },
       "reset_filter": {
         "name": "Сброс ресурса фильтра"
+      },
+      "reset_prefilter": {
+        "name": "Сброс ресурса префильтра"
       }
     },
     "binary_sensor": {

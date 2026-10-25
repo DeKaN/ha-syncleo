@@ -36,8 +36,14 @@
   },
   "entity": {
     "button": {
+      "activate_options": {
+        "name": "Activate options"
+      },
       "reset_filter": {
         "name": "Reset filter life"
+      },
+      "reset_prefilter": {
+        "name": "Reset prefilter life"
       }
     },
     "binary_sensor": {

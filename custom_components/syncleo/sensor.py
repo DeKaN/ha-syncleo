@@ -49,15 +49,11 @@ async def async_setup_entry(
                 required_field = config.required_program_data_field
                 assert required_field is not None
                 field = profile.program_data_fields.get(required_field)
-                if (
-                    field is None
-                    or cmd.mode != field.mode
-                    or len(cmd.data) < field.offset + field.size
-                ):
+                if field is None or cmd.mode != field.mode:
                     continue
 
-                data = cmd.data[field.offset : field.offset + field.size]
-                if int.from_bytes(data, byteorder="little") != 0:
+                data = field.read_value(cmd.data)
+                if data is not None and int.from_bytes(data, byteorder="little") != 0:
                     entity = SyncleoSensor(conn, profile, entry, key, config)
                     entity._program_data_modes[cmd.mode] = bytearray(cmd.data)
                     discovered.append(entity)

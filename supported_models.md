@@ -59,6 +59,10 @@
 | Rusclimate | 93 | Electrolux SI (SE/BE) EEC, Electrolux Smartinverter, Electrolux Smartinverter PRO, Electrolux Smartinverter PRO 2.0, Electrolux Smartinverter Enamel |
 | Rusclimate | 95 | Climer Dresden ??K/in-07/G8, Climer Dresden ??K/in-09/G8, Climer Dresden CK/in-18/G8 |
 | Rusclimate | 99 | Aurus A |
+| Rusclimate | 102 | Ballu ONEAIR ASP-90 (without CO₂ sensor or heater) |
+| Rusclimate | 105 | Ballu ONEAIR ASP-90 (with CO₂ sensor and heater) |
+| Rusclimate | 106 | Ballu ONEAIR ASP-90 (with heater, without CO₂ sensor) |
+| Rusclimate | 107 | Ballu ONEAIR ASP-90 (with CO₂ sensor, without heater) |
 | Rusclimate | 108 | Royal Thermo Diamond DC |
 | Rusclimate | 109 | Aurus S |
 | Rusclimate | 110 | GoldStar GSTI |
