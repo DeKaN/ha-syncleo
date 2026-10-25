@@ -87,22 +87,19 @@ class SensorConfig:
     value_fn: Callable[[Any], Any] = lambda x: x
 
 
-RSSI_SENSOR_CONFIG = SensorConfig(
-    device_class=SensorDeviceClass.SIGNAL_STRENGTH,
-    unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
-    entity_category=EntityCategory.DIAGNOSTIC,
-    value_fn=lambda status: (
-        status.rssi - 256
-        if status.rssi > 127
-        else status.rssi
-        if isinstance(status, DiagnosticStatus)
-        else None
-    ),
-)
-
-
 DEFAULT_SENSOR_CONFIGS = {
-    FEATURE_RSSI: RSSI_SENSOR_CONFIG,
+    FEATURE_RSSI: SensorConfig(
+        device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+        unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda status: (
+            status.rssi - 256
+            if status.rssi > 127
+            else status.rssi
+            if isinstance(status, DiagnosticStatus)
+            else None
+        ),
+    ),
     FEATURE_GATEWAY_LATENCY: SensorConfig(
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.MEASUREMENT,

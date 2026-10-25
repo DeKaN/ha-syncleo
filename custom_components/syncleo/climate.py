@@ -215,7 +215,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
         field = self._profile.program_data_fields[field_key]
         await self.async_set_program_data_fields(
-            {field_key: (1).to_bytes(field.size, byteorder="little")}
+            {field_key: True.to_bytes(field.size, byteorder="little")}
         )
         self._current_hvac_mode = self._profile.default_hvac_mode
         self._is_on = True
