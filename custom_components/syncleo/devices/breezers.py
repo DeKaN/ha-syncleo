@@ -9,7 +9,7 @@ from homeassistant.const import (
     EntityCategory,
     UnitOfTime,
 )
-from pysyncleo.commands import CmdExpendables, CmdProgramData
+from pysyncleo.commands import CmdExpendables
 from pysyncleo.enums import UdpCommandType
 
 from ..const import (
@@ -220,7 +220,7 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
-        turn_on_command_factory=lambda: CmdProgramData(mode=1, data=b"\x01\x01\x00"),
+        turn_on_program_data_field=PD_TURN_ON,
         preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
@@ -401,7 +401,7 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
-        turn_on_command_factory=lambda: CmdProgramData(mode=1, data=b"\x01\x01\x00"),
+        turn_on_program_data_field=PD_TURN_ON,
         current_temperature_value_fn=decode_asp100_current_temperature,
         preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
         target_temperature_requirement=PD_HEATER_INSTALLED,
