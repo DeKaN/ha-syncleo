@@ -7,6 +7,7 @@ from homeassistant.const import (
     PERCENTAGE,
     STATE_OFF,
     EntityCategory,
+    UnitOfTime,
 )
 from pysyncleo.commands import CmdExpendables
 from pysyncleo.enums import UdpCommandType
@@ -22,6 +23,7 @@ from ..const import (
     FEATURE_EXPENDABLES_FILTER,
     FEATURE_EXPENDABLES_PREFILTER,
     FEATURE_IONIZATION,
+    FEATURE_REMAINING_TIME,
     FEATURE_RESET_FILTER,
     FEATURE_ULTRAVIOLET,
     FEATURE_VOLUME,
@@ -207,6 +209,7 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_program_data_field=PD_TURN_ON,
         preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
@@ -230,10 +233,6 @@ PROFILES = [
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
             PD_TURN_ON: ProgramDataField(mode=1, offset=0),
-            PD_NIGHT_SPEED: ProgramDataField(
-                mode=1, offset=1, min_value=1, max_value=3
-            ),
-            PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
         },
         buttons={
             FEATURE_RESET_FILTER: ButtonConfig(
@@ -247,20 +246,12 @@ PROFILES = [
             PD_CO2_INSTALLED,
             PD_HEATER_INSTALLED,
         ],
-        selects={
-            FEATURE_BREEZER_MELODY: SelectConfig(
-                options_map={
-                    STATE_OFF: 0,
-                    PRESET_MELODY_RAIN_SOUND: 1,
-                    PRESET_MELODY_SEA_SOUND: 2,
-                    PRESET_MELODY_FOREST_SOUND: 3,
-                    PRESET_MELODY_BIRDS_SINGING: 4,
-                    PRESET_MELODY_FIREPLACE_SOUND: 5,
-                }
-            ),
-        },
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         sensors={
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 required_program_data_field=PD_CO2_INSTALLED,
                 device_class=SensorDeviceClass.CO2,
@@ -398,6 +389,7 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_program_data_field=PD_TURN_ON,
         preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
@@ -421,10 +413,6 @@ PROFILES = [
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
             PD_TURN_ON: ProgramDataField(mode=1, offset=0),
-            PD_NIGHT_SPEED: ProgramDataField(
-                mode=1, offset=1, min_value=1, max_value=3
-            ),
-            PD_BREEZER_DAMPER: ProgramDataField(mode=1, offset=2),
         },
         buttons={
             FEATURE_RESET_FILTER: ButtonConfig(
@@ -452,6 +440,10 @@ PROFILES = [
         },
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         sensors={
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 required_program_data_field=PD_CO2_INSTALLED,
                 device_class=SensorDeviceClass.CO2,

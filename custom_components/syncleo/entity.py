@@ -33,6 +33,7 @@ from pysyncleo.commands import (
     CmdTank,
     CmdTargetId,
     CmdTargetTemperature,
+    CmdTargetTime,
     CmdTurbo,
     CmdUltraviolet,
     CmdVolume,
@@ -69,6 +70,8 @@ from .const import (
     FEATURE_EXPENDABLES_ANODE,
     FEATURE_EXPENDABLES_FILTER,
     FEATURE_EXPENDABLES_PREFILTER,
+    FEATURE_GATEWAY_LATENCY,
+    FEATURE_GATEWAY_PACKET_LOSS,
     FEATURE_GOLDSTAR_GSTI_BREEZE_AWAY,
     FEATURE_GOLDSTAR_GSTI_CLEAN,
     FEATURE_GOLDSTAR_GSTI_DAMPER,
@@ -76,8 +79,10 @@ from .const import (
     FEATURE_IONIZATION,
     FEATURE_KEEP_WARM,
     FEATURE_KETTLE_TEMPERATURE_PRESET,
+    FEATURE_MQTT_LATENCY,
     FEATURE_NIGHT,
     FEATURE_POWER_LEVEL,
+    FEATURE_REMAINING_TIME,
     FEATURE_RSSI,
     FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
     FEATURE_SHUFT_SFMS_09_ANTI_MELDEW,
@@ -110,11 +115,15 @@ FEATURE_TO_COMMAND_MAP = {
     FEATURE_EXPENDABLES_ANODE: CmdExpendables,
     FEATURE_EXPENDABLES_FILTER: CmdExpendables,
     FEATURE_EXPENDABLES_PREFILTER: CmdExpendables,
+    FEATURE_GATEWAY_LATENCY: CmdInitDiagnostic,
+    FEATURE_GATEWAY_PACKET_LOSS: CmdInitDiagnostic,
     FEATURE_IONIZATION: CmdIonization,
     FEATURE_KEEP_WARM: CmdKeepWarm,
+    FEATURE_MQTT_LATENCY: CmdInitDiagnostic,
     FEATURE_NIGHT: CmdNight,
     FEATURE_POWER_LEVEL: CmdSpeed,
     FEATURE_SMART_MODE: CmdSmartMode,
+    FEATURE_REMAINING_TIME: CmdTargetTime,
     FEATURE_RSSI: CmdInitDiagnostic,
     FEATURE_TANK: CmdTank,
     FEATURE_TURBO: CmdTurbo,
@@ -310,14 +319,10 @@ class SyncleoBaseEntity(Entity):
                     default=field.offset + field.size,
                 )
 
+                data = bytearray(mode_length)
                 cached_data = self._program_data_modes.get(field.mode)
-
-                if cached_data is None:
-                    data = bytearray(mode_length)
-                else:
-                    data = bytearray(cached_data)
-                    if len(data) < mode_length:
-                        data.extend(b"\x00" * (mode_length - len(data)))
+                if cached_data is not None:
+                    data[: len(cached_data)] = cached_data
 
                 modes_to_update[field.mode] = data
 

@@ -7,15 +7,20 @@ from homeassistant.components.fan import FanEntityFeature
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.components.water_heater import WaterHeaterEntityFeature
 from homeassistant.const import (
+    PERCENTAGE,
     SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
     EntityCategory,
     Platform,
+    UnitOfTime,
 )
 from pysyncleo.commands import UdpCommand
 from pysyncleo.enums import UdpCommandType
 from pysyncleo.models import DiagnosticStatus
 
 from ..const import (
+    FEATURE_GATEWAY_LATENCY,
+    FEATURE_GATEWAY_PACKET_LOSS,
+    FEATURE_MQTT_LATENCY,
     FEATURE_RSSI,
     PROFILE_TYPE_AC,
     PROFILE_TYPE_BOILER,
@@ -82,18 +87,46 @@ class SensorConfig:
     value_fn: Callable[[Any], Any] = lambda x: x
 
 
-RSSI_SENSOR_CONFIG = SensorConfig(
-    device_class=SensorDeviceClass.SIGNAL_STRENGTH,
-    unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
-    entity_category=EntityCategory.DIAGNOSTIC,
-    value_fn=lambda status: (
-        status.rssi - 256
-        if status.rssi > 127
-        else status.rssi
-        if isinstance(status, DiagnosticStatus)
-        else None
+DEFAULT_SENSOR_CONFIGS = {
+    FEATURE_RSSI: SensorConfig(
+        device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+        unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda status: (
+            status.rssi - 256
+            if status.rssi > 127
+            else status.rssi
+            if isinstance(status, DiagnosticStatus)
+            else None
+        ),
     ),
-)
+    FEATURE_GATEWAY_LATENCY: SensorConfig(
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit_of_measurement=UnitOfTime.MILLISECONDS,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda status: (
+            status.gw_ping if isinstance(status, DiagnosticStatus) else None
+        ),
+    ),
+    FEATURE_GATEWAY_PACKET_LOSS: SensorConfig(
+        state_class=SensorStateClass.MEASUREMENT,
+        unit_of_measurement=PERCENTAGE,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda status: (
+            status.gw_loss if isinstance(status, DiagnosticStatus) else None
+        ),
+    ),
+    FEATURE_MQTT_LATENCY: SensorConfig(
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit_of_measurement=UnitOfTime.MILLISECONDS,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda status: (
+            status.mqtt_ping if isinstance(status, DiagnosticStatus) else None
+        ),
+    ),
+}
 
 
 @dataclass(kw_only=True)
@@ -163,8 +196,8 @@ class SensorMixin(PlatformProviderBase):
     def __post_init__(self):
         if self.sensors is None:
             self.sensors = {}
-        if FEATURE_RSSI not in self.sensors:
-            self.sensors[FEATURE_RSSI] = RSSI_SENSOR_CONFIG
+        for feature, config in DEFAULT_SENSOR_CONFIGS.items():
+            self.sensors.setdefault(feature, config)
 
     @property
     def supported_platforms(self) -> list[Platform]:
@@ -237,6 +270,7 @@ class ClimateProfile(
 
     hvac_modes_map: dict[HVACMode, int]
     default_hvac_mode: HVACMode
+    turn_on_program_data_field: str | None = None
 
     cmd_current_humidity: UdpCommandType | None = None
 
