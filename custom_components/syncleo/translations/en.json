@@ -50,6 +50,9 @@
       "breezer_damper": {
         "name": "Recirculation"
       },
+      "breezer_damper_state": {
+        "name": "Open window mode"
+      },
       "co2_installed": {
         "name": "CO₂ sensor installed"
       },

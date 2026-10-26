@@ -50,6 +50,9 @@
       "breezer_damper": {
         "name": "Рециркуляция"
       },
+      "breezer_damper_state": {
+        "name": "Режим открытого окна"
+      },
       "co2_installed": {
         "name": "Датчик CO₂ установлен"
       },

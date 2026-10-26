@@ -99,6 +99,11 @@ class SensorConfig:
     value_fn: Callable[[Any], Any] = lambda x: x
 
 
+@dataclass(kw_only=True)
+class SwitchConfig:
+    required_program_data_field: str | None = None
+
+
 DEFAULT_SENSOR_CONFIGS = {
     FEATURE_RSSI: SensorConfig(
         device_class=SensorDeviceClass.SIGNAL_STRENGTH,
@@ -220,6 +225,7 @@ class SensorMixin(PlatformProviderBase):
 @dataclass(kw_only=True)
 class SwitchMixin(PlatformProviderBase):
     switches: list[str] = field(default_factory=list)
+    switch_configs: dict[str, SwitchConfig] = field(default_factory=dict)
 
     @property
     def supported_platforms(self) -> list[Platform]:

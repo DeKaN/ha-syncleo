@@ -283,6 +283,13 @@ class SyncleoBaseEntity(Entity):
         field = self._profile.program_data_fields.get(feature_key)
         return bytes(field.size) if field else b""
 
+    def _requirement_is_absent(self, feature_key: str | None) -> bool:
+        """Only a received zero confirms that optional hardware is absent."""
+        if feature_key is None:
+            return False
+        data = self.get_known_program_data(feature_key)
+        return data is not None and int.from_bytes(data, byteorder="little") == 0
+
     async def async_set_program_data(self, feature_key: str, value: bytes):
         await self.async_set_program_data_fields({feature_key: value})
 
