@@ -95,6 +95,12 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 if new_port and current_port != new_port:
                     updates[CONF_PORT] = new_port
 
+                device_type = discovery_info.properties.get(ZEROCONF_DEVICE_TYPE)
+                if device_type and entry.data.get(CONF_DEVICE_CLASS) != int(
+                    device_type
+                ):
+                    updates[CONF_DEVICE_CLASS] = int(device_type)
+
                 if not updates:
                     return self.async_abort(reason="already_configured")
 

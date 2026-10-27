@@ -540,11 +540,8 @@ PROFILES = [
             PD_BREEZER_AUTO_INTENSITY: ProgramDataField(
                 mode=1, offset=3, min_value=1, max_value=3
             ),
-            # Option bits are status only; capabilities are fixed by device_type.
-            PD_CO2_INSTALLED: ProgramDataField(mode=2, bitmask=0x01),
-            PD_HEATER_INSTALLED: ProgramDataField(mode=2, bitmask=0x02),
         },
-        binary_sensors=[FEATURE_ERROR, PD_CO2_INSTALLED, PD_HEATER_INSTALLED],
+        binary_sensors=[FEATURE_ERROR],
         numbers=[PD_NIGHT_SPEED],
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         buttons={
@@ -617,11 +614,8 @@ PROFILES = [
             PD_BREEZER_AUTO_INTENSITY: ProgramDataField(
                 mode=1, offset=3, min_value=1, max_value=3
             ),
-            # Option bits are status only; capabilities are fixed by device_type.
-            PD_CO2_INSTALLED: ProgramDataField(mode=2, bitmask=0x01),
-            PD_HEATER_INSTALLED: ProgramDataField(mode=2, bitmask=0x02),
         },
-        binary_sensors=[FEATURE_ERROR, PD_CO2_INSTALLED, PD_HEATER_INSTALLED],
+        binary_sensors=[FEATURE_ERROR],
         numbers=[PD_NIGHT_SPEED, PD_BREEZER_AUTO_INTENSITY],
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         buttons={
@@ -698,11 +692,8 @@ PROFILES = [
             PD_BREEZER_AUTO_INTENSITY: ProgramDataField(
                 mode=1, offset=3, min_value=1, max_value=3
             ),
-            # Option bits are status only; capabilities are fixed by device_type.
-            PD_CO2_INSTALLED: ProgramDataField(mode=2, bitmask=0x01),
-            PD_HEATER_INSTALLED: ProgramDataField(mode=2, bitmask=0x02),
         },
-        binary_sensors=[FEATURE_ERROR, PD_CO2_INSTALLED, PD_HEATER_INSTALLED],
+        binary_sensors=[FEATURE_ERROR],
         numbers=[PD_NIGHT_SPEED],
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         buttons={
@@ -774,11 +765,8 @@ PROFILES = [
             PD_BREEZER_AUTO_INTENSITY: ProgramDataField(
                 mode=1, offset=3, min_value=1, max_value=3
             ),
-            # Option bits are status only; capabilities are fixed by device_type.
-            PD_CO2_INSTALLED: ProgramDataField(mode=2, bitmask=0x01),
-            PD_HEATER_INSTALLED: ProgramDataField(mode=2, bitmask=0x02),
         },
-        binary_sensors=[FEATURE_ERROR, PD_CO2_INSTALLED, PD_HEATER_INSTALLED],
+        binary_sensors=[FEATURE_ERROR],
         numbers=[PD_NIGHT_SPEED, PD_BREEZER_AUTO_INTENSITY],
         switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
         buttons={
