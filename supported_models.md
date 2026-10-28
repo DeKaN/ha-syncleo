@@ -27,6 +27,7 @@
 | Rusclimate | 31 | (Transformer 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux EIH/R, Electrolux EIH/S, Ballu Plaza |
 | Rusclimate | 32 | Ballu ONEAIR ASP-100, Electrolux EASP-100 |
 | Rusclimate | 33 | Electrolux Centurio IQ 3.0 |
+| Rusclimate | 35 | Electrolux YOGAhealthline 2.0 |
 | Rusclimate | 38 | Toshiba Shorai EE |
 | Rusclimate | 41 | Electrolux Monaco DC |
 | Rusclimate | 42 | (Transformer DI 3.0 XS) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble |

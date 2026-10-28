@@ -2,6 +2,7 @@ from .air_conditioners import PROFILES as CONDITIONER_PROFILES
 from .boilers import PROFILES as BOILER_PROFILES
 from .breezers import PROFILES as BREEZER_PROFILES
 from .heaters import PROFILES as HEATER_PROFILES
+from .humidifiers import PROFILES as HUMIDIFIER_PROFILES
 from .kettles import PROFILES as KETTLE_PROFILES
 from .profiles import (
     BinarySensorMixin,
@@ -10,6 +11,7 @@ from .profiles import (
     ButtonMixin,
     ClimateProfile,
     DeviceBaseProfile,
+    HumidifierProfile,
     LightMixin,
     NumberConfig,
     NumberMixin,
@@ -27,6 +29,7 @@ _ALL_PROFILES = (
     + BOILER_PROFILES
     + BREEZER_PROFILES
     + HEATER_PROFILES
+    + HUMIDIFIER_PROFILES
     + KETTLE_PROFILES
 )
 
@@ -42,6 +45,7 @@ __all__ = [
     "ButtonMixin",
     "ClimateProfile",
     "DeviceBaseProfile",
+    "HumidifierProfile",
     "LightMixin",
     "NumberConfig",
     "NumberMixin",
