@@ -36,6 +36,9 @@
   },
   "entity": {
     "button": {
+      "activate_options": {
+        "name": "Activate options"
+      },
       "reset_filter": {
         "name": "Reset filter life"
       },

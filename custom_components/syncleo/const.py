@@ -123,6 +123,7 @@ PRESET_TOSHIBA_NOISELESS_1 = "noiseless_1"
 PRESET_TOSHIBA_NOISELESS_2 = "noiseless_2"
 
 FEATURE_ACCESS_CONTROL = "access_control"
+FEATURE_ACTIVATE_OPTIONS = "activate_options"
 FEATURE_ANTI_MELDEW = "anti_meldew"
 FEATURE_AUTO_OFF_BACKLIGHT = "auto_off_backlight"
 FEATURE_BACKLIGHT = "backlight"

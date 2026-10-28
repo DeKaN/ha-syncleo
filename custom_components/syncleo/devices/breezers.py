@@ -10,10 +10,11 @@ from homeassistant.const import (
     # UnitOfDensity,  # Not available in the minimum supported HA 2026.5.0.
     UnitOfTime,
 )
-from pysyncleo.commands import CmdExpendables
+from pysyncleo.commands import CmdExpendables, CmdProgramData
 from pysyncleo.enums import UdpCommandType
 
 from ..const import (
+    FEATURE_ACTIVATE_OPTIONS,
     FEATURE_AUTO_OFF_BACKLIGHT,
     FEATURE_BREEZER_DAMPER,
     FEATURE_BREEZER_MELODY,
@@ -504,6 +505,308 @@ PROFILES = [
                 value_fn=lambda val: (
                     val[0] if isinstance(val, list) and len(val) > 0 else None
                 ),
+            ),
+        },
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=102,
+        profile_type=PROFILE_TYPE_BREEZER,
+        min_temp=5,
+        max_temp=25,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.PRESET_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
+        default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_program_data_field=PD_TURN_ON,
+        preset_modes_map={
+            PRESET_MANUAL: 1,
+            PRESET_NIGHT: 3,
+            PRESET_TURBO: 4,
+        },
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={"1": 1, "2": 2, "3": 3, "4": 4, "5": 5},
+        program_data_fields={
+            PD_TURN_ON: ProgramDataField(mode=1),
+            PD_NIGHT_SPEED: ProgramDataField(
+                mode=1, offset=1, min_value=1, max_value=3
+            ),
+            # Offset 2 is ignored on writes; retain it in received blocks.
+            PD_BREEZER_AUTO_INTENSITY: ProgramDataField(
+                mode=1, offset=3, min_value=1, max_value=3
+            ),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_NIGHT_SPEED],
+        switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
+        buttons={
+            FEATURE_ACTIVATE_OPTIONS: ButtonConfig(
+                command_factory=lambda: CmdProgramData(data=b"\x01", mode=2),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_FILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(100, 0),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_PREFILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(0, 100),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+        },
+        sensors={
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+            FEATURE_EXPENDABLES_FILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[1] if isinstance(val, list) and len(val) > 1 else None
+                ),
+            ),
+            FEATURE_EXPENDABLES_PREFILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: val[0] if isinstance(val, list) and val else None,
+            ),
+        },
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=105,
+        profile_type=PROFILE_TYPE_BREEZER,
+        min_temp=5,
+        max_temp=25,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.PRESET_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
+        default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_program_data_field=PD_TURN_ON,
+        preset_modes_map={
+            PRESET_MANUAL: 1,
+            PRESET_AUTO: 2,
+            PRESET_NIGHT: 3,
+            PRESET_TURBO: 4,
+        },
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={"1": 1, "2": 2, "3": 3, "4": 4, "5": 5},
+        program_data_fields={
+            PD_TURN_ON: ProgramDataField(mode=1),
+            PD_NIGHT_SPEED: ProgramDataField(
+                mode=1, offset=1, min_value=1, max_value=3
+            ),
+            # Offset 2 is ignored on writes; retain it in received blocks.
+            PD_BREEZER_AUTO_INTENSITY: ProgramDataField(
+                mode=1, offset=3, min_value=1, max_value=3
+            ),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_NIGHT_SPEED, PD_BREEZER_AUTO_INTENSITY],
+        switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
+        buttons={
+            FEATURE_ACTIVATE_OPTIONS: ButtonConfig(
+                command_factory=lambda: CmdProgramData(data=b"\x01", mode=2),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_FILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(100, 0),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_PREFILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(0, 100),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+        },
+        sensors={
+            FEATURE_CURRENT_CO2: SensorConfig(
+                device_class=SensorDeviceClass.CO2,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+            ),
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+            FEATURE_EXPENDABLES_FILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[1] if isinstance(val, list) and len(val) > 1 else None
+                ),
+            ),
+            FEATURE_EXPENDABLES_PREFILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: val[0] if isinstance(val, list) and val else None,
+            ),
+        },
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=106,
+        profile_type=PROFILE_TYPE_BREEZER,
+        min_temp=5,
+        max_temp=25,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.PRESET_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
+        default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_program_data_field=PD_TURN_ON,
+        preset_modes_map={
+            PRESET_MANUAL: 1,
+            PRESET_NIGHT: 3,
+            PRESET_TURBO: 4,
+        },
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={"1": 1, "2": 2, "3": 3, "4": 4, "5": 5},
+        program_data_fields={
+            PD_TURN_ON: ProgramDataField(mode=1),
+            PD_NIGHT_SPEED: ProgramDataField(
+                mode=1, offset=1, min_value=1, max_value=3
+            ),
+            # Offset 2 is ignored on writes; retain it in received blocks.
+            PD_BREEZER_AUTO_INTENSITY: ProgramDataField(
+                mode=1, offset=3, min_value=1, max_value=3
+            ),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_NIGHT_SPEED],
+        switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
+        buttons={
+            FEATURE_ACTIVATE_OPTIONS: ButtonConfig(
+                command_factory=lambda: CmdProgramData(data=b"\x01", mode=2),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_FILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(100, 0),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_PREFILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(0, 100),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+        },
+        sensors={
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+            FEATURE_EXPENDABLES_FILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[1] if isinstance(val, list) and len(val) > 1 else None
+                ),
+            ),
+            FEATURE_EXPENDABLES_PREFILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: val[0] if isinstance(val, list) and val else None,
+            ),
+        },
+    ),
+    ClimateProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=107,
+        profile_type=PROFILE_TYPE_BREEZER,
+        min_temp=5,
+        max_temp=25,
+        target_temp_step=1.0,
+        supported_features=(
+            ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.PRESET_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
+        default_hvac_mode=HVACMode.FAN_ONLY,
+        turn_on_program_data_field=PD_TURN_ON,
+        preset_modes_map={
+            PRESET_MANUAL: 1,
+            PRESET_AUTO: 2,
+            PRESET_NIGHT: 3,
+            PRESET_TURBO: 4,
+        },
+        cmd_fan_mode=UdpCommandType.SPEED,
+        fan_modes_map={"1": 1, "2": 2, "3": 3, "4": 4, "5": 5},
+        program_data_fields={
+            PD_TURN_ON: ProgramDataField(mode=1),
+            PD_NIGHT_SPEED: ProgramDataField(
+                mode=1, offset=1, min_value=1, max_value=3
+            ),
+            # Offset 2 is ignored on writes; retain it in received blocks.
+            PD_BREEZER_AUTO_INTENSITY: ProgramDataField(
+                mode=1, offset=3, min_value=1, max_value=3
+            ),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_NIGHT_SPEED, PD_BREEZER_AUTO_INTENSITY],
+        switches=[FEATURE_AUTO_OFF_BACKLIGHT, FEATURE_VOLUME],
+        buttons={
+            FEATURE_ACTIVATE_OPTIONS: ButtonConfig(
+                command_factory=lambda: CmdProgramData(data=b"\x01", mode=2),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_FILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(100, 0),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+            FEATURE_RESET_PREFILTER: ButtonConfig(
+                command_factory=lambda: CmdExpendables(0, 100),
+                entity_category=EntityCategory.CONFIG,
+                entity_registry_enabled_default=False,
+            ),
+        },
+        sensors={
+            FEATURE_CURRENT_CO2: SensorConfig(
+                device_class=SensorDeviceClass.CO2,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+            ),
+            FEATURE_REMAINING_TIME: SensorConfig(
+                device_class=SensorDeviceClass.DURATION,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+            FEATURE_EXPENDABLES_FILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: (
+                    val[1] if isinstance(val, list) and len(val) > 1 else None
+                ),
+            ),
+            FEATURE_EXPENDABLES_PREFILTER: SensorConfig(
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=PERCENTAGE,
+                value_fn=lambda val: val[0] if isinstance(val, list) and val else None,
             ),
         },
     ),
