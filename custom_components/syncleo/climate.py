@@ -8,6 +8,7 @@ from homeassistant.components.climate.const import (
     SWING_OFF,
     SWING_VERTICAL,
     ClimateEntityFeature,
+    HVACAction,
     HVACMode,
 )
 from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
@@ -71,6 +72,22 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
     @property
     def hvac_mode(self) -> HVACMode:
         return self._current_hvac_mode
+
+    @property
+    def hvac_action(self) -> HVACAction | None:
+        field_key = self._profile.heating_program_data_field
+        if field_key is None:
+            return None
+        if self.hvac_mode == HVACMode.OFF:
+            return HVACAction.OFF
+        data = self.get_known_program_data(field_key)
+        if data is None:
+            return None
+        return (
+            HVACAction.HEATING
+            if int.from_bytes(data, byteorder="little")
+            else HVACAction.IDLE
+        )
 
     @property
     def preset_mode(self) -> str | None:
@@ -174,7 +191,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
             self._target_temp = float(cmd.value)
             update_needed = True
 
-        elif cmd.command_type == UdpCommandType.TEMPERATURE:
+        elif cmd.command_type == self._profile.cmd_current_temperature:
             self._current_temp = float(cmd.value)
             update_needed = True
 

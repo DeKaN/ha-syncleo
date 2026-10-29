@@ -26,6 +26,7 @@ from ..const import (
     PROFILE_TYPE_BOILER,
     PROFILE_TYPE_HEATER,
     PROFILE_TYPE_KETTLE,
+    PROFILE_TYPE_THERMOSTAT,
 )
 
 
@@ -36,6 +37,7 @@ class NumberBounds:
     min_value: int = 0
     max_value: int = 1
     step: int = 1
+    unit_of_measurement: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -50,6 +52,13 @@ class ProgramDataField(NumberBounds):
     mode: int
     offset: int = 0
     size: int = 1
+    value_scale: float = 1.0
+    value_offset: float = 0.0
+    min_value_source: str | None = None
+    min_value_map: dict[int, int] = field(default_factory=dict)
+    max_value_source: str | None = None
+    max_value_map: dict[int, int] = field(default_factory=dict)
+    available_when: tuple[str, int] | None = None
 
 
 @dataclass
@@ -267,7 +276,7 @@ class ClimateProfile(
     SensorMixin,
     SwitchMixin,
 ):
-    """Profile for Heaters and Air Conditioners."""
+    """Profile for climate devices."""
 
     min_temp: int
     max_temp: int
@@ -278,7 +287,9 @@ class ClimateProfile(
     default_hvac_mode: HVACMode
     turn_on_program_data_field: str | None = None
 
+    cmd_current_temperature: UdpCommandType = UdpCommandType.TEMPERATURE
     cmd_current_humidity: UdpCommandType | None = None
+    heating_program_data_field: str | None = None
 
     preset_modes_map: dict[str, int] = field(default_factory=dict)
     preset_mode_requirements: dict[str, str] = field(default_factory=dict)
@@ -348,6 +359,20 @@ class AirConditionerProfile(ClimateProfile):
 class HeaterProfile(ClimateProfile):
     profile_type: str = PROFILE_TYPE_HEATER
     target_temp_step: float = 1.0
+    supported_features: ClimateEntityFeature = (
+        ClimateEntityFeature.TARGET_TEMPERATURE
+        | ClimateEntityFeature.PRESET_MODE
+        | ClimateEntityFeature.TURN_ON
+        | ClimateEntityFeature.TURN_OFF
+    )
+
+
+@dataclass(kw_only=True)
+class ThermostatProfile(ClimateProfile):
+    """Profile for thermostats with device-defined presets."""
+
+    profile_type: str = PROFILE_TYPE_THERMOSTAT
+    target_temp_step: float = 0.1
     supported_features: ClimateEntityFeature = (
         ClimateEntityFeature.TARGET_TEMPERATURE
         | ClimateEntityFeature.PRESET_MODE

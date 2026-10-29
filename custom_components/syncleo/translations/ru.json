@@ -94,6 +94,8 @@
               "manual": "Ручной",
               "auto": "Авто",
               "night": "Ночной",
+              "schedule": "Расписание",
+              "standby": "Дежурный",
               "turbo": "Турбо",
               "ventilation": "Вентиляция",
               "vacation": "Отпуск"
@@ -133,8 +135,41 @@
       "breezer_temperature": {
         "name": "Температура выдува"
       },
+      "cable_power": {
+        "name": "Мощность нагревательного кабеля, Вт"
+      },
+      "comfort_temperature": {
+        "name": "Температура Комфорт"
+      },
+      "display_brightness": {
+        "name": "Яркость дисплея, %"
+      },
       "eco_delta": {
         "name": "Разница температур в режиме Eco"
+      },
+      "eco_temperature": {
+        "name": "Температура Эко"
+      },
+      "fan_speed": {
+        "name": "Скорость вентилятора, %"
+      },
+      "hysteresis": {
+        "name": "Настройка гистерезиса"
+      },
+      "manual_speed": {
+        "name": "Скорость вентилятора в ручном режиме, %"
+      },
+      "max_temperature_air": {
+        "name": "Максимальная температура воздуха"
+      },
+      "max_temperature_floor": {
+        "name": "Максимальная температура пола"
+      },
+      "min_temperature_air": {
+        "name": "Минимальная температура воздуха"
+      },
+      "min_temperature_floor": {
+        "name": "Минимальная температура пола"
       },
       "min_voltage": {
         "name": "Минимальное напряжение (145+X)"
@@ -150,6 +185,12 @@
       },
       "swing_vertical": {
         "name": "Положение вертикальных жалюзей"
+      },
+      "temperature_calibration": {
+        "name": "Калибровка температуры"
+      },
+      "turbo_temperature": {
+        "name": "Температура Турбо"
       },
       "vacation_temperature": {
         "name": "Температура режима Отпуск"
@@ -173,6 +214,16 @@
           "melody_forest_sound": "Звук леса",
           "melody_rain_sound": "Звук дождя",
           "melody_sea_sound": "Звук моря"
+        }
+      },
+      "floor_mode": {
+        "name": "Покрытие пола",
+        "state": {
+          "tile": "Плитка",
+          "carpet": "Ковролин",
+          "laminate": "Ламинат",
+          "linoleum": "Линолеум",
+          "other": "Другое"
         }
       },
       "kettle_temperature_preset": {
@@ -218,14 +269,37 @@
           "power_100": "100%"
         }
       },
+      "resistance": {
+        "name": "Сопротивление датчика пола",
+        "state": {
+          "caleo_5k": "Caleo 5 кОм",
+          "teplolux_6_8k": "Теплолюкс 6,8 кОм",
+          "electrolux_10k": "Electrolux 10 кОм",
+          "raychem_12k": "Raychem 12 кОм",
+          "devi_15k": "Devi 15 кОм",
+          "eberle_33k": "Eberle 33 кОм"
+        }
+      },
       "source_current_temperature": {
         "name": "Источник температуры",
         "state": {
           "datasource_preset_none": "Встроенный датчик"
         }
+      },
+      "temperature_control": {
+        "name": "Управление температурой",
+        "state": {
+          "air": "Воздух",
+          "floor": "Пол",
+          "air_with_floor_limit": "Воздух с ограничением по полу",
+          "floor_with_air_limit": "Пол с ограничением по воздуху"
+        }
       }
     },
     "sensor": {
+      "current_air_temperature": {
+        "name": "Температура воздуха"
+      },
       "gateway_latency": {
         "name": "Задержка до шлюза"
       },
@@ -326,6 +400,9 @@
       },
       "night": {
         "name": "Ночной режим"
+      },
+      "open_window_detection": {
+        "name": "Открытое окно"
       },
       "selfclean": {
         "name": "Самоочистка"
