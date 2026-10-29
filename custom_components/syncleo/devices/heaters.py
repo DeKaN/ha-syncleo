@@ -4,6 +4,7 @@ from homeassistant.components.climate.const import (
     PRESET_NONE,
     HVACMode,
 )
+from homeassistant.components.sensor import SensorStateClass
 
 from ..const import (
     FEATURE_ACCESS_CONTROL,
@@ -39,7 +40,13 @@ from ..const import (
     PRESET_VACATION,
     VENDOR_RUSCLIMATE,
 )
-from .profiles import HeaterProfile, NumberConfig, ProgramDataField, SelectConfig
+from .profiles import (
+    HeaterProfile,
+    NumberConfig,
+    ProgramDataField,
+    SelectConfig,
+    SensorConfig,
+)
 
 PROFILES = [
     HeaterProfile(
@@ -367,6 +374,9 @@ PROFILES = [
             FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
                 options_map={},
             ),
+        },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
             FEATURE_BACKLIGHT,

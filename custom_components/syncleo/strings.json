@@ -188,6 +188,9 @@
       },
       "tank": {
         "name": "Water Tank"
+      },
+      "power": {
+        "name": "Current power"
       }
     },
     "select": {
