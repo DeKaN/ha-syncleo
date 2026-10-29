@@ -97,6 +97,20 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         return features
 
     @property
+    def max_temp(self) -> float:
+        field_key = self._profile.preset_max_temp_offsets.get(
+            self._current_preset_mode or PRESET_NONE
+        )
+        if field_key is None:
+            return self._attr_max_temp
+
+        data = self.get_known_program_data(field_key)
+        if data is None:
+            return self._attr_max_temp
+
+        return self._attr_max_temp - int.from_bytes(data, byteorder="little")
+
+    @property
     def target_temperature(self) -> float | None:
         if not self.supported_features & ClimateEntityFeature.TARGET_TEMPERATURE:
             return None
@@ -231,7 +245,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
         temp = kwargs.get(ATTR_TEMPERATURE)
         if temp is not None:
-            temp = max(self._attr_min_temp, min(self._attr_max_temp, float(temp)))
+            temp = max(self._attr_min_temp, min(self.max_temp, float(temp)))
             await self.async_send_command(CmdTargetTemperature(temp))
             self._target_temp = temp
             self.async_write_ha_state()

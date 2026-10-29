@@ -7,7 +7,7 @@ from homeassistant.components.water_heater import (
     STATE_PERFORMANCE,
     WaterHeaterEntityFeature,
 )
-from homeassistant.const import STATE_ON, UnitOfTime, UnitOfVolume
+from homeassistant.const import STATE_IDLE, STATE_ON, UnitOfTime, UnitOfVolume
 
 from ..const import (
     FEATURE_ACCESS_CONTROL,
@@ -17,6 +17,8 @@ from ..const import (
     FEATURE_KEEP_WARM,
     FEATURE_SMART_MODE,
     FEATURE_TANK,
+    FEATURE_TIMER,
+    OPERATION_MODE_ECONOMY,
     PD_DISPLAY_HALF_POWER,
     PD_EXPENDABLES_ANODE,
     PD_LAST_PROGRAM,
@@ -38,6 +40,8 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
+        operation_mode_states={4: STATE_IDLE},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -71,12 +75,12 @@ PROFILES = [
             STATE_HEAT_PUMP: 5,
         },
         default_operation_mode=STATE_ECO,
+        operation_mode_states={4: FEATURE_TIMER},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
         ],
         switches=[
-            FEATURE_SMART_MODE,
             FEATURE_BSS,
         ],
     ),
@@ -91,8 +95,11 @@ PROFILES = [
             STATE_ELECTRIC: 2,
             STATE_PERFORMANCE: 3,
             STATE_HEAT_PUMP: 5,
+            OPERATION_MODE_ECONOMY: 6,
         },
         default_operation_mode=STATE_ECO,
+        operation_mode_aliases={7: 6},
+        operation_mode_states={4: FEATURE_TIMER},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -128,8 +135,11 @@ PROFILES = [
             STATE_ELECTRIC: 2,
             STATE_PERFORMANCE: 3,
             STATE_HEAT_PUMP: 5,
+            OPERATION_MODE_ECONOMY: 6,
         },
         default_operation_mode=STATE_ECO,
+        operation_mode_aliases={7: 6},
+        operation_mode_states={4: FEATURE_TIMER},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -152,9 +162,18 @@ PROFILES = [
             STATE_ON: 3,
         },
         default_operation_mode=STATE_ON,
+        operation_mode_aliases={1: 3, 2: 3, 7: 6},
+        operation_mode_states={
+            4: FEATURE_TIMER,
+            5: STATE_HEAT_PUMP,
+            6: OPERATION_MODE_ECONOMY,
+        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
+        ],
+        switches=[
+            FEATURE_BSS,
         ],
     ),
     BoilerProfile(
@@ -167,8 +186,12 @@ PROFILES = [
             STATE_ECO: 1,
             STATE_ELECTRIC: 2,
             STATE_PERFORMANCE: 3,
+            OPERATION_MODE_ECONOMY: 6,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_TURN_ON,
+        operation_mode_aliases={7: 6},
+        operation_mode_states={4: FEATURE_TIMER, 5: STATE_HEAT_PUMP},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -199,16 +222,26 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
+        operation_mode_states={
+            4: STATE_HEAT_PUMP,
+            5: FEATURE_BSS,
+            6: FEATURE_SMART_MODE,
+        },
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
+            FEATURE_KEEP_WARM,
             PD_DISPLAY_HALF_POWER,
         ],
         sensors={
-            PD_EXPENDABLES_ANODE: SensorConfig(
+            FEATURE_EXPENDABLES_ANODE: SensorConfig(
                 device_class=SensorDeviceClass.DURATION,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=UnitOfTime.DAYS,
+                value_fn=lambda val: (
+                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                ),
             ),
         },
         program_data_fields={
@@ -229,10 +262,19 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
+        operation_mode_states={4: STATE_IDLE},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
         ],
+        sensors={
+            FEATURE_TANK: SensorConfig(
+                device_class=SensorDeviceClass.VOLUME_STORAGE,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfVolume.LITERS,
+            ),
+        },
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -252,8 +294,12 @@ PROFILES = [
             STATE_ECO: 1,
             STATE_ELECTRIC: 2,
             STATE_PERFORMANCE: 3,
+            OPERATION_MODE_ECONOMY: 6,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_TURN_ON,
+        operation_mode_aliases={7: 6},
+        operation_mode_states={4: FEATURE_TIMER, 5: STATE_HEAT_PUMP},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -272,10 +318,15 @@ PROFILES = [
                     val[0] if isinstance(val, list) and len(val) > 0 else None
                 ),
             ),
+            FEATURE_TANK: SensorConfig(
+                device_class=SensorDeviceClass.VOLUME_STORAGE,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfVolume.LITERS,
+            ),
         },
         program_data_fields={
             PD_TURN_ON: ProgramDataField(mode=0),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=1, offset=1),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=1),
         },
     ),
     BoilerProfile(
@@ -290,6 +341,12 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
+        operation_mode_states={
+            4: STATE_HEAT_PUMP,
+            5: FEATURE_BSS,
+            6: FEATURE_SMART_MODE,
+        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -297,13 +354,17 @@ PROFILES = [
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
+            FEATURE_KEEP_WARM,
             PD_DISPLAY_HALF_POWER,
         ],
         sensors={
-            PD_EXPENDABLES_ANODE: SensorConfig(
+            FEATURE_EXPENDABLES_ANODE: SensorConfig(
                 device_class=SensorDeviceClass.DURATION,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=UnitOfTime.DAYS,
+                value_fn=lambda val: (
+                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                ),
             ),
         },
         program_data_fields={
@@ -324,6 +385,12 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
+        operation_mode_states={
+            4: STATE_HEAT_PUMP,
+            5: FEATURE_BSS,
+            6: FEATURE_SMART_MODE,
+        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -331,6 +398,7 @@ PROFILES = [
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
+            FEATURE_KEEP_WARM,
             PD_DISPLAY_HALF_POWER,
         ],
         program_data_fields={
@@ -351,6 +419,12 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
+        operation_mode_states={
+            4: STATE_HEAT_PUMP,
+            5: FEATURE_BSS,
+            6: FEATURE_SMART_MODE,
+        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -358,13 +432,17 @@ PROFILES = [
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
+            FEATURE_KEEP_WARM,
             PD_DISPLAY_HALF_POWER,
         ],
         sensors={
-            PD_EXPENDABLES_ANODE: SensorConfig(
+            FEATURE_EXPENDABLES_ANODE: SensorConfig(
                 device_class=SensorDeviceClass.DURATION,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=UnitOfTime.DAYS,
+                value_fn=lambda val: (
+                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                ),
             ),
         },
         program_data_fields={
@@ -387,14 +465,23 @@ PROFILES = [
             STATE_ON: 3,
         },
         default_operation_mode=STATE_ON,
+        operation_mode_aliases={1: 3, 2: 3, 7: 6},
+        operation_mode_states={
+            4: FEATURE_TIMER,
+            5: STATE_HEAT_PUMP,
+            6: OPERATION_MODE_ECONOMY,
+        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
         ],
+        switches=[
+            FEATURE_BSS,
+        ],
     ),
     BoilerProfile(
         vendor=VENDOR_RUSCLIMATE,
-        device_type=2,
+        device_type=93,
         min_temp=30,
         max_temp=75,
         operation_modes_map={
@@ -404,10 +491,19 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
+        operation_mode_states={4: STATE_IDLE},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
         ],
+        sensors={
+            FEATURE_TANK: SensorConfig(
+                device_class=SensorDeviceClass.VOLUME_STORAGE,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfVolume.LITERS,
+            ),
+        },
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -429,6 +525,8 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
+        operation_mode_states={4: STATE_IDLE},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -454,6 +552,8 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
+        operation_mode_states={4: STATE_IDLE},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,

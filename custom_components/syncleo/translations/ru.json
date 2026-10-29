@@ -73,6 +73,9 @@
       },
       "volume": {
         "name": "Звук"
+      },
+      "damper_state": {
+        "name": "Режим открытого окна"
       }
     },
     "climate": {
@@ -153,6 +156,9 @@
       },
       "vacation_temperature": {
         "name": "Температура режима Отпуск"
+      },
+      "timer": {
+        "name": "Таймер"
       }
     },
     "select": {
@@ -175,6 +181,13 @@
           "melody_sea_sound": "Звук моря"
         }
       },
+      "display_brightness": {
+        "name": "Яркость дисплея",
+        "state": {
+          "brightness_100": "100%",
+          "brightness_50": "50%"
+        }
+      },
       "kettle_temperature_preset": {
         "name": "Предустановка температуры",
         "state": {
@@ -195,6 +208,7 @@
       "night": {
         "name": "Настройки ночного режима",
         "state": {
+          "night_mode_adult": "Для взрослых",
           "night_mode_off": "Выключен",
           "night_mode_standard": "Стандартный",
           "night_mode_child": "Детский",
@@ -258,6 +272,9 @@
       },
       "tank": {
         "name": "Бак"
+      },
+      "power": {
+        "name": "Текущая мощность"
       }
     },
     "switch": {
@@ -285,11 +302,14 @@
       "auto_off_backlight": {
         "name": "Автоотключение подсветки"
       },
+      "auto_off_display": {
+        "name": "Автоотключение дисплея"
+      },
       "backlight": {
         "name": "Подсветка"
       },
       "breeze_away": {
-        "name": "Деликативный обдув"
+        "name": "Деликатный обдув"
       },
       "breezer_damper": {
         "name": "Рециркуляция"
@@ -312,11 +332,17 @@
       "freeze_protection": {
         "name": "Автообогрев +8"
       },
+      "full_display_brightness": {
+        "name": "Полная яркость дисплея"
+      },
       "fungus_proof": {
         "name": "Профилактика грибка"
       },
       "goldstar_gsti_damper": {
         "name": "Здоровье"
+      },
+      "half_display_brightness": {
+        "name": "Яркость дисплея 50%"
       },
       "ionization": {
         "name": "Ионизация"
@@ -326,6 +352,9 @@
       },
       "night": {
         "name": "Ночной режим"
+      },
+      "noiseless": {
+        "name": "Бесшумный режим"
       },
       "selfclean": {
         "name": "Самоочистка"
@@ -355,11 +384,16 @@
     "water_heater": {
       "syncleo_boiler": {
         "state": {
+          "bss": "Самоочистка (BSS)",
           "off": "Выключено",
           "eco": "Низкий (700Вт)",
+          "economy": "Eco",
           "electric": "Средний (1300Вт)",
           "performance": "Турбо (2000Вт)",
-          "heat_pump": "NO Frost"
+          "heat_pump": "NO Frost",
+          "idle": "Ожидание нагрева",
+          "smart_mode": "Smart",
+          "timer": "Таймер"
         }
       },
       "syncleo_kettle": {

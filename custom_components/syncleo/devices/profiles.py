@@ -42,6 +42,8 @@ class NumberBounds:
 class NumberConfig(NumberBounds):
     """Configuration for dedicated command numbers."""
 
+    unit_of_measurement: str | None = None
+
 
 @dataclass(kw_only=True)
 class ProgramDataField(NumberBounds):
@@ -90,6 +92,7 @@ class SensorConfig:
 @dataclass(kw_only=True)
 class SwitchConfig:
     required_program_data_field: str | None = None
+    translation_key: str | None = None
 
 
 DEFAULT_SENSOR_CONFIGS = {
@@ -282,6 +285,7 @@ class ClimateProfile(
 
     preset_modes_map: dict[str, int] = field(default_factory=dict)
     preset_mode_requirements: dict[str, str] = field(default_factory=dict)
+    preset_max_temp_offsets: dict[str, str] = field(default_factory=dict)
     target_temperature_requirement: str | None = None
 
     cmd_fan_mode: UdpCommandType | None = None
@@ -313,6 +317,9 @@ class WaterHeaterProfile(
 
     operation_modes_map: dict[str, int]
     default_operation_mode: str
+    turn_on_program_data_field: str | None = None
+    operation_mode_aliases: dict[int, int] = field(default_factory=dict)
+    operation_mode_states: dict[int, str] = field(default_factory=dict)
 
     @property
     def supported_platforms(self) -> list[Platform]:

@@ -10,6 +10,7 @@ from homeassistant.components.climate.const import (
     ClimateEntityFeature,
     HVACMode,
 )
+from homeassistant.const import UnitOfTime
 from pysyncleo.enums import UdpCommandType
 
 from ..const import (
@@ -24,6 +25,7 @@ from ..const import (
     FEATURE_AURUS_VRF_CHILD_LOCK,
     FEATURE_AURUS_VRF_ECO_MODE,
     FEATURE_AURUS_VRF_NOISELESS_MODE,
+    FEATURE_AUTO_OFF_BACKLIGHT,
     FEATURE_BACKLIGHT,
     FEATURE_CHILD_LOCK,
     FEATURE_ECO_AS_SMART_MODE,
@@ -36,6 +38,7 @@ from ..const import (
     FEATURE_NIGHT,
     FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
     FEATURE_SHUFT_SFMS_09_ANTI_MELDEW,
+    FEATURE_TIMER,
     FEATURE_TURBO,
     FEATURE_VOLUME,
     PD_ANGLE_HORIZONTAL,
@@ -43,7 +46,7 @@ from ..const import (
     PD_AURUS_A_AIR_CLEAN,
     PD_AURUS_SCREENSAVER_MODE,
     PD_BREEZE_AWAY,
-    PD_DISPLAY_HALF_POWER,
+    PD_DISPLAY_BRIGHTNESS,
     PD_ENERGY_SAVING,
     PD_FIREPLACE,
     PD_FREEZE_PROTECTION,
@@ -60,6 +63,9 @@ from ..const import (
     PRESET_AURUS_SCREENSAVER_MODE_3,
     PRESET_AURUS_SCREENSAVER_MODE_5,
     PRESET_AURUS_SCREENSAVER_MODE_OFF,
+    PRESET_DISPLAY_BRIGHTNESS_50,
+    PRESET_DISPLAY_BRIGHTNESS_100,
+    PRESET_NIGHT_MODE_ADULT,
     PRESET_NIGHT_MODE_AGED,
     PRESET_NIGHT_MODE_CHILD,
     PRESET_NIGHT_MODE_OFF,
@@ -73,7 +79,12 @@ from ..const import (
     PRESET_TOSHIBA_POWER_100,
     VENDOR_RUSCLIMATE,
 )
-from .profiles import AirConditionerProfile, ProgramDataField, SelectConfig
+from .profiles import (
+    AirConditionerProfile,
+    NumberConfig,
+    ProgramDataField,
+    SelectConfig,
+)
 
 PROFILES = [
     AirConditionerProfile(
@@ -358,9 +369,9 @@ PROFILES = [
             PD_ENERGY_SAVING: ProgramDataField(mode=0, offset=2),
             PD_FREEZE_PROTECTION: ProgramDataField(mode=0, offset=3),
             PD_POWER: ProgramDataField(mode=1, max_value=2),
-            PD_FIREPLACE: ProgramDataField(mode=1, offset=2),
-            PD_NOISELESS: ProgramDataField(mode=1, offset=3, max_value=2),
-            PD_TURN_ON: ProgramDataField(mode=1, offset=4),
+            PD_FIREPLACE: ProgramDataField(mode=1, offset=1),
+            PD_NOISELESS: ProgramDataField(mode=1, offset=2, max_value=2),
+            PD_TURN_ON: ProgramDataField(mode=1, offset=3),
         },
         binary_sensors=[FEATURE_ERROR],
         selects={
@@ -417,6 +428,7 @@ PROFILES = [
         binary_sensors=[FEATURE_ERROR],
         numbers=[PD_SWING_HORIZONTAL, PD_SWING_VERTICAL],
         switches=[
+            FEATURE_BACKLIGHT,
             FEATURE_IONIZATION,
             FEATURE_NIGHT,
             FEATURE_TURBO,
@@ -462,7 +474,7 @@ PROFILES = [
         vendor=VENDOR_RUSCLIMATE,
         device_type=55,
         min_temp=16,
-        max_temp=30,
+        max_temp=31,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -668,6 +680,7 @@ PROFILES = [
         switches=[
             FEATURE_BACKLIGHT,
             FEATURE_NIGHT,
+            FEATURE_TURBO,
             FEATURE_VOLUME,
             PD_ENERGY_SAVING,
             PD_FREEZE_PROTECTION,
@@ -712,9 +725,19 @@ PROFILES = [
             FEATURE_ERROR,
             FEATURE_VOLUME,
         ],
+        selects={
+            FEATURE_NIGHT: SelectConfig(
+                options_map={
+                    PRESET_NIGHT_MODE_OFF: 0,
+                    PRESET_NIGHT_MODE_STANDARD: 1,
+                    PRESET_NIGHT_MODE_CHILD: 2,
+                    PRESET_NIGHT_MODE_TEEN: 3,
+                    PRESET_NIGHT_MODE_AGED: 4,
+                }
+            )
+        },
         switches=[
             FEATURE_BACKLIGHT,
-            FEATURE_NIGHT,
             PD_ENERGY_SAVING,
         ],
     ),
@@ -765,7 +788,7 @@ PROFILES = [
         vendor=VENDOR_RUSCLIMATE,
         device_type=72,
         min_temp=16,
-        max_temp=30,
+        max_temp=31,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.AUTO: 1,
@@ -852,7 +875,7 @@ PROFILES = [
         vendor=VENDOR_RUSCLIMATE,
         device_type=83,
         min_temp=16,
-        max_temp=30,
+        max_temp=32,
         supported_features=(
             ClimateEntityFeature.TARGET_TEMPERATURE
             | ClimateEntityFeature.FAN_MODE
@@ -878,10 +901,11 @@ PROFILES = [
         vendor=VENDOR_RUSCLIMATE,
         device_type=84,
         min_temp=16,
-        max_temp=30,
+        max_temp=32,
         supported_features=(
             ClimateEntityFeature.TARGET_TEMPERATURE
             | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.SWING_MODE
             | ClimateEntityFeature.TURN_ON
             | ClimateEntityFeature.TURN_OFF
         ),
@@ -892,7 +916,8 @@ PROFILES = [
             HVACMode.FAN_ONLY: 5,
         },
         default_hvac_mode=HVACMode.COOL,
-        fan_modes_map={FAN_LOW: 1, FAN_HIGH: 2},
+        fan_modes_map={FAN_LOW: 1, FAN_MEDIUM: 2, FAN_HIGH: 3},
+        supported_swing_modes=[SWING_OFF, SWING_HORIZONTAL],
         program_data_fields={
             PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
             PD_LAST_PROGRAM: ProgramDataField(mode=0, offset=1, max_value=5),
@@ -1036,7 +1061,6 @@ PROFILES = [
         },
         switches=[
             FEATURE_BACKLIGHT,
-            FEATURE_ECO_AS_SMART_MODE,
             FEATURE_TURBO,
             PD_AURUS_A_AIR_CLEAN,
             PD_ENERGY_SAVING,
@@ -1089,6 +1113,7 @@ PROFILES = [
         switches=[
             FEATURE_BACKLIGHT,
             FEATURE_NIGHT,
+            FEATURE_TURBO,
             FEATURE_ECO_AS_SMART_MODE,
             FEATURE_VOLUME,
             PD_FREEZE_PROTECTION,
@@ -1187,6 +1212,7 @@ PROFILES = [
         switches=[
             FEATURE_BACKLIGHT,
             FEATURE_ECO_AS_SMART_MODE,
+            FEATURE_NIGHT,
             FEATURE_VOLUME,
             FEATURE_SHUFT_SFMS_09_ANTI_MELDEW,
             FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
@@ -1214,7 +1240,6 @@ PROFILES = [
             FAN_MEDIUM: 4,
             FAN_MID_HIGH: 5,
             FAN_HIGH: 6,
-            FAN_TURBO: 7,
         },
         supported_swing_modes=[
             SWING_OFF,
@@ -1228,6 +1253,8 @@ PROFILES = [
         numbers=[PD_ANGLE_HORIZONTAL],
         switches=[
             FEATURE_BACKLIGHT,
+            FEATURE_ECO_AS_SMART_MODE,
+            FEATURE_NIGHT,
             FEATURE_TURBO,
             FEATURE_VOLUME,
             FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION,
@@ -1264,11 +1291,19 @@ PROFILES = [
         program_data_fields={
             PD_LAST_PROGRAM: ProgramDataField(mode=0, max_value=5),
             PD_SWING_HORIZONTAL: ProgramDataField(mode=1, max_value=5),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=2),
-            PD_AURUS_SCREENSAVER_MODE: ProgramDataField(mode=3),
+            PD_DISPLAY_BRIGHTNESS: ProgramDataField(mode=2),
+            PD_AURUS_SCREENSAVER_MODE: ProgramDataField(mode=3, max_value=3),
         },
         binary_sensors=[FEATURE_ERROR],
-        numbers=[PD_SWING_HORIZONTAL],
+        numbers=[PD_SWING_HORIZONTAL, FEATURE_TIMER],
+        number_configs={
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+        },
         selects={
             PD_AURUS_SCREENSAVER_MODE: SelectConfig(
                 options_map={
@@ -1278,15 +1313,174 @@ PROFILES = [
                     PRESET_AURUS_SCREENSAVER_MODE_5: 3,
                 },
             ),
+            PD_DISPLAY_BRIGHTNESS: SelectConfig(
+                options_map={
+                    PRESET_DISPLAY_BRIGHTNESS_50: 0,
+                    PRESET_DISPLAY_BRIGHTNESS_100: 1,
+                },
+            ),
         },
         switches=[
             FEATURE_AURUS_VRF_CHILD_LOCK,
             FEATURE_AURUS_VRF_ECO_MODE,
             FEATURE_AURUS_VRF_NOISELESS_MODE,
+            FEATURE_AUTO_OFF_BACKLIGHT,
+            FEATURE_IONIZATION,
+            FEATURE_NIGHT,
+            FEATURE_TURBO,
+            FEATURE_VOLUME,
+        ],
+    ),
+    AirConditionerProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=123,
+        min_temp=16,
+        max_temp=31,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_QUITE: 1,
+            FAN_LOW: 2,
+            FAN_MID_LOW: 3,
+            FAN_MEDIUM: 4,
+            FAN_MID_HIGH: 5,
+            FAN_HIGH: 6,
+            FAN_TURBO: 7,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1),
+            PD_ENERGY_SAVING: ProgramDataField(mode=0, offset=2),
+            PD_ANGLE_HORIZONTAL: ProgramDataField(mode=3, max_value=5),
+            PD_ANGLE_VERTICAL: ProgramDataField(mode=4, max_value=5),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_ANGLE_HORIZONTAL, PD_ANGLE_VERTICAL],
+        switches=[FEATURE_BACKLIGHT, FEATURE_NIGHT, FEATURE_VOLUME, PD_ENERGY_SAVING],
+    ),
+    AirConditionerProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=125,
+        min_temp=16,
+        max_temp=32,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
+        fan_modes_map={
+            FAN_AUTO: 0,
+            FAN_LOW: 1,
+            FAN_MID_LOW: 2,
+            FAN_MEDIUM: 3,
+            FAN_MID_HIGH: 4,
+            FAN_HIGH: 5,
+        },
+        supported_swing_modes=[
+            SWING_OFF,
+            SWING_VERTICAL,
+            SWING_HORIZONTAL,
+            SWING_BOTH,
+        ],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_SWING_VERTICAL: ProgramDataField(mode=0, offset=1),
+            PD_ENERGY_SAVING: ProgramDataField(mode=0, offset=2),
+            PD_FREEZE_PROTECTION: ProgramDataField(mode=0, offset=3),
+            PD_SELFCLEAN: ProgramDataField(mode=1),
+            FEATURE_IONIZATION: ProgramDataField(mode=1, offset=1),
+            PD_NOISELESS: ProgramDataField(mode=1, offset=2),
+            PD_LAST_PROGRAM: ProgramDataField(mode=2, max_value=5),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        selects={
+            FEATURE_NIGHT: SelectConfig(
+                options_map={
+                    PRESET_NIGHT_MODE_OFF: 0,
+                    PRESET_NIGHT_MODE_STANDARD: 1,
+                    PRESET_NIGHT_MODE_CHILD: 2,
+                    PRESET_NIGHT_MODE_ADULT: 3,
+                    PRESET_NIGHT_MODE_AGED: 4,
+                }
+            )
+        },
+        switches=[
             FEATURE_BACKLIGHT,
             FEATURE_IONIZATION,
             FEATURE_TURBO,
             FEATURE_VOLUME,
+            PD_ENERGY_SAVING,
+            PD_FREEZE_PROTECTION,
+            PD_NOISELESS,
         ],
+    ),
+    AirConditionerProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=128,
+        min_temp=16,
+        max_temp=30,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.AUTO: 1,
+            HVACMode.COOL: 2,
+            HVACMode.DRY: 3,
+            HVACMode.HEAT: 4,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.AUTO,
+        fan_modes_map={FAN_AUTO: 0, FAN_LOW: 1, FAN_MEDIUM: 2, FAN_HIGH: 3},
+        supported_swing_modes=[SWING_OFF, SWING_HORIZONTAL],
+        program_data_fields={
+            PD_SWING_HORIZONTAL: ProgramDataField(mode=0),
+            PD_SELFCLEAN: ProgramDataField(mode=1),
+            PD_ANGLE_HORIZONTAL: ProgramDataField(mode=3, max_value=5),
+            PD_FREEZE_PROTECTION: ProgramDataField(mode=5),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        numbers=[PD_ANGLE_HORIZONTAL],
+        switches=[FEATURE_NIGHT, FEATURE_TURBO, PD_FREEZE_PROTECTION, PD_SELFCLEAN],
+    ),
+    AirConditionerProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=129,
+        min_temp=16,
+        max_temp=31,
+        supported_features=(
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        ),
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.COOL: 1,
+            HVACMode.DRY: 3,
+            HVACMode.FAN_ONLY: 5,
+        },
+        default_hvac_mode=HVACMode.COOL,
+        turn_on_program_data_field=PD_TURN_ON,
+        fan_modes_map={FAN_LOW: 1, FAN_HIGH: 2},
+        program_data_fields={PD_TURN_ON: ProgramDataField(mode=0)},
+        binary_sensors=[FEATURE_ERROR],
+        switches=[FEATURE_NIGHT],
     ),
 ]

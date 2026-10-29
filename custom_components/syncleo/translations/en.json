@@ -73,6 +73,9 @@
       },
       "volume": {
         "name": "Sound"
+      },
+      "damper_state": {
+        "name": "Open window mode"
       }
     },
     "climate": {
@@ -153,6 +156,9 @@
       },
       "vacation_temperature": {
         "name": "Vacation temperature"
+      },
+      "timer": {
+        "name": "Timer"
       }
     },
     "sensor": {
@@ -188,6 +194,9 @@
       },
       "tank": {
         "name": "Water Tank"
+      },
+      "power": {
+        "name": "Current power"
       }
     },
     "select": {
@@ -210,6 +219,13 @@
           "melody_sea_sound": "Sea sound"
         }
       },
+      "display_brightness": {
+        "name": "Display brightness",
+        "state": {
+          "brightness_100": "100%",
+          "brightness_50": "50%"
+        }
+      },
       "kettle_temperature_preset": {
         "name": "Temperature preset",
         "state": {
@@ -230,6 +246,7 @@
       "night": {
         "name": "Night mode settings",
         "state": {
+          "night_mode_adult": "Adult",
           "night_mode_off": "Off",
           "night_mode_standard": "Standard",
           "night_mode_child": "Child",
@@ -285,6 +302,9 @@
       "auto_off_backlight": {
         "name": "Auto-off backlight"
       },
+      "auto_off_display": {
+        "name": "Auto off display"
+      },
       "backlight": {
         "name": "Backlight"
       },
@@ -312,11 +332,17 @@
       "freeze_protection": {
         "name": "Freeze Protection +8"
       },
+      "full_display_brightness": {
+        "name": "Full display brightness"
+      },
       "fungus_proof": {
         "name": "Fungus proof"
       },
       "goldstar_gsti_damper": {
         "name": "Health"
+      },
+      "half_display_brightness": {
+        "name": "Display brightness 50%"
       },
       "ionization": {
         "name": "Ionization"
@@ -326,6 +352,9 @@
       },
       "night": {
         "name": "Night Mode"
+      },
+      "noiseless": {
+        "name": "Noiseless"
       },
       "selfclean": {
         "name": "Self clean"
@@ -355,11 +384,16 @@
     "water_heater": {
       "syncleo_boiler": {
         "state": {
+          "bss": "BSS",
           "off": "Off",
           "eco": "Low (700W)",
+          "economy": "Eco",
           "electric": "Mid (1300W)",
           "performance": "Turbo (2000W)",
-          "heat_pump": "NO Frost"
+          "heat_pump": "NO Frost",
+          "idle": "Waiting for heating",
+          "smart_mode": "Smart",
+          "timer": "Timer"
         }
       },
       "syncleo_kettle": {
