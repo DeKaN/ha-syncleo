@@ -19,8 +19,10 @@ from .profiles import (
     SensorMixin,
     SwitchConfig,
     SwitchMixin,
+    ThermostatProfile,
     WaterHeaterProfile,
 )
+from .thermostats import PROFILES as THERMOSTAT_PROFILES
 
 _ALL_PROFILES = (
     CONDITIONER_PROFILES
@@ -28,6 +30,7 @@ _ALL_PROFILES = (
     + BREEZER_PROFILES
     + HEATER_PROFILES
     + KETTLE_PROFILES
+    + THERMOSTAT_PROFILES
 )
 
 DEVICE_PROFILES: dict[tuple[str, int], DeviceBaseProfile] = {
@@ -51,5 +54,6 @@ __all__ = [
     "SensorMixin",
     "SwitchConfig",
     "SwitchMixin",
+    "ThermostatProfile",
     "WaterHeaterProfile",
 ]

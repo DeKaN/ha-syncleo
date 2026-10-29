@@ -14,6 +14,7 @@ from pysyncleo.commands import (
     CmdBss,
     CmdChildLock,
     CmdCO2,
+    CmdCurrentHumidity,
     CmdCurrentTemperature,
     CmdDamper,
     CmdDataSource,
@@ -60,6 +61,7 @@ from .const import (
     FEATURE_BREEZER_TEMPERATURE,
     FEATURE_BSS,
     FEATURE_CHILD_LOCK,
+    FEATURE_CURRENT_AIR_TEMPERATURE,
     FEATURE_CURRENT_CO2,
     FEATURE_CURRENT_PM2,
     FEATURE_CURRENT_TEMPERATURE,
@@ -70,6 +72,7 @@ from .const import (
     FEATURE_EXPENDABLES_ANODE,
     FEATURE_EXPENDABLES_FILTER,
     FEATURE_EXPENDABLES_PREFILTER,
+    FEATURE_FAN_SPEED,
     FEATURE_GATEWAY_LATENCY,
     FEATURE_GATEWAY_PACKET_LOSS,
     FEATURE_GOLDSTAR_GSTI_BREEZE_AWAY,
@@ -81,6 +84,7 @@ from .const import (
     FEATURE_KETTLE_TEMPERATURE_PRESET,
     FEATURE_MQTT_LATENCY,
     FEATURE_NIGHT,
+    FEATURE_OPEN_WINDOW_DETECTION,
     FEATURE_POWER_LEVEL,
     FEATURE_REMAINING_TIME,
     FEATURE_RSSI,
@@ -106,6 +110,7 @@ FEATURE_TO_COMMAND_MAP = {
     FEATURE_BSS: CmdBss,
     FEATURE_CHILD_LOCK: CmdChildLock,
     FEATURE_CURRENT_CO2: CmdCO2,
+    FEATURE_CURRENT_AIR_TEMPERATURE: CmdCurrentHumidity,
     FEATURE_CURRENT_PM2: CmdPM2,
     FEATURE_CURRENT_TEMPERATURE: CmdCurrentTemperature,
     FEATURE_DAMPER: CmdDamper,
@@ -115,12 +120,14 @@ FEATURE_TO_COMMAND_MAP = {
     FEATURE_EXPENDABLES_ANODE: CmdExpendables,
     FEATURE_EXPENDABLES_FILTER: CmdExpendables,
     FEATURE_EXPENDABLES_PREFILTER: CmdExpendables,
+    FEATURE_FAN_SPEED: CmdSpeed,
     FEATURE_GATEWAY_LATENCY: CmdInitDiagnostic,
     FEATURE_GATEWAY_PACKET_LOSS: CmdInitDiagnostic,
     FEATURE_IONIZATION: CmdIonization,
     FEATURE_KEEP_WARM: CmdKeepWarm,
     FEATURE_MQTT_LATENCY: CmdInitDiagnostic,
     FEATURE_NIGHT: CmdNight,
+    FEATURE_OPEN_WINDOW_DETECTION: CmdDamper,
     FEATURE_POWER_LEVEL: CmdSpeed,
     FEATURE_SMART_MODE: CmdSmartMode,
     FEATURE_REMAINING_TIME: CmdTargetTime,
@@ -285,6 +292,30 @@ class SyncleoBaseEntity(Entity):
             return data
         field = self._profile.program_data_fields.get(feature_key)
         return bytes(field.size) if field else b""
+
+    def get_program_data_bounds(self, feature_key: str) -> tuple[int, int]:
+        """Resolve numeric bounds from received fields, or use profile defaults."""
+        config = self._profile.program_data_fields[feature_key]
+        min_value, max_value = config.min_value, config.max_value
+        if config.min_value_source is not None:
+            data = self.get_known_program_data(config.min_value_source)
+            if data is not None:
+                value = int.from_bytes(data, byteorder="little")
+                min_value = (
+                    config.min_value_map.get(value, min_value)
+                    if config.min_value_map
+                    else value
+                )
+        if config.max_value_source is not None:
+            data = self.get_known_program_data(config.max_value_source)
+            if data is not None:
+                value = int.from_bytes(data, byteorder="little")
+                max_value = (
+                    config.max_value_map.get(value, max_value)
+                    if config.max_value_map
+                    else value
+                )
+        return min_value, max_value
 
     def _requirement_is_absent(self, feature_key: str | None) -> bool:
         """Only a received zero confirms that optional hardware is absent."""

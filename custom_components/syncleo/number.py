@@ -45,9 +45,12 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
             config = None
 
         if config:
-            self._attr_native_min_value = int(config.min_value)
-            self._attr_native_max_value = int(config.max_value)
-            self._attr_native_step = int(config.step)
+            scale = config.value_scale if self._is_program_data else 1.0
+            offset = config.value_offset if self._is_program_data else 0.0
+            self._attr_native_min_value = config.min_value * scale + offset
+            self._attr_native_max_value = config.max_value * scale + offset
+            self._attr_native_step = config.step * scale
+            self._attr_native_unit_of_measurement = config.unit_of_measurement
         else:
             _LOGGER.warning(
                 "No number_config found for %s, using defaults", feature_key
@@ -62,11 +65,29 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
     def native_value(self) -> float | None:
         return self._value
 
+    @property
+    def available(self) -> bool:
+        if not super().available:
+            return False
+        if self._is_program_data:
+            condition = self._profile.program_data_fields[
+                self._feature_key
+            ].available_when
+            if condition is not None:
+                source, expected_value = condition
+                data = self.get_known_program_data(source)
+                return (
+                    data is not None
+                    and int.from_bytes(data, byteorder="little") == expected_value
+                )
+        return True
+
     @callback
     def _handle_device_update(self, cmd):
         super()._handle_device_update(cmd)
 
         value = self._value
+        bounds_changed = False
 
         if self._is_program_data:
             data = self.get_program_data(self._feature_key)
@@ -77,7 +98,20 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
                 )
                 value = self._attr_native_min_value
 
-            parsed_value = float(int.from_bytes(data, byteorder="little"))
+            field_config = self._profile.program_data_fields[self._feature_key]
+            raw_min, raw_max = self.get_program_data_bounds(self._feature_key)
+            min_value = raw_min * field_config.value_scale + field_config.value_offset
+            max_value = raw_max * field_config.value_scale + field_config.value_offset
+            bounds_changed = (
+                min_value != self._attr_native_min_value
+                or max_value != self._attr_native_max_value
+            )
+            self._attr_native_min_value = min_value
+            self._attr_native_max_value = max_value
+            parsed_value = (
+                int.from_bytes(data, byteorder="little") * field_config.value_scale
+                + field_config.value_offset
+            )
             value = max(
                 self._attr_native_min_value,
                 min(self._attr_native_max_value, parsed_value),
@@ -102,7 +136,7 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
                 "Entity %s ignoring unrelated cmd: %s", self._attr_unique_id, cmd
             )
 
-        if value != self._value:
+        if value != self._value or bounds_changed:
             self._value = value
             self.async_write_ha_state()
 
@@ -110,9 +144,13 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
         if self._is_program_data:
             field_config = self._profile.program_data_fields[self._feature_key]
 
-            fixed_value = max(
-                field_config.min_value, min(field_config.max_value, int(value))
-            )
+            raw_value = int(value)
+            if field_config.value_scale != 1.0 or field_config.value_offset != 0.0:
+                raw_value = round(
+                    (value - field_config.value_offset) / field_config.value_scale
+                )
+            min_value, max_value = self.get_program_data_bounds(self._feature_key)
+            fixed_value = max(min_value, min(max_value, raw_value))
             data = fixed_value.to_bytes(field_config.size, byteorder="little")
 
             await self.async_set_program_data(self._feature_key, data)

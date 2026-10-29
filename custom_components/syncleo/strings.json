@@ -94,6 +94,8 @@
               "manual": "Manual",
               "auto": "Auto",
               "night": "Sleep",
+              "schedule": "Schedule",
+              "standby": "Standby",
               "turbo": "Turbo",
               "ventilation": "Fan",
               "vacation": "Vacation"
@@ -133,8 +135,41 @@
       "breezer_temperature": {
         "name": "Output temperature"
       },
+      "cable_power": {
+        "name": "Heating cable power, W"
+      },
+      "comfort_temperature": {
+        "name": "Comfort temperature"
+      },
+      "display_brightness": {
+        "name": "Display brightness, %"
+      },
       "eco_delta": {
         "name": "Eco Delta Temperature"
+      },
+      "eco_temperature": {
+        "name": "Eco temperature"
+      },
+      "fan_speed": {
+        "name": "Fan speed, %"
+      },
+      "hysteresis": {
+        "name": "Hysteresis setting"
+      },
+      "manual_speed": {
+        "name": "Manual mode fan speed, %"
+      },
+      "max_temperature_air": {
+        "name": "Maximum air temperature"
+      },
+      "max_temperature_floor": {
+        "name": "Maximum floor temperature"
+      },
+      "min_temperature_air": {
+        "name": "Minimum air temperature"
+      },
+      "min_temperature_floor": {
+        "name": "Minimum floor temperature"
       },
       "min_voltage": {
         "name": "Min voltage (145+X)"
@@ -151,11 +186,20 @@
       "swing_vertical": {
         "name": "Vertical blinds position"
       },
+      "temperature_calibration": {
+        "name": "Temperature calibration"
+      },
+      "turbo_temperature": {
+        "name": "Turbo temperature"
+      },
       "vacation_temperature": {
         "name": "Vacation temperature"
       }
     },
     "sensor": {
+      "current_air_temperature": {
+        "name": "Air temperature"
+      },
       "gateway_latency": {
         "name": "Gateway latency"
       },
@@ -210,6 +254,16 @@
           "melody_sea_sound": "Sea sound"
         }
       },
+      "floor_mode": {
+        "name": "Floor covering",
+        "state": {
+          "tile": "Tile",
+          "carpet": "Carpet",
+          "laminate": "Laminate",
+          "linoleum": "Linoleum",
+          "other": "Other"
+        }
+      },
       "kettle_temperature_preset": {
         "name": "Temperature preset",
         "state": {
@@ -253,10 +307,30 @@
           "power_100": "100%"
         }
       },
+      "resistance": {
+        "name": "Floor sensor resistance",
+        "state": {
+          "caleo_5k": "Caleo 5 kΩ",
+          "teplolux_6_8k": "Teplolux 6.8 kΩ",
+          "electrolux_10k": "Electrolux 10 kΩ",
+          "raychem_12k": "Raychem 12 kΩ",
+          "devi_15k": "Devi 15 kΩ",
+          "eberle_33k": "Eberle 33 kΩ"
+        }
+      },
       "source_current_temperature": {
         "name": "Temperature Source",
         "state": {
           "datasource_preset_none": "Internal Sensor"
+        }
+      },
+      "temperature_control": {
+        "name": "Temperature control",
+        "state": {
+          "air": "Air",
+          "floor": "Floor",
+          "air_with_floor_limit": "Air with floor limit",
+          "floor_with_air_limit": "Floor with air limit"
         }
       }
     },
@@ -326,6 +400,9 @@
       },
       "night": {
         "name": "Night Mode"
+      },
+      "open_window_detection": {
+        "name": "Open window detection"
       },
       "selfclean": {
         "name": "Self clean"
