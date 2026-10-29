@@ -24,6 +24,7 @@ from ..const import (
     FEATURE_RSSI,
     PROFILE_TYPE_AC,
     PROFILE_TYPE_BOILER,
+    PROFILE_TYPE_BREEZER,
     PROFILE_TYPE_HEATER,
     PROFILE_TYPE_KETTLE,
 )
@@ -237,7 +238,7 @@ class DeviceBaseProfile(PlatformProviderBase):
 
 
 @dataclass(kw_only=True)
-class BreezerProfile(
+class VentilationProfile(
     DeviceBaseProfile,
     BinarySensorMixin,
     NumberMixin,
@@ -245,7 +246,7 @@ class BreezerProfile(
     SensorMixin,
     SwitchMixin,
 ):
-    """Profile for Breezers and Ventilation systems."""
+    """Profile for Ventilation systems."""
 
     supported_features: FanEntityFeature
     speed_count: int
@@ -267,7 +268,7 @@ class ClimateProfile(
     SensorMixin,
     SwitchMixin,
 ):
-    """Profile for Heaters and Air Conditioners."""
+    """Base profile for devices exposed as climate entities."""
 
     min_temp: int
     max_temp: int
@@ -292,6 +293,22 @@ class ClimateProfile(
     @property
     def supported_platforms(self) -> list[Platform]:
         return super().supported_platforms + [Platform.CLIMATE]
+
+
+@dataclass(kw_only=True)
+class BreezerProfile(ClimateProfile):
+    """Profile for breezers exposed as climate entities."""
+
+    profile_type: str = PROFILE_TYPE_BREEZER
+    target_temp_step: float = 1.0
+    supported_features: ClimateEntityFeature = (
+        ClimateEntityFeature.TARGET_TEMPERATURE
+        | ClimateEntityFeature.FAN_MODE
+        | ClimateEntityFeature.PRESET_MODE
+        | ClimateEntityFeature.TURN_ON
+        | ClimateEntityFeature.TURN_OFF
+    )
+    cmd_fan_mode: UdpCommandType | None = UdpCommandType.SPEED
 
 
 @dataclass(kw_only=True)
