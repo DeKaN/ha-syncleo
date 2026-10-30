@@ -37,6 +37,8 @@ from ..const import (
     PRESET_AURUS_SCREENSAVER_MODE_5,
     PRESET_AURUS_SCREENSAVER_MODE_OFF,
     PRESET_MANUAL,
+    PRESET_SCHEDULE,
+    PRESET_TURBO,
     PRESET_VACATION,
     VENDOR_RUSCLIMATE,
 )
@@ -580,5 +582,26 @@ PROFILES = [
             FEATURE_DAMPER,
             FEATURE_VOLUME,
         ],
+    ),
+    HeaterProfile(
+        # Electrolux ETS-16 Wi-Fi floor heating thermostat.
+        # TEMPERATURE is the floor sensor; it is stale while the device is off.
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=67,
+        min_temp=5,
+        max_temp=45,
+        target_temp_step=0.5,
+        hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 7},
+        default_hvac_mode=HVACMode.HEAT,
+        preset_modes_map={
+            PRESET_MANUAL: 7,
+            PRESET_ECO: 1,
+            PRESET_COMFORT: 2,
+            PRESET_TURBO: 3,
+            PRESET_ANTI_FROST: 4,
+            PRESET_SCHEDULE: 5,
+        },
+        binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
+        switches=[FEATURE_CHILD_LOCK, FEATURE_DAMPER],
     ),
 ]

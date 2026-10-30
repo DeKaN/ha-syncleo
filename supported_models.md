@@ -40,6 +40,7 @@
 | Rusclimate | 57 | Shuft Berg, MBO M-1, MI-3 DC, NeoLine, HitAir HAM, Monroe Dream Air |
 | Rusclimate | 59 | Ballu ONEAIR ASP-200S |
 | Rusclimate | 60 | Ballu Discovery DC |
+| Rusclimate | 67 | Electrolux ETS-16 |
 | Rusclimate | 68 | Ballu iGreen Pro, Electrolux Loft DC, Zanussi Moderno DC, Electrolux Slide DC, Electrolux Arctic Air Wi-Fi, Shuft Asgard Black DC, Ballu Platinum Black DC, Ballu Platinum DC Inverter |
 | Rusclimate | 69 | Ballu ONEAIR ASP-100, Electrolux EASP-100 |
 | Rusclimate | 70 | Ballu Universal 3, DC, Free Match |
