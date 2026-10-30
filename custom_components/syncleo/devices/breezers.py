@@ -60,13 +60,10 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=3,
-        min_temp=5,
-        max_temp=25,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.FAN_ONLY: 2,
         },
-        default_hvac_mode=HVACMode.FAN_ONLY,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
@@ -108,13 +105,10 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=30,
-        min_temp=5,
-        max_temp=25,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.FAN_ONLY: 1,
         },
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
@@ -209,13 +203,10 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=32,
-        min_temp=5,
-        max_temp=25,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.FAN_ONLY: 5,
         },
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
         target_temperature_requirement=PD_HEATER_INSTALLED,
@@ -275,13 +266,10 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=59,
-        min_temp=5,
-        max_temp=25,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.FAN_ONLY: 1,
         },
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
@@ -388,13 +376,10 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=69,
-        min_temp=5,
-        max_temp=25,
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.FAN_ONLY: 5,
         },
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
         target_temperature_requirement=PD_HEATER_INSTALLED,
@@ -466,8 +451,6 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=102,
-        min_temp=5,
-        max_temp=25,
         supported_features=(
             ClimateEntityFeature.FAN_MODE
             | ClimateEntityFeature.PRESET_MODE
@@ -475,7 +458,6 @@ PROFILES = [
             | ClimateEntityFeature.TURN_OFF
         ),
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
             PRESET_MANUAL: 1,
@@ -539,10 +521,7 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=105,
-        min_temp=5,
-        max_temp=25,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
             PRESET_MANUAL: 1,
@@ -612,10 +591,7 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=106,
-        min_temp=5,
-        max_temp=25,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
             PRESET_MANUAL: 1,
@@ -679,8 +655,6 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=107,
-        min_temp=5,
-        max_temp=25,
         supported_features=(
             ClimateEntityFeature.FAN_MODE
             | ClimateEntityFeature.PRESET_MODE
@@ -688,7 +662,6 @@ PROFILES = [
             | ClimateEntityFeature.TURN_OFF
         ),
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
             PRESET_MANUAL: 1,

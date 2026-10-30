@@ -300,6 +300,8 @@ class BreezerProfile(ClimateProfile):
     """Profile for breezers exposed as climate entities."""
 
     profile_type: str = PROFILE_TYPE_BREEZER
+    min_temp: int = 5
+    max_temp: int = 25
     target_temp_step: float = 1.0
     supported_features: ClimateEntityFeature = (
         ClimateEntityFeature.TARGET_TEMPERATURE
@@ -308,6 +310,7 @@ class BreezerProfile(ClimateProfile):
         | ClimateEntityFeature.TURN_ON
         | ClimateEntityFeature.TURN_OFF
     )
+    default_hvac_mode: HVACMode = HVACMode.FAN_ONLY
     cmd_fan_mode: UdpCommandType | None = UdpCommandType.SPEED
 
 
