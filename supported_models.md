@@ -70,3 +70,7 @@
 | Rusclimate | 114 | Shuft SFMS/-07 |
 | Rusclimate | 119 | Electrolux SI (SE/BE) EEC, Electrolux Smartinverter, Electrolux Smartinverter PRO, Electrolux Smartinverter PRO 2.0, Electrolux Smartinverter Enamel |
 | Rusclimate | 120 | Aurus VRF |
+| Rusclimate | 123 | Ballu Voyager |
+| Rusclimate | 125 | Electrolux Grace DC |
+| Rusclimate | 128 | Ballu Olympio Pro |
+| Rusclimate | 129 | Electrolux Arizona |

@@ -47,6 +47,7 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
 
         self._op_mode_map = profile.operation_modes_map
         self._rev_op_mode_map = {v: k for k, v in self._op_mode_map.items()}
+        self._rev_op_mode_map.update(profile.operation_mode_states)
 
         self._attr_operation_list = list(self._op_mode_map.keys())
 
@@ -73,6 +74,7 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
 
         if cmd.command_type == UdpCommandType.MODE:
             raw_val = int(cmd.value)
+            raw_val = self._profile.operation_mode_aliases.get(raw_val, raw_val)
             resolved_mode = self._rev_op_mode_map.get(raw_val)
             if resolved_mode:
                 self._current_operation = resolved_mode
@@ -94,8 +96,18 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
             )
             self.async_write_ha_state()
 
-    async def async_turn_on(self, **kwargs):
-        await self.async_set_operation_mode(self._profile.default_operation_mode)
+    async def async_turn_on(self, **kwargs) -> None:
+        field_key = self._profile.turn_on_program_data_field
+        if field_key is None:
+            await self.async_set_operation_mode(self._profile.default_operation_mode)
+            return
+
+        field = self._profile.program_data_fields[field_key]
+        await self.async_set_program_data_fields(
+            {field_key: True.to_bytes(field.size, byteorder="little")}
+        )
+        self._current_operation = self._profile.default_operation_mode
+        self.async_write_ha_state()
 
     async def async_turn_off(self, **kwargs):
         await self.async_set_operation_mode(STATE_OFF)

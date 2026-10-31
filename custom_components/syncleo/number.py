@@ -5,7 +5,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .devices import NumberMixin
+from .devices import NumberConfig, NumberMixin
 from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
 from .utils import get_device_profile_by_device
 
@@ -48,6 +48,8 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
             self._attr_native_min_value = int(config.min_value)
             self._attr_native_max_value = int(config.max_value)
             self._attr_native_step = int(config.step)
+            if isinstance(config, NumberConfig):
+                self._attr_native_unit_of_measurement = config.unit_of_measurement
         else:
             _LOGGER.warning(
                 "No number_config found for %s, using defaults", feature_key
