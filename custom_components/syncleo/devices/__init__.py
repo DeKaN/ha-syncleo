@@ -4,12 +4,15 @@ from .breezers import PROFILES as BREEZER_PROFILES
 from .heaters import PROFILES as HEATER_PROFILES
 from .kettles import PROFILES as KETTLE_PROFILES
 from .profiles import (
+    AirCleanerProfile,
     BinarySensorMixin,
     BreezerProfile,
     ButtonConfig,
     ButtonMixin,
     ClimateProfile,
     DeviceBaseProfile,
+    FireplaceProfile,
+    HumidifierProfile,
     LightMixin,
     NumberConfig,
     NumberMixin,
@@ -36,12 +39,15 @@ DEVICE_PROFILES: dict[tuple[str, int], DeviceBaseProfile] = {
 
 __all__ = [
     "DEVICE_PROFILES",
+    "AirCleanerProfile",
     "BinarySensorMixin",
     "BreezerProfile",
     "ButtonConfig",
     "ButtonMixin",
     "ClimateProfile",
     "DeviceBaseProfile",
+    "FireplaceProfile",
+    "HumidifierProfile",
     "LightMixin",
     "NumberConfig",
     "NumberMixin",

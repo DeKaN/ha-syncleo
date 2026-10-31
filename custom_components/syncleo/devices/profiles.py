@@ -4,6 +4,7 @@ from typing import Any
 
 from homeassistant.components.climate.const import ClimateEntityFeature, HVACMode
 from homeassistant.components.fan import FanEntityFeature
+from homeassistant.components.humidifier import HumidifierEntityFeature
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.components.water_heater import WaterHeaterEntityFeature
 from homeassistant.const import (
@@ -23,8 +24,11 @@ from ..const import (
     FEATURE_MQTT_LATENCY,
     FEATURE_RSSI,
     PROFILE_TYPE_AC,
+    PROFILE_TYPE_AIR_CLEANER,
     PROFILE_TYPE_BOILER,
+    PROFILE_TYPE_FIREPLACE,
     PROFILE_TYPE_HEATER,
+    PROFILE_TYPE_HUMIDIFIER,
     PROFILE_TYPE_KETTLE,
 )
 
@@ -237,6 +241,34 @@ class DeviceBaseProfile(PlatformProviderBase):
 
 
 @dataclass(kw_only=True)
+class AirCleanerProfile(
+    DeviceBaseProfile,
+    ButtonMixin,
+    BinarySensorMixin,
+    NumberMixin,
+    SelectMixin,
+    SensorMixin,
+    SwitchMixin,
+):
+    """Profile for air cleaners exposed as fan entities."""
+
+    profile_type: str = PROFILE_TYPE_AIR_CLEANER
+    supported_features: FanEntityFeature = (
+        FanEntityFeature.SET_SPEED
+        | FanEntityFeature.PRESET_MODE
+        | FanEntityFeature.TURN_OFF
+        | FanEntityFeature.TURN_ON
+    )
+    speed_count: int
+    preset_modes_map: dict[str, int] = field(default_factory=dict)
+    default_preset_mode: str
+
+    @property
+    def supported_platforms(self) -> list[Platform]:
+        return super().supported_platforms + [Platform.FAN]
+
+
+@dataclass(kw_only=True)
 class BreezerProfile(
     DeviceBaseProfile,
     BinarySensorMixin,
@@ -357,6 +389,47 @@ class HeaterProfile(ClimateProfile):
 
 
 @dataclass(kw_only=True)
+class FireplaceProfile(
+    DeviceBaseProfile,
+    ButtonMixin,
+    LightMixin,
+    NumberMixin,
+    SelectMixin,
+    SensorMixin,
+    SwitchMixin,
+):
+    """Profile for decorative fireplaces without a temperature target."""
+
+    profile_type: str = PROFILE_TYPE_FIREPLACE
+
+
+@dataclass(kw_only=True)
+class HumidifierProfile(
+    DeviceBaseProfile,
+    ButtonMixin,
+    BinarySensorMixin,
+    LightMixin,
+    NumberMixin,
+    SelectMixin,
+    SensorMixin,
+    SwitchMixin,
+):
+    """Profile for humidifiers with optional controls on other platforms."""
+
+    profile_type: str = PROFILE_TYPE_HUMIDIFIER
+    supported_features: HumidifierEntityFeature = HumidifierEntityFeature.MODES
+    min_humidity: int
+    max_humidity: int
+    target_humidity_step: int = 1
+    modes_map: dict[str, int] = field(default_factory=dict)
+    default_mode: str
+
+    @property
+    def supported_platforms(self) -> list[Platform]:
+        return super().supported_platforms + [Platform.HUMIDIFIER]
+
+
+@dataclass(kw_only=True)
 class KettleProfile(WaterHeaterProfile):
     profile_type: str = PROFILE_TYPE_KETTLE
     min_temp: int = 30
@@ -372,35 +445,6 @@ class KettleProfile(WaterHeaterProfile):
 # ==========================================
 #     TEMPLATES FOR FUTURE DEVICE PROFILES
 # ==========================================
-
-# @dataclass(kw_only=True)
-# class HumidifierProfile(DeviceBaseProfile):
-#     """Profile for Humidifiers."""
-
-#     min_humidity: int
-#     max_humidity: int
-#     supported_features: HumidifierEntityFeature
-#     cmd_mode: UdpCommandType
-#     modes_map: Dict[str, int]
-#     cmd_target_humidity: UdpCommandType
-#     cmd_current_humidity: Optional[UdpCommandType] = None
-#     switches: List[str] = field(default_factory=list)
-#     sensors: List[str] = field(default_factory=list)
-#     speed_map: Dict[str, int] = field(default_factory=dict)
-
-#     @property
-#     def supported_platforms(self) -> List[Platform]:
-#         platforms = [Platform.HUMIDIFIER]
-
-#         if self.switches:
-#             platforms.append(Platform.SWITCH)
-#         if self.sensors:
-#             platforms.append(Platform.SENSOR)
-#         if self.speed_map:
-#             platforms.append(Platform.SELECT)
-
-#         return platforms
-
 
 # @dataclass(kw_only=True)
 # class FanProfile(DeviceBaseProfile):
