@@ -70,16 +70,7 @@ PROFILES = [
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-            "6": 6,
-            "7": 7,
-            "8": 8,
-        },
+        fan_modes_count=8,
         program_data_fields={
             PD_NIGHT_SPEED: ProgramDataField(mode=3, min_value=1, max_value=3),
             PD_COOLDOWN: ProgramDataField(mode=4, size=2, max_value=7200),
@@ -105,10 +96,6 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=30,
-        hvac_modes_map={
-            HVACMode.OFF: 0,
-            HVACMode.FAN_ONLY: 1,
-        },
         turn_on_program_data_field=PD_TURN_ON,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
@@ -117,16 +104,7 @@ PROFILES = [
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-            "6": 6,
-            "7": 7,
-            "8": 8,
-        },
+        fan_modes_count=8,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_UV_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -217,15 +195,7 @@ PROFILES = [
             PRESET_TURBO: 4,
             PRESET_VENTILATION: 5,
         },
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-            "6": 6,
-            "7": 7,
-        },
+        fan_modes_count=7,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -266,10 +236,6 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=59,
-        hvac_modes_map={
-            HVACMode.OFF: 0,
-            HVACMode.FAN_ONLY: 1,
-        },
         turn_on_program_data_field=PD_TURN_ON,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
@@ -278,16 +244,7 @@ PROFILES = [
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-            "6": 6,
-            "7": 7,
-            "8": 8,
-        },
+        fan_modes_count=8,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_UV_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -390,15 +347,7 @@ PROFILES = [
             PRESET_TURBO: 4,
             PRESET_VENTILATION: 5,
         },
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-            "6": 6,
-            "7": 7,
-        },
+        fan_modes_count=7,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -457,20 +406,13 @@ PROFILES = [
             | ClimateEntityFeature.TURN_ON
             | ClimateEntityFeature.TURN_OFF
         ),
-        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-        },
+        fan_modes_count=5,
         program_data_fields={
             PD_TURN_ON: ProgramDataField(mode=1),
             PD_NIGHT_SPEED: ProgramDataField(
@@ -521,7 +463,6 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=105,
-        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
             PRESET_MANUAL: 1,
@@ -529,13 +470,7 @@ PROFILES = [
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-        },
+        fan_modes_count=5,
         program_data_fields={
             PD_TURN_ON: ProgramDataField(mode=1),
             PD_NIGHT_SPEED: ProgramDataField(
@@ -591,20 +526,13 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=106,
-        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
             PRESET_MANUAL: 1,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-        },
+        fan_modes_count=5,
         program_data_fields={
             PD_TURN_ON: ProgramDataField(mode=1),
             PD_NIGHT_SPEED: ProgramDataField(
@@ -661,7 +589,6 @@ PROFILES = [
             | ClimateEntityFeature.TURN_ON
             | ClimateEntityFeature.TURN_OFF
         ),
-        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
             PRESET_MANUAL: 1,
@@ -669,13 +596,7 @@ PROFILES = [
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-        },
+        fan_modes_count=5,
         program_data_fields={
             PD_TURN_ON: ProgramDataField(mode=1),
             PD_NIGHT_SPEED: ProgramDataField(

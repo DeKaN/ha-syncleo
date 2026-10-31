@@ -299,6 +299,8 @@ class ClimateProfile(
 class BreezerProfile(ClimateProfile):
     """Profile for breezers exposed as climate entities."""
 
+    fan_modes_count: int
+
     profile_type: str = PROFILE_TYPE_BREEZER
     min_temp: int = 5
     max_temp: int = 25
@@ -310,8 +312,20 @@ class BreezerProfile(ClimateProfile):
         | ClimateEntityFeature.TURN_ON
         | ClimateEntityFeature.TURN_OFF
     )
+    hvac_modes_map: dict[HVACMode, int] = field(
+        default_factory=lambda: {
+            HVACMode.OFF: 0,
+            HVACMode.FAN_ONLY: 1,
+        }
+    )
     default_hvac_mode: HVACMode = HVACMode.FAN_ONLY
     cmd_fan_mode: UdpCommandType | None = UdpCommandType.SPEED
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        self.fan_modes_map = {
+            str(speed): speed for speed in range(1, self.fan_modes_count + 1)
+        }
 
 
 @dataclass(kw_only=True)
