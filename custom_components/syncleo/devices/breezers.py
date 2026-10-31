@@ -1,4 +1,8 @@
-from homeassistant.components.climate.const import ClimateEntityFeature, HVACMode
+from homeassistant.components.climate.const import (
+    PRESET_NONE,
+    ClimateEntityFeature,
+    HVACMode,
+)
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.const import (
     CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
@@ -65,6 +69,7 @@ PROFILES = [
             HVACMode.FAN_ONLY: 2,
         },
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
@@ -99,6 +104,7 @@ PROFILES = [
         turn_on_program_data_field=PD_TURN_ON,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
@@ -189,6 +195,7 @@ PROFILES = [
         preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
@@ -239,6 +246,7 @@ PROFILES = [
         turn_on_program_data_field=PD_TURN_ON,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
@@ -341,6 +349,7 @@ PROFILES = [
         preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
@@ -408,6 +417,7 @@ PROFILES = [
         ),
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
@@ -465,6 +475,7 @@ PROFILES = [
         device_type=105,
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
@@ -528,6 +539,7 @@ PROFILES = [
         device_type=106,
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
@@ -591,6 +603,7 @@ PROFILES = [
         ),
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
