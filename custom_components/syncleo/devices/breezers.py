@@ -1,5 +1,8 @@
-from homeassistant.components.climate.const import ClimateEntityFeature, HVACMode
-from homeassistant.components.fan import FanEntityFeature
+from homeassistant.components.climate.const import (
+    PRESET_NONE,
+    ClimateEntityFeature,
+    HVACMode,
+)
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.const import (
     CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
@@ -11,14 +14,12 @@ from homeassistant.const import (
     UnitOfTime,
 )
 from pysyncleo.commands import CmdExpendables, CmdProgramData
-from pysyncleo.enums import UdpCommandType
 
 from ..const import (
     FEATURE_ACTIVATE_OPTIONS,
     FEATURE_AUTO_OFF_BACKLIGHT,
     FEATURE_BREEZER_DAMPER,
     FEATURE_BREEZER_MELODY,
-    FEATURE_BREEZER_TEMPERATURE,
     FEATURE_CURRENT_CO2,
     FEATURE_CURRENT_PM2,
     FEATURE_ERROR,
@@ -48,14 +49,11 @@ from ..const import (
     PRESET_NIGHT,
     PRESET_TURBO,
     PRESET_VENTILATION,
-    PROFILE_TYPE_BREEZER,
     VENDOR_RUSCLIMATE,
 )
 from .profiles import (
     BreezerProfile,
     ButtonConfig,
-    ClimateProfile,
-    NumberConfig,
     ProgramDataField,
     SelectConfig,
     SensorConfig,
@@ -66,28 +64,24 @@ PROFILES = [
     BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=3,
-        profile_type=PROFILE_TYPE_BREEZER,
-        supported_features=FanEntityFeature.SET_SPEED
-        | FanEntityFeature.PRESET_MODE
-        | FanEntityFeature.TURN_OFF
-        | FanEntityFeature.TURN_ON,
-        speed_count=8,
+        hvac_modes_map={
+            HVACMode.OFF: 0,
+            HVACMode.FAN_ONLY: 2,
+        },
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        default_preset_mode=PRESET_AUTO,
+        fan_modes_count=8,
         program_data_fields={
             PD_NIGHT_SPEED: ProgramDataField(mode=3, min_value=1, max_value=3),
             PD_COOLDOWN: ProgramDataField(mode=4, size=2, max_value=7200),
         },
         binary_sensors=[FEATURE_ERROR],
-        numbers=[FEATURE_BREEZER_TEMPERATURE, PD_NIGHT_SPEED],
-        number_configs={
-            FEATURE_BREEZER_TEMPERATURE: NumberConfig(min_value=5, max_value=25),
-        },
+        numbers=[PD_NIGHT_SPEED],
         switches=[
             FEATURE_BREEZER_DAMPER,
             FEATURE_IONIZATION,
@@ -104,44 +98,19 @@ PROFILES = [
             ),
         },
     ),
-    ClimateProfile(
+    BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=30,
-        profile_type=PROFILE_TYPE_BREEZER,
-        min_temp=5,
-        max_temp=25,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        hvac_modes_map={
-            HVACMode.OFF: 0,
-            HVACMode.FAN_ONLY: 1,
-        },
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        cmd_fan_mode=UdpCommandType.SPEED,
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-            "6": 6,
-            "7": 7,
-            "8": 8,
-        },
+        fan_modes_count=8,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_UV_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -158,12 +127,10 @@ PROFILES = [
             FEATURE_RESET_FILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(0, 100),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
             FEATURE_RESET_PREFILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(100, 0),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
         },
         binary_sensors=[
@@ -217,45 +184,25 @@ PROFILES = [
             ),
         },
     ),
-    ClimateProfile(
+    BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=32,
-        profile_type=PROFILE_TYPE_BREEZER,
-        min_temp=5,
-        max_temp=25,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.FAN_ONLY: 5,
         },
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
             PRESET_VENTILATION: 5,
         },
-        cmd_fan_mode=UdpCommandType.SPEED,
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-            "6": 6,
-            "7": 7,
-        },
+        fan_modes_count=7,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -265,7 +212,6 @@ PROFILES = [
             FEATURE_RESET_FILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(0),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
         },
         binary_sensors=[
@@ -294,44 +240,19 @@ PROFILES = [
             ),
         },
     ),
-    ClimateProfile(
+    BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=59,
-        profile_type=PROFILE_TYPE_BREEZER,
-        min_temp=5,
-        max_temp=25,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        hvac_modes_map={
-            HVACMode.OFF: 0,
-            HVACMode.FAN_ONLY: 1,
-        },
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        cmd_fan_mode=UdpCommandType.SPEED,
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-            "6": 6,
-            "7": 7,
-            "8": 8,
-        },
+        fan_modes_count=8,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_UV_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -348,12 +269,10 @@ PROFILES = [
             FEATURE_RESET_FILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(0, 100),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
             FEATURE_RESET_PREFILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(100, 0),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
         },
         binary_sensors=[
@@ -419,45 +338,25 @@ PROFILES = [
             ),
         },
     ),
-    ClimateProfile(
+    BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=69,
-        profile_type=PROFILE_TYPE_BREEZER,
-        min_temp=5,
-        max_temp=25,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
         hvac_modes_map={
             HVACMode.OFF: 0,
             HVACMode.FAN_ONLY: 5,
         },
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         preset_mode_requirements={PRESET_AUTO: PD_CO2_INSTALLED},
         target_temperature_requirement=PD_HEATER_INSTALLED,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
             PRESET_VENTILATION: 5,
         },
-        cmd_fan_mode=UdpCommandType.SPEED,
-        fan_modes_map={
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "5": 5,
-            "6": 6,
-            "7": 7,
-        },
+        fan_modes_count=7,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -467,7 +366,6 @@ PROFILES = [
             FEATURE_RESET_FILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(0),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
         },
         binary_sensors=[
@@ -508,29 +406,23 @@ PROFILES = [
             ),
         },
     ),
-    ClimateProfile(
+    BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=102,
-        profile_type=PROFILE_TYPE_BREEZER,
-        min_temp=5,
-        max_temp=25,
-        target_temp_step=1.0,
         supported_features=(
             ClimateEntityFeature.FAN_MODE
             | ClimateEntityFeature.PRESET_MODE
             | ClimateEntityFeature.TURN_ON
             | ClimateEntityFeature.TURN_OFF
         ),
-        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        cmd_fan_mode=UdpCommandType.SPEED,
-        fan_modes_map={"1": 1, "2": 2, "3": 3, "4": 4, "5": 5},
+        fan_modes_count=5,
         program_data_fields={
             PD_TURN_ON: ProgramDataField(mode=1),
             PD_NIGHT_SPEED: ProgramDataField(
@@ -553,12 +445,10 @@ PROFILES = [
             FEATURE_RESET_FILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(100, 0),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
             FEATURE_RESET_PREFILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(0, 100),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
         },
         sensors={
@@ -580,31 +470,18 @@ PROFILES = [
             ),
         },
     ),
-    ClimateProfile(
+    BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=105,
-        profile_type=PROFILE_TYPE_BREEZER,
-        min_temp=5,
-        max_temp=25,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        cmd_fan_mode=UdpCommandType.SPEED,
-        fan_modes_map={"1": 1, "2": 2, "3": 3, "4": 4, "5": 5},
+        fan_modes_count=5,
         program_data_fields={
             PD_TURN_ON: ProgramDataField(mode=1),
             PD_NIGHT_SPEED: ProgramDataField(
@@ -627,12 +504,10 @@ PROFILES = [
             FEATURE_RESET_FILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(100, 0),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
             FEATURE_RESET_PREFILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(0, 100),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
         },
         sensors={
@@ -659,30 +534,17 @@ PROFILES = [
             ),
         },
     ),
-    ClimateProfile(
+    BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=106,
-        profile_type=PROFILE_TYPE_BREEZER,
-        min_temp=5,
-        max_temp=25,
-        target_temp_step=1.0,
-        supported_features=(
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.FAN_MODE
-            | ClimateEntityFeature.PRESET_MODE
-            | ClimateEntityFeature.TURN_ON
-            | ClimateEntityFeature.TURN_OFF
-        ),
-        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        cmd_fan_mode=UdpCommandType.SPEED,
-        fan_modes_map={"1": 1, "2": 2, "3": 3, "4": 4, "5": 5},
+        fan_modes_count=5,
         program_data_fields={
             PD_TURN_ON: ProgramDataField(mode=1),
             PD_NIGHT_SPEED: ProgramDataField(
@@ -705,12 +567,10 @@ PROFILES = [
             FEATURE_RESET_FILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(100, 0),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
             FEATURE_RESET_PREFILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(0, 100),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
         },
         sensors={
@@ -732,30 +592,24 @@ PROFILES = [
             ),
         },
     ),
-    ClimateProfile(
+    BreezerProfile(
         vendor=VENDOR_RUSCLIMATE,
         device_type=107,
-        profile_type=PROFILE_TYPE_BREEZER,
-        min_temp=5,
-        max_temp=25,
-        target_temp_step=1.0,
         supported_features=(
             ClimateEntityFeature.FAN_MODE
             | ClimateEntityFeature.PRESET_MODE
             | ClimateEntityFeature.TURN_ON
             | ClimateEntityFeature.TURN_OFF
         ),
-        hvac_modes_map={HVACMode.OFF: 0, HVACMode.FAN_ONLY: 1},
-        default_hvac_mode=HVACMode.FAN_ONLY,
         turn_on_program_data_field=PD_TURN_ON,
         preset_modes_map={
+            PRESET_NONE: 0,
             PRESET_MANUAL: 1,
             PRESET_AUTO: 2,
             PRESET_NIGHT: 3,
             PRESET_TURBO: 4,
         },
-        cmd_fan_mode=UdpCommandType.SPEED,
-        fan_modes_map={"1": 1, "2": 2, "3": 3, "4": 4, "5": 5},
+        fan_modes_count=5,
         program_data_fields={
             PD_TURN_ON: ProgramDataField(mode=1),
             PD_NIGHT_SPEED: ProgramDataField(
@@ -778,12 +632,10 @@ PROFILES = [
             FEATURE_RESET_FILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(100, 0),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
             FEATURE_RESET_PREFILTER: ButtonConfig(
                 command_factory=lambda: CmdExpendables(0, 100),
                 entity_category=EntityCategory.CONFIG,
-                entity_registry_enabled_default=False,
             ),
         },
         sensors={

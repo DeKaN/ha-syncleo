@@ -24,6 +24,7 @@ from ..const import (
     FEATURE_RSSI,
     PROFILE_TYPE_AC,
     PROFILE_TYPE_BOILER,
+    PROFILE_TYPE_BREEZER,
     PROFILE_TYPE_HEATER,
     PROFILE_TYPE_KETTLE,
 )
@@ -237,7 +238,7 @@ class DeviceBaseProfile(PlatformProviderBase):
 
 
 @dataclass(kw_only=True)
-class BreezerProfile(
+class VentilationProfile(
     DeviceBaseProfile,
     BinarySensorMixin,
     NumberMixin,
@@ -245,7 +246,7 @@ class BreezerProfile(
     SensorMixin,
     SwitchMixin,
 ):
-    """Profile for Breezers and Ventilation systems."""
+    """Profile for Ventilation systems."""
 
     supported_features: FanEntityFeature
     speed_count: int
@@ -267,7 +268,7 @@ class ClimateProfile(
     SensorMixin,
     SwitchMixin,
 ):
-    """Profile for Heaters and Air Conditioners."""
+    """Base profile for devices exposed as climate entities."""
 
     min_temp: int
     max_temp: int
@@ -292,6 +293,39 @@ class ClimateProfile(
     @property
     def supported_platforms(self) -> list[Platform]:
         return super().supported_platforms + [Platform.CLIMATE]
+
+
+@dataclass(kw_only=True)
+class BreezerProfile(ClimateProfile):
+    """Profile for breezers exposed as climate entities."""
+
+    fan_modes_count: int
+
+    profile_type: str = PROFILE_TYPE_BREEZER
+    min_temp: int = 5
+    max_temp: int = 25
+    target_temp_step: float = 1.0
+    supported_features: ClimateEntityFeature = (
+        ClimateEntityFeature.TARGET_TEMPERATURE
+        | ClimateEntityFeature.FAN_MODE
+        | ClimateEntityFeature.PRESET_MODE
+        | ClimateEntityFeature.TURN_ON
+        | ClimateEntityFeature.TURN_OFF
+    )
+    hvac_modes_map: dict[HVACMode, int] = field(
+        default_factory=lambda: {
+            HVACMode.OFF: 0,
+            HVACMode.FAN_ONLY: 1,
+        }
+    )
+    default_hvac_mode: HVACMode = HVACMode.FAN_ONLY
+    cmd_fan_mode: UdpCommandType | None = UdpCommandType.SPEED
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        self.fan_modes_map = {
+            str(speed): speed for speed in range(1, self.fan_modes_count + 1)
+        }
 
 
 @dataclass(kw_only=True)
