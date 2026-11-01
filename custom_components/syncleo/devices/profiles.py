@@ -37,13 +37,12 @@ class NumberBounds:
     min_value: int = 0
     max_value: int = 1
     step: int = 1
+    unit_of_measurement: str | None = None
 
 
 @dataclass(kw_only=True)
 class NumberConfig(NumberBounds):
     """Configuration for dedicated command numbers."""
-
-    unit_of_measurement: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -93,7 +92,7 @@ class SensorConfig:
 @dataclass(kw_only=True)
 class SwitchConfig:
     required_program_data_field: str | None = None
-    translation_key: str | None = None
+    inverted: bool = False
 
 
 DEFAULT_SENSOR_CONFIGS = {

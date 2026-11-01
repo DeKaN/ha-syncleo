@@ -46,7 +46,7 @@ from ..const import (
     PD_AURUS_A_AIR_CLEAN,
     PD_AURUS_SCREENSAVER_MODE,
     PD_BREEZE_AWAY,
-    PD_DISPLAY_BRIGHTNESS,
+    PD_DISPLAY_HALF_POWER,
     PD_ENERGY_SAVING,
     PD_FIREPLACE,
     PD_FREEZE_PROTECTION,
@@ -63,8 +63,6 @@ from ..const import (
     PRESET_AURUS_SCREENSAVER_MODE_3,
     PRESET_AURUS_SCREENSAVER_MODE_5,
     PRESET_AURUS_SCREENSAVER_MODE_OFF,
-    PRESET_DISPLAY_BRIGHTNESS_50,
-    PRESET_DISPLAY_BRIGHTNESS_100,
     PRESET_NIGHT_MODE_ADULT,
     PRESET_NIGHT_MODE_AGED,
     PRESET_NIGHT_MODE_CHILD,
@@ -84,6 +82,7 @@ from .profiles import (
     NumberConfig,
     ProgramDataField,
     SelectConfig,
+    SwitchConfig,
 )
 
 PROFILES = [
@@ -1291,7 +1290,7 @@ PROFILES = [
         program_data_fields={
             PD_LAST_PROGRAM: ProgramDataField(mode=0, max_value=5),
             PD_SWING_HORIZONTAL: ProgramDataField(mode=1, max_value=5),
-            PD_DISPLAY_BRIGHTNESS: ProgramDataField(mode=2),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=2),
             PD_AURUS_SCREENSAVER_MODE: ProgramDataField(mode=3, max_value=3),
         },
         binary_sensors=[FEATURE_ERROR],
@@ -1313,14 +1312,10 @@ PROFILES = [
                     PRESET_AURUS_SCREENSAVER_MODE_5: 3,
                 },
             ),
-            PD_DISPLAY_BRIGHTNESS: SelectConfig(
-                options_map={
-                    PRESET_DISPLAY_BRIGHTNESS_50: 0,
-                    PRESET_DISPLAY_BRIGHTNESS_100: 1,
-                },
-            ),
         },
+        switch_configs={PD_DISPLAY_HALF_POWER: SwitchConfig(inverted=True)},
         switches=[
+            PD_DISPLAY_HALF_POWER,
             FEATURE_AURUS_VRF_CHILD_LOCK,
             FEATURE_AURUS_VRF_ECO_MODE,
             FEATURE_AURUS_VRF_NOISELESS_MODE,

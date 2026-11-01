@@ -324,7 +324,7 @@
         "name": "Обнаружение открытого окна"
       },
       "display_half_power": {
-        "name": "50% подсветка"
+        "name": "Подсветка 50%"
       },
       "energy_saving": {
         "name": "Экономичный режим"
@@ -332,17 +332,11 @@
       "freeze_protection": {
         "name": "Автообогрев +8"
       },
-      "full_display_brightness": {
-        "name": "Полная яркость дисплея"
-      },
       "fungus_proof": {
         "name": "Профилактика грибка"
       },
       "goldstar_gsti_damper": {
         "name": "Здоровье"
-      },
-      "half_display_brightness": {
-        "name": "Яркость дисплея 50%"
       },
       "ionization": {
         "name": "Ионизация"

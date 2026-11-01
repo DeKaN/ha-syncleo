@@ -12,11 +12,11 @@ from ..const import (
     FEATURE_AURUS_PF_AUTO_OFF_DISPLAY,
     FEATURE_AURUS_PF_HALF_POWER,
     FEATURE_AURUS_SCREENSAVER_MODE,
-    FEATURE_BACKLIGHT,
     FEATURE_CHILD_LOCK,
     FEATURE_DAMPER,
     FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
     FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
+    FEATURE_DISPLAY_HALF_POWER,
     FEATURE_ERROR,
     FEATURE_POWER_LEVEL,
     FEATURE_TIMER,
@@ -25,8 +25,8 @@ from ..const import (
     PD_AUTO_OFF_DISPLAY,
     PD_CURRENT_PRESET,
     PD_DAMPER,
-    PD_DISPLAY_HALF_POWER,
     PD_ECO_DELTA,
+    PD_HALF_POWER,
     PD_MIN_VOLTAGE,
     PD_POWER,
     PD_TIME_END,
@@ -88,14 +88,14 @@ PROFILES = [
             PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
             PD_AUTO_OFF_DISPLAY,
         ],
         switch_configs={
-            FEATURE_BACKLIGHT: SwitchConfig(translation_key="full_display_brightness"),
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
         },
     ),
     HeaterProfile(
@@ -114,7 +114,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -135,14 +135,14 @@ PROFILES = [
             PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
             PD_AUTO_OFF_DISPLAY,
         ],
         switch_configs={
-            FEATURE_BACKLIGHT: SwitchConfig(translation_key="full_display_brightness"),
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
         },
     ),
     HeaterProfile(
@@ -166,7 +166,7 @@ PROFILES = [
         },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_ERROR,
             FEATURE_VOLUME,
         ],
@@ -224,7 +224,7 @@ PROFILES = [
             PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
         ],
     ),
@@ -245,7 +245,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -267,14 +267,14 @@ PROFILES = [
             PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
             PD_AUTO_OFF_DISPLAY,
         ],
         switch_configs={
-            FEATURE_BACKLIGHT: SwitchConfig(translation_key="full_display_brightness"),
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
         },
     ),
     HeaterProfile(
@@ -294,7 +294,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -325,14 +325,14 @@ PROFILES = [
             PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
             PD_AUTO_OFF_DISPLAY,
         ],
         switch_configs={
-            FEATURE_BACKLIGHT: SwitchConfig(translation_key="full_display_brightness"),
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
         },
     ),
     HeaterProfile(
@@ -352,7 +352,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -383,14 +383,14 @@ PROFILES = [
             PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
             PD_AUTO_OFF_DISPLAY,
         ],
         switch_configs={
-            FEATURE_BACKLIGHT: SwitchConfig(translation_key="full_display_brightness"),
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
         },
     ),
     HeaterProfile(
@@ -409,7 +409,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -430,14 +430,14 @@ PROFILES = [
             PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
             PD_AUTO_OFF_DISPLAY,
         ],
         switch_configs={
-            FEATURE_BACKLIGHT: SwitchConfig(translation_key="full_display_brightness"),
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
         },
     ),
     HeaterProfile(
@@ -457,7 +457,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -488,14 +488,14 @@ PROFILES = [
             PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
             PD_AUTO_OFF_DISPLAY,
         ],
         switch_configs={
-            FEATURE_BACKLIGHT: SwitchConfig(translation_key="full_display_brightness"),
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
         },
     ),
     HeaterProfile(
@@ -515,7 +515,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -537,14 +537,14 @@ PROFILES = [
             PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
             PD_AUTO_OFF_DISPLAY,
         ],
         switch_configs={
-            FEATURE_BACKLIGHT: SwitchConfig(translation_key="full_display_brightness"),
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
         },
     ),
     HeaterProfile(
@@ -565,7 +565,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -596,14 +596,14 @@ PROFILES = [
             PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
             PD_AUTO_OFF_DISPLAY,
         ],
         switch_configs={
-            FEATURE_BACKLIGHT: SwitchConfig(translation_key="full_display_brightness"),
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
         },
     ),
     HeaterProfile(
@@ -623,7 +623,7 @@ PROFILES = [
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -654,14 +654,14 @@ PROFILES = [
             PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
             PD_AUTO_OFF_DISPLAY,
         ],
         switch_configs={
-            FEATURE_BACKLIGHT: SwitchConfig(translation_key="full_display_brightness"),
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
         },
     ),
     HeaterProfile(
@@ -746,13 +746,10 @@ PROFILES = [
         switches=[
             FEATURE_AURUS_PF_AUTO_OFF_DISPLAY,
             FEATURE_AURUS_PF_HALF_POWER,
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
         ],
-        switch_configs={
-            FEATURE_BACKLIGHT: SwitchConfig(translation_key="half_display_brightness"),
-        },
     ),
 ]
