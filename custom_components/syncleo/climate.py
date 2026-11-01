@@ -51,7 +51,9 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         self._attr_hvac_modes = list(profile.hvac_modes_map.keys())
 
         self._rev_hvac_map = {v: k for k, v in profile.hvac_modes_map.items()}
-        self._rev_presets_map = {v: k for k, v in profile.preset_modes_map.items()}
+        self._rev_presets_map = {
+            config.mode: key for key, config in profile.presets.items()
+        }
         self._rev_fan_map = {v: k for k, v in profile.fan_modes_map.items()}
 
         if profile.fan_modes_map:
@@ -62,7 +64,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
         self._is_on = False
         self._current_hvac_mode = HVACMode.OFF
-        self._current_preset_mode = PRESET_NONE if profile.preset_modes_map else None
+        self._current_preset_mode = PRESET_NONE if profile.presets else None
         self._target_temp: float | None = None
         self._current_temp: float | None = None
         self._current_humidity: float | None = None
@@ -82,15 +84,13 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
     @property
     def preset_modes(self) -> list[str] | None:
-        if not self._profile.preset_modes_map:
+        if not self._profile.presets:
             return None
 
         return [
             preset
-            for preset in self._profile.preset_modes_map
-            if not self._requirement_is_absent(
-                self._profile.preset_mode_requirements.get(preset)
-            )
+            for preset, config in self._profile.presets.items()
+            if not self._requirement_is_absent(config.required_program_data_field)
         ]
 
     @property
@@ -102,17 +102,14 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
     @property
     def max_temp(self) -> float:
-        field_key = self._profile.preset_max_temp_offsets.get(
-            self._current_preset_mode or PRESET_NONE
-        )
-        if field_key is None:
-            return self._attr_max_temp
-
-        data = self.get_known_program_data(field_key)
-        if data is None:
-            return self._attr_max_temp
-
-        return self._attr_max_temp - int.from_bytes(data, byteorder="little")
+        preset = self._profile.presets.get(self._current_preset_mode or PRESET_NONE)
+        if (
+            preset
+            and (field_key := preset.max_temp_offset_field)
+            and (data := self.get_known_program_data(field_key)) is not None
+        ):
+            return self._attr_max_temp - int.from_bytes(data, byteorder="little")
+        return self._attr_max_temp
 
     @property
     def target_temperature(self) -> float | None:
@@ -183,7 +180,7 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
             self._is_on = self._current_hvac_mode != HVACMode.OFF
             if not self._is_on:
                 self._current_preset_mode = (
-                    PRESET_NONE if self._profile.preset_modes_map else None
+                    PRESET_NONE if self._profile.presets else None
                 )
 
             update_needed = True
@@ -278,9 +275,9 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
         if preset_mode not in (self.preset_modes or []):
             raise ServiceValidationError(f"Preset mode {preset_mode} is not available")
 
-        raw_val = self._profile.preset_modes_map.get(preset_mode)
-        if raw_val is not None:
-            await self.async_send_command(CmdMode(raw_val))
+        preset = self._profile.presets.get(preset_mode)
+        if preset is not None:
+            await self.async_send_command(CmdMode(preset.mode))
             self._current_preset_mode = preset_mode
             self.async_write_ha_state()
 

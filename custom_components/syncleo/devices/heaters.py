@@ -45,6 +45,7 @@ from ..const import (
 from .profiles import (
     HeaterProfile,
     NumberConfig,
+    PresetConfig,
     ProgramDataField,
     SelectConfig,
     SensorConfig,
@@ -59,11 +60,11 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
@@ -105,11 +106,11 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
@@ -152,11 +153,11 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
@@ -196,11 +197,11 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
@@ -236,11 +237,11 @@ PROFILES = [
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
         turn_on_program_data_field=PD_TURN_ON,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
@@ -285,11 +286,11 @@ PROFILES = [
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
         turn_on_program_data_field=PD_TURN_ON,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
@@ -343,11 +344,11 @@ PROFILES = [
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
         turn_on_program_data_field=PD_TURN_ON,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
@@ -400,11 +401,11 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
@@ -448,11 +449,11 @@ PROFILES = [
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
         turn_on_program_data_field=PD_TURN_ON,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
@@ -506,11 +507,11 @@ PROFILES = [
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
         turn_on_program_data_field=PD_TURN_ON,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
@@ -555,13 +556,12 @@ PROFILES = [
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
         turn_on_program_data_field=PD_TURN_ON,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2, max_temp_offset_field=PD_ECO_DELTA),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
-        preset_max_temp_offsets={PRESET_ECO: PD_ECO_DELTA},
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
@@ -614,11 +614,11 @@ PROFILES = [
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
         turn_on_program_data_field=PD_TURN_ON,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
@@ -672,13 +672,13 @@ PROFILES = [
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
         turn_on_program_data_field=PD_TURN_ON,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
-            PRESET_MANUAL: 4,
-            PRESET_VACATION: 5,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
+            PRESET_MANUAL: PresetConfig(mode=4),
+            PRESET_VACATION: PresetConfig(mode=5),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),

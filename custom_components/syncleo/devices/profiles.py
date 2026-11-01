@@ -80,6 +80,13 @@ class SelectConfig:
 
 
 @dataclass(kw_only=True)
+class PresetConfig:
+    mode: int
+    required_program_data_field: str | None = None
+    max_temp_offset_field: str | None = None
+
+
+@dataclass(kw_only=True)
 class SensorConfig:
     required_program_data_field: str | None = None
     device_class: SensorDeviceClass | None = None
@@ -283,9 +290,7 @@ class ClimateProfile(
 
     cmd_current_humidity: UdpCommandType | None = None
 
-    preset_modes_map: dict[str, int] = field(default_factory=dict)
-    preset_mode_requirements: dict[str, str] = field(default_factory=dict)
-    preset_max_temp_offsets: dict[str, str] = field(default_factory=dict)
+    presets: dict[str, PresetConfig] = field(default_factory=dict)
     target_temperature_requirement: str | None = None
 
     cmd_fan_mode: UdpCommandType | None = None
