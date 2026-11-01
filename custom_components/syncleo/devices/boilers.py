@@ -20,7 +20,6 @@ from ..const import (
     FEATURE_TIMER,
     OPERATION_MODE_ECONOMY,
     PD_DISPLAY_HALF_POWER,
-    PD_EXPENDABLES_ANODE,
     PD_LAST_PROGRAM,
     PD_TURN_ON,
     VENDOR_RUSCLIMATE,
@@ -239,15 +238,17 @@ PROFILES = [
                 device_class=SensorDeviceClass.DURATION,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=UnitOfTime.DAYS,
+                # Hommyn displays 500 as an unknown resource.
                 value_fn=lambda val: (
-                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                    val[0]
+                    if isinstance(val, list) and len(val) > 0 and val[0] != 500
+                    else None
                 ),
             ),
         },
         program_data_fields={
             PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0),
             PD_LAST_PROGRAM: ProgramDataField(mode=1, min_value=1, max_value=1),
-            PD_EXPENDABLES_ANODE: ProgramDataField(mode=2, min_value=0, max_value=2),
         },
     ),
     BoilerProfile(
@@ -362,15 +363,17 @@ PROFILES = [
                 device_class=SensorDeviceClass.DURATION,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=UnitOfTime.DAYS,
+                # Hommyn displays 500 as an unknown resource.
                 value_fn=lambda val: (
-                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                    val[0]
+                    if isinstance(val, list) and len(val) > 0 and val[0] != 500
+                    else None
                 ),
             ),
         },
         program_data_fields={
             PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0),
             PD_LAST_PROGRAM: ProgramDataField(mode=1, min_value=1, max_value=1),
-            PD_EXPENDABLES_ANODE: ProgramDataField(mode=2, min_value=0, max_value=2),
         },
     ),
     BoilerProfile(
@@ -404,7 +407,6 @@ PROFILES = [
         program_data_fields={
             PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0),
             PD_LAST_PROGRAM: ProgramDataField(mode=1, min_value=1, max_value=1),
-            PD_EXPENDABLES_ANODE: ProgramDataField(mode=2, min_value=0, max_value=2),
         },
     ),
     BoilerProfile(
@@ -440,15 +442,17 @@ PROFILES = [
                 device_class=SensorDeviceClass.DURATION,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=UnitOfTime.DAYS,
+                # Hommyn displays 500 as an unknown resource.
                 value_fn=lambda val: (
-                    val[0] if isinstance(val, list) and len(val) > 0 else None
+                    val[0]
+                    if isinstance(val, list) and len(val) > 0 and val[0] != 500
+                    else None
                 ),
             ),
         },
         program_data_fields={
             PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0),
             PD_LAST_PROGRAM: ProgramDataField(mode=1, min_value=1, max_value=1),
-            PD_EXPENDABLES_ANODE: ProgramDataField(mode=2, min_value=0, max_value=2),
         },
     ),
     BoilerProfile(

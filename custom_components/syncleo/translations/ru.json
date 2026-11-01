@@ -73,9 +73,6 @@
       },
       "volume": {
         "name": "Звук"
-      },
-      "damper_state": {
-        "name": "Режим открытого окна"
       }
     },
     "climate": {

@@ -73,9 +73,6 @@
       },
       "volume": {
         "name": "Sound"
-      },
-      "damper_state": {
-        "name": "Open window mode"
       }
     },
     "climate": {
