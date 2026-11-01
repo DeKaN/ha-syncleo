@@ -74,6 +74,10 @@ class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
 
     @property
     def preset_mode(self) -> str | None:
+        if self._current_preset_mode == PRESET_NONE and PRESET_NONE not in (
+            self.preset_modes or []
+        ):
+            return None
         return self._current_preset_mode
 
     @property

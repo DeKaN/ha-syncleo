@@ -19,6 +19,7 @@ from .profiles import (
     SensorMixin,
     SwitchConfig,
     SwitchMixin,
+    VentilationProfile,
     WaterHeaterProfile,
 )
 
@@ -51,5 +52,6 @@ __all__ = [
     "SensorMixin",
     "SwitchConfig",
     "SwitchMixin",
+    "VentilationProfile",
     "WaterHeaterProfile",
 ]
