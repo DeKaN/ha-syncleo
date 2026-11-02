@@ -216,13 +216,6 @@
           "melody_sea_sound": "Sea sound"
         }
       },
-      "display_brightness": {
-        "name": "Display brightness",
-        "state": {
-          "brightness_100": "100%",
-          "brightness_50": "50%"
-        }
-      },
       "kettle_temperature_preset": {
         "name": "Temperature preset",
         "state": {
@@ -375,16 +368,11 @@
     "water_heater": {
       "syncleo_boiler": {
         "state": {
-          "bss": "BSS",
           "off": "Off",
           "eco": "Low (700W)",
-          "economy": "Eco",
           "electric": "Mid (1300W)",
           "performance": "Turbo (2000W)",
-          "heat_pump": "NO Frost",
-          "idle": "Waiting for heating",
-          "smart_mode": "Smart",
-          "timer": "Timer"
+          "heat_pump": "NO Frost"
         }
       },
       "syncleo_kettle": {

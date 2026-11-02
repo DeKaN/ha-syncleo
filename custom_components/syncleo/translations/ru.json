@@ -178,13 +178,6 @@
           "melody_sea_sound": "Звук моря"
         }
       },
-      "display_brightness": {
-        "name": "Яркость дисплея",
-        "state": {
-          "brightness_100": "100%",
-          "brightness_50": "50%"
-        }
-      },
       "kettle_temperature_preset": {
         "name": "Предустановка температуры",
         "state": {
@@ -375,16 +368,11 @@
     "water_heater": {
       "syncleo_boiler": {
         "state": {
-          "bss": "Самоочистка (BSS)",
           "off": "Выключено",
           "eco": "Низкий (700Вт)",
-          "economy": "Eco",
           "electric": "Средний (1300Вт)",
           "performance": "Турбо (2000Вт)",
-          "heat_pump": "NO Frost",
-          "idle": "Ожидание нагрева",
-          "smart_mode": "Smart",
-          "timer": "Таймер"
+          "heat_pump": "NO Frost"
         }
       },
       "syncleo_kettle": {

@@ -356,7 +356,6 @@ class WaterHeaterProfile(
     operation_modes_map: dict[str, int]
     default_operation_mode: str
     turn_on_program_data_field: str | None = None
-    operation_mode_states: dict[int, str] = field(default_factory=dict)
 
     @property
     def supported_platforms(self) -> list[Platform]:

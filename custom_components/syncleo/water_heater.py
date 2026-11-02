@@ -47,7 +47,6 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
 
         self._op_mode_map = profile.operation_modes_map
         self._rev_op_mode_map = {v: k for k, v in self._op_mode_map.items()}
-        self._rev_op_mode_map.update(profile.operation_mode_states)
 
         self._attr_operation_list = list(self._op_mode_map.keys())
 

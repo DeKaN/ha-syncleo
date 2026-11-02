@@ -7,7 +7,7 @@ from homeassistant.components.water_heater import (
     STATE_PERFORMANCE,
     WaterHeaterEntityFeature,
 )
-from homeassistant.const import STATE_IDLE, STATE_ON, UnitOfTime, UnitOfVolume
+from homeassistant.const import STATE_ON, UnitOfTime, UnitOfVolume
 
 from ..const import (
     FEATURE_ACCESS_CONTROL,
@@ -17,8 +17,6 @@ from ..const import (
     FEATURE_KEEP_WARM,
     FEATURE_SMART_MODE,
     FEATURE_TANK,
-    FEATURE_TIMER,
-    OPERATION_MODE_ECONOMY,
     PD_DISPLAY_HALF_POWER,
     PD_LAST_PROGRAM,
     PD_TURN_ON,
@@ -40,7 +38,6 @@ PROFILES = [
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_LAST_PROGRAM,
-        operation_mode_states={4: STATE_IDLE},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -74,7 +71,6 @@ PROFILES = [
             STATE_HEAT_PUMP: 5,
         },
         default_operation_mode=STATE_ECO,
-        operation_mode_states={4: FEATURE_TIMER},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -94,10 +90,8 @@ PROFILES = [
             STATE_ELECTRIC: 2,
             STATE_PERFORMANCE: 3,
             STATE_HEAT_PUMP: 5,
-            OPERATION_MODE_ECONOMY: 6,
         },
         default_operation_mode=STATE_ECO,
-        operation_mode_states={4: FEATURE_TIMER, 7: OPERATION_MODE_ECONOMY},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -133,10 +127,8 @@ PROFILES = [
             STATE_ELECTRIC: 2,
             STATE_PERFORMANCE: 3,
             STATE_HEAT_PUMP: 5,
-            OPERATION_MODE_ECONOMY: 6,
         },
         default_operation_mode=STATE_ECO,
-        operation_mode_states={4: FEATURE_TIMER, 7: OPERATION_MODE_ECONOMY},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -159,14 +151,6 @@ PROFILES = [
             STATE_ON: 3,
         },
         default_operation_mode=STATE_ON,
-        operation_mode_states={
-            1: STATE_ON,
-            2: STATE_ON,
-            4: FEATURE_TIMER,
-            5: STATE_HEAT_PUMP,
-            6: OPERATION_MODE_ECONOMY,
-            7: OPERATION_MODE_ECONOMY,
-        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -185,15 +169,9 @@ PROFILES = [
             STATE_ECO: 1,
             STATE_ELECTRIC: 2,
             STATE_PERFORMANCE: 3,
-            OPERATION_MODE_ECONOMY: 6,
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_TURN_ON,
-        operation_mode_states={
-            4: FEATURE_TIMER,
-            5: STATE_HEAT_PUMP,
-            7: OPERATION_MODE_ECONOMY,
-        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -225,11 +203,6 @@ PROFILES = [
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_LAST_PROGRAM,
-        operation_mode_states={
-            4: STATE_HEAT_PUMP,
-            5: FEATURE_BSS,
-            6: FEATURE_SMART_MODE,
-        },
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -267,7 +240,6 @@ PROFILES = [
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_LAST_PROGRAM,
-        operation_mode_states={4: STATE_IDLE},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -298,15 +270,9 @@ PROFILES = [
             STATE_ECO: 1,
             STATE_ELECTRIC: 2,
             STATE_PERFORMANCE: 3,
-            OPERATION_MODE_ECONOMY: 6,
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_TURN_ON,
-        operation_mode_states={
-            4: FEATURE_TIMER,
-            5: STATE_HEAT_PUMP,
-            7: OPERATION_MODE_ECONOMY,
-        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -349,11 +315,6 @@ PROFILES = [
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_LAST_PROGRAM,
-        operation_mode_states={
-            4: STATE_HEAT_PUMP,
-            5: FEATURE_BSS,
-            6: FEATURE_SMART_MODE,
-        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -395,11 +356,6 @@ PROFILES = [
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_LAST_PROGRAM,
-        operation_mode_states={
-            4: STATE_HEAT_PUMP,
-            5: FEATURE_BSS,
-            6: FEATURE_SMART_MODE,
-        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -428,11 +384,6 @@ PROFILES = [
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_LAST_PROGRAM,
-        operation_mode_states={
-            4: STATE_HEAT_PUMP,
-            5: FEATURE_BSS,
-            6: FEATURE_SMART_MODE,
-        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -475,14 +426,6 @@ PROFILES = [
             STATE_ON: 3,
         },
         default_operation_mode=STATE_ON,
-        operation_mode_states={
-            1: STATE_ON,
-            2: STATE_ON,
-            4: FEATURE_TIMER,
-            5: STATE_HEAT_PUMP,
-            6: OPERATION_MODE_ECONOMY,
-            7: OPERATION_MODE_ECONOMY,
-        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -504,7 +447,6 @@ PROFILES = [
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_LAST_PROGRAM,
-        operation_mode_states={4: STATE_IDLE},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -538,7 +480,6 @@ PROFILES = [
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_LAST_PROGRAM,
-        operation_mode_states={4: STATE_IDLE},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -565,7 +506,6 @@ PROFILES = [
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_LAST_PROGRAM,
-        operation_mode_states={4: STATE_IDLE},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
