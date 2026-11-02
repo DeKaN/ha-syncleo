@@ -74,7 +74,6 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
 
         if cmd.command_type == UdpCommandType.MODE:
             raw_val = int(cmd.value)
-            raw_val = self._profile.operation_mode_aliases.get(raw_val, raw_val)
             resolved_mode = self._rev_op_mode_map.get(raw_val)
             if resolved_mode:
                 self._current_operation = resolved_mode

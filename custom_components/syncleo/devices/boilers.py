@@ -97,8 +97,7 @@ PROFILES = [
             OPERATION_MODE_ECONOMY: 6,
         },
         default_operation_mode=STATE_ECO,
-        operation_mode_aliases={7: 6},
-        operation_mode_states={4: FEATURE_TIMER},
+        operation_mode_states={4: FEATURE_TIMER, 7: OPERATION_MODE_ECONOMY},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -137,8 +136,7 @@ PROFILES = [
             OPERATION_MODE_ECONOMY: 6,
         },
         default_operation_mode=STATE_ECO,
-        operation_mode_aliases={7: 6},
-        operation_mode_states={4: FEATURE_TIMER},
+        operation_mode_states={4: FEATURE_TIMER, 7: OPERATION_MODE_ECONOMY},
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -161,11 +159,13 @@ PROFILES = [
             STATE_ON: 3,
         },
         default_operation_mode=STATE_ON,
-        operation_mode_aliases={1: 3, 2: 3, 7: 6},
         operation_mode_states={
+            1: STATE_ON,
+            2: STATE_ON,
             4: FEATURE_TIMER,
             5: STATE_HEAT_PUMP,
             6: OPERATION_MODE_ECONOMY,
+            7: OPERATION_MODE_ECONOMY,
         },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
@@ -189,8 +189,11 @@ PROFILES = [
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_TURN_ON,
-        operation_mode_aliases={7: 6},
-        operation_mode_states={4: FEATURE_TIMER, 5: STATE_HEAT_PUMP},
+        operation_mode_states={
+            4: FEATURE_TIMER,
+            5: STATE_HEAT_PUMP,
+            7: OPERATION_MODE_ECONOMY,
+        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -299,8 +302,11 @@ PROFILES = [
         },
         default_operation_mode=STATE_ECO,
         turn_on_program_data_field=PD_TURN_ON,
-        operation_mode_aliases={7: 6},
-        operation_mode_states={4: FEATURE_TIMER, 5: STATE_HEAT_PUMP},
+        operation_mode_states={
+            4: FEATURE_TIMER,
+            5: STATE_HEAT_PUMP,
+            7: OPERATION_MODE_ECONOMY,
+        },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -469,11 +475,13 @@ PROFILES = [
             STATE_ON: 3,
         },
         default_operation_mode=STATE_ON,
-        operation_mode_aliases={1: 3, 2: 3, 7: 6},
         operation_mode_states={
+            1: STATE_ON,
+            2: STATE_ON,
             4: FEATURE_TIMER,
             5: STATE_HEAT_PUMP,
             6: OPERATION_MODE_ECONOMY,
+            7: OPERATION_MODE_ECONOMY,
         },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
