@@ -151,14 +151,17 @@
       "swing_vertical": {
         "name": "Положение вертикальных жалюзей"
       },
-      "vacation_temperature": {
-        "name": "Температура режима Отпуск"
-      },
       "timer": {
         "name": "Таймер"
+      },
+      "vacation_temperature": {
+        "name": "Температура режима Отпуск"
       }
     },
     "select": {
+      "air_cleaner_display_brightness": {
+        "name": "Яркость дисплея"
+      },
       "aurus_screensaver_mode": {
         "name": "Режим заставки",
         "state": {
@@ -166,6 +169,16 @@
           "screensaver_1": "1 мин",
           "screensaver_3": "3 мин",
           "screensaver_5": "5 мин"
+        }
+      },
+      "backlight_mode": {
+        "name": "Режим подсветки",
+        "state": {
+          "off": "Экран и свет выключены",
+          "all": "Включен весь свет",
+          "upper": "Включен верхний свет",
+          "middle": "Включен средний свет",
+          "lower": "Включен нижний свет"
         }
       },
       "breezer_melody": {
@@ -193,6 +206,15 @@
           "kettle_preset_oolong_tea": "Улун",
           "kettle_preset_white_tea": "Белый чай",
           "kettle_preset_herbal_tea": "Травяной чай"
+        }
+      },
+      "light_time": {
+        "name": "Автоотключение дисплея",
+        "state": {
+          "off": "Выключено",
+          "1": "1 мин",
+          "3": "3 мин",
+          "5": "5 мин"
         }
       },
       "night": {
@@ -248,8 +270,11 @@
       "current_pm2": {
         "name": "PM2.5"
       },
+      "current_humidity": {
+        "name": "Текущая влажность"
+      },
       "current_temperature": {
-        "name": "Температура притока"
+        "name": "Текущая температура"
       },
       "expendables_anode": {
         "name": "Ресурс анода, д"
@@ -268,6 +293,9 @@
       }
     },
     "switch": {
+      "air_cleaner_child_lock": {
+        "name": "Замок от детей"
+      },
       "anti_meldew": {
         "name": "Защита от плесени"
       },
