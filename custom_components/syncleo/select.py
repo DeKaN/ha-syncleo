@@ -110,6 +110,7 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
                 data.hex(),
             )
             value = int.from_bytes(data, byteorder="little") if data else 0
+            current_option = self._rev_options_map.get(value, current_option)
 
         elif self._cmd_class and cmd.command_type == self._cmd_class.command_type:
             _LOGGER.debug(
@@ -118,16 +119,12 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
                 cmd,
             )
             value = int(cmd.value)
+            current_option = self._rev_options_map.get(value)
         else:
             _LOGGER.debug(
                 "Entity %s ignoring unrelated cmd: %s", self._attr_unique_id, cmd
             )
             return
-
-        text_value = self._rev_options_map.get(value)
-
-        if text_value is not None:
-            current_option = text_value
 
         if current_option != self._current_option:
             self._current_option = current_option
