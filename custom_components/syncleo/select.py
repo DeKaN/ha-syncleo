@@ -70,11 +70,21 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
 
     @property
     def options(self) -> list[str]:
-        return (
-            list(self._virtual_sensors.values())
-            if self._is_data_source
-            else self._config.options
-        )
+        if self._is_data_source:
+            return list(self._virtual_sensors.values())
+        if self._is_program_data:
+            config = self._profile.program_data_fields[self._feature_key]
+            if (
+                config.min_value_source is not None
+                or config.max_value_source is not None
+            ):
+                min_value, max_value = self.get_program_data_bounds(self._feature_key)
+                return [
+                    option
+                    for option, value in self._options_map.items()
+                    if min_value <= value <= max_value
+                ]
+        return self._config.options
 
     @property
     def current_option(self) -> str | None:
