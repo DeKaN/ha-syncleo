@@ -117,6 +117,23 @@
         }
       }
     },
+    "humidifier": {
+      "syncleo_humidifier": {
+        "state_attributes": {
+          "mode": {
+            "state": {
+              "aroma": "Арома",
+              "fitness": "Фитнес",
+              "health": "Здоровье",
+              "meditation": "Медитация",
+              "prana_auto": "Прана авто",
+              "prana_manual": "Прана ручной",
+              "yoga": "Йога"
+            }
+          }
+        }
+      }
+    },
     "number": {
       "angle_horizontal": {
         "name": "Положение горизонтальных жалюзей"
@@ -136,6 +153,9 @@
       "eco_delta": {
         "name": "Разница температур в режиме Eco"
       },
+      "meditation_timer": {
+        "name": "Длительность медитации"
+      },
       "min_voltage": {
         "name": "Минимальное напряжение (145+X)"
       },
@@ -145,17 +165,41 @@
       "power_level": {
         "name": "Мощность"
       },
+      "prana_exhale": {
+        "name": "Выдох Prana"
+      },
+      "prana_exhale_delay": {
+        "name": "Пауза после выдоха Prana"
+      },
+      "prana_inhale": {
+        "name": "Вдох Prana"
+      },
+      "prana_inhale_delay": {
+        "name": "Пауза после вдоха Prana"
+      },
+      "prana_iteration_time": {
+        "name": "Длительность цикла праны"
+      },
+      "prana_iterations": {
+        "name": "Количество повторений праны"
+      },
       "swing_horizontal": {
         "name": "Положение горизонтальных жалюзей"
       },
       "swing_vertical": {
         "name": "Положение вертикальных жалюзей"
       },
+      "timer": {
+        "name": "Таймер"
+      },
       "vacation_temperature": {
         "name": "Температура режима Отпуск"
       },
-      "timer": {
-        "name": "Таймер"
+      "yoga_iterations": {
+        "name": "Количество повторений йоги"
+      },
+      "yoga_timer": {
+        "name": "Длительность йоги"
       }
     },
     "select": {
@@ -176,6 +220,17 @@
           "melody_forest_sound": "Звук леса",
           "melody_rain_sound": "Звук дождя",
           "melody_sea_sound": "Звук моря"
+        }
+      },
+      "fan_speed": {
+        "name": "Скорость вентилятора"
+      },
+      "fitness_timer": {
+        "name": "Длительность фитнеса",
+        "state": {
+          "15": "15 мин",
+          "30": "30 мин",
+          "60": "60 мин"
         }
       },
       "kettle_temperature_preset": {
@@ -222,6 +277,18 @@
           "power_100": "100%"
         }
       },
+      "prana_auto_exercise": {
+        "name": "Упражнение Prana Auto"
+      },
+      "prana_iteration_time": {
+        "name": "Длительность цикла праны",
+        "state": {
+          "3": "3 с",
+          "6": "6 с",
+          "12": "12 с",
+          "24": "24 с"
+        }
+      },
       "source_current_temperature": {
         "name": "Источник температуры",
         "state": {
@@ -249,7 +316,7 @@
         "name": "PM2.5"
       },
       "current_temperature": {
-        "name": "Температура притока"
+        "name": "Текущая температура"
       },
       "expendables_anode": {
         "name": "Ресурс анода, д"

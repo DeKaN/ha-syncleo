@@ -117,6 +117,23 @@
         }
       }
     },
+    "humidifier": {
+      "syncleo_humidifier": {
+        "state_attributes": {
+          "mode": {
+            "state": {
+              "aroma": "Aroma",
+              "fitness": "Fitness",
+              "health": "Health",
+              "meditation": "Meditation",
+              "prana_auto": "Prana auto",
+              "prana_manual": "Prana manual",
+              "yoga": "Yoga"
+            }
+          }
+        }
+      }
+    },
     "number": {
       "angle_horizontal": {
         "name": "Horizontal blinds position"
@@ -136,6 +153,9 @@
       "eco_delta": {
         "name": "Eco Delta Temperature"
       },
+      "meditation_timer": {
+        "name": "Meditation duration"
+      },
       "min_voltage": {
         "name": "Min voltage (145+X)"
       },
@@ -145,17 +165,41 @@
       "power_level": {
         "name": "Power Level"
       },
+      "prana_exhale": {
+        "name": "Prana exhale"
+      },
+      "prana_exhale_delay": {
+        "name": "Prana pause after exhale"
+      },
+      "prana_inhale": {
+        "name": "Prana inhale"
+      },
+      "prana_inhale_delay": {
+        "name": "Prana pause after inhale"
+      },
+      "prana_iteration_time": {
+        "name": "Prana cycle duration"
+      },
+      "prana_iterations": {
+        "name": "Prana repetitions"
+      },
       "swing_horizontal": {
         "name": "Horizontal blinds position"
       },
       "swing_vertical": {
         "name": "Vertical blinds position"
       },
+      "timer": {
+        "name": "Timer"
+      },
       "vacation_temperature": {
         "name": "Vacation temperature"
       },
-      "timer": {
-        "name": "Timer"
+      "yoga_iterations": {
+        "name": "Yoga repetitions"
+      },
+      "yoga_timer": {
+        "name": "Yoga duration"
       }
     },
     "sensor": {
@@ -178,7 +222,7 @@
         "name": "PM2.5"
       },
       "current_temperature": {
-        "name": "Inlet temperature"
+        "name": "Current temperature"
       },
       "expendables_anode": {
         "name": "Anode resource, d"
@@ -214,6 +258,17 @@
           "melody_forest_sound": "Forest sound",
           "melody_rain_sound": "Rain sound",
           "melody_sea_sound": "Sea sound"
+        }
+      },
+      "fan_speed": {
+        "name": "Fan speed"
+      },
+      "fitness_timer": {
+        "name": "Fitness duration",
+        "state": {
+          "15": "15 min",
+          "30": "30 min",
+          "60": "60 min"
         }
       },
       "kettle_temperature_preset": {
@@ -258,6 +313,18 @@
           "power_50": "50%",
           "power_75": "75%",
           "power_100": "100%"
+        }
+      },
+      "prana_auto_exercise": {
+        "name": "Prana auto exercise"
+      },
+      "prana_iteration_time": {
+        "name": "Prana cycle duration",
+        "state": {
+          "3": "3 s",
+          "6": "6 s",
+          "12": "12 s",
+          "24": "24 s"
         }
       },
       "source_current_temperature": {
