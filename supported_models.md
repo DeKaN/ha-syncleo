@@ -23,6 +23,7 @@
 | Rusclimate | 20 | Ballu Defender DC, Royal Thermo Milano, Ballu Olympio Legend, Electrolux Skandi DC, Ballu Platinum Evolution DC, Electrolux Onix Black Super DC |
 | Rusclimate | 21 | Shuft Soturai, Ballu Maverick DC, Ballu iGreen Pro, Ballu Maverick DC, Electrolux Loft DC, Zanussi Moderno DC, Electrolux Slide DC, Electrolux Arctic Air Wi-Fi, Shuft Asgard Black DC, Ballu Platinum Black DC, Ballu Platinum DC Inverter |
 | Rusclimate | 28 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
+| Rusclimate | 29 | Electrolux ETS-16, Electrolux ETV-16, Royal Thermo RTS-16, Royal Thermo RTI-16 |
 | Rusclimate | 30 | Ballu ONEAIR ASP-200S |
 | Rusclimate | 31 | (Transformer 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux EIH/R, Electrolux EIH/S, Ballu Plaza |
 | Rusclimate | 32 | Ballu ONEAIR ASP-100, Electrolux EASP-100 |
@@ -40,14 +41,18 @@
 | Rusclimate | 57 | Shuft Berg, MBO M-1, MI-3 DC, NeoLine, HitAir HAM, Monroe Dream Air |
 | Rusclimate | 59 | Ballu ONEAIR ASP-200S |
 | Rusclimate | 60 | Ballu Discovery DC |
+| Rusclimate | 65 | SmartControl |
+| Rusclimate | 67 | Electrolux ETS-16, Electrolux ETV-16, Royal Thermo RTS-16, Royal Thermo RTI-16, Electrolux Maximus WiFi |
 | Rusclimate | 68 | Ballu iGreen Pro, Electrolux Loft DC, Zanussi Moderno DC, Electrolux Slide DC, Electrolux Arctic Air Wi-Fi, Shuft Asgard Black DC, Ballu Platinum Black DC, Ballu Platinum DC Inverter |
 | Rusclimate | 69 | Ballu ONEAIR ASP-100, Electrolux EASP-100 |
 | Rusclimate | 70 | Ballu Universal 3, DC, Free Match |
 | Rusclimate | 71 | (Transformer DI 4.0) Electrolux Air Gate, Electrolux Rapid, Ballu Apollo, Ballu Evolution, Electrolux Brilliant Marble, Electrolux ECH/AG, Electrolux ECH/AG2, Electrolux ECH/AT, Electrolux ECH/BM |
 | Rusclimate | 72 | Zanussi Barocco, Royal Thermo Barocco |
+| Rusclimate | 73 | SmartControl Pro |
 | Rusclimate | 74 | Aurus S |
 | Rusclimate | 76 | Ballu Artendo Inverter, Electrolux Royal Flash, Electrolux Centurio IQ Inverter |
 | Rusclimate | 77 | Royal Thermo Major Inverter, Royal Thermo Smalto Inverter |
+| Rusclimate | 78 | Electrolux ETS-16, Electrolux ETV-16, Royal Thermo RTS-16, Royal Thermo RTI-16 |
 | Rusclimate | 80 | Aurus F |
 | Rusclimate | 82 | Goldstar GSAC/GSACI |
 | Rusclimate | 83 | Ballu Aura 07, Ballu Aura 09/12 |
