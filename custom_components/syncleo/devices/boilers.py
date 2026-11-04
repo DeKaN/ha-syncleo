@@ -18,7 +18,6 @@ from ..const import (
     FEATURE_SMART_MODE,
     FEATURE_TANK,
     PD_DISPLAY_HALF_POWER,
-    PD_EXPENDABLES_ANODE,
     PD_LAST_PROGRAM,
     PD_TURN_ON,
     VENDOR_RUSCLIMATE,
@@ -38,6 +37,7 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -76,7 +76,6 @@ PROFILES = [
             FEATURE_ERROR,
         ],
         switches=[
-            FEATURE_SMART_MODE,
             FEATURE_BSS,
         ],
     ),
@@ -156,6 +155,9 @@ PROFILES = [
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
         ],
+        switches=[
+            FEATURE_BSS,
+        ],
     ),
     BoilerProfile(
         vendor=VENDOR_RUSCLIMATE,
@@ -169,6 +171,7 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_TURN_ON,
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -199,22 +202,29 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
+            FEATURE_KEEP_WARM,
             PD_DISPLAY_HALF_POWER,
         ],
         sensors={
-            PD_EXPENDABLES_ANODE: SensorConfig(
+            FEATURE_EXPENDABLES_ANODE: SensorConfig(
                 device_class=SensorDeviceClass.DURATION,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=UnitOfTime.DAYS,
+                # Hommyn displays 500 as an unknown resource.
+                value_fn=lambda val: (
+                    val[0]
+                    if isinstance(val, list) and len(val) > 0 and val[0] != 500
+                    else None
+                ),
             ),
         },
         program_data_fields={
             PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0),
             PD_LAST_PROGRAM: ProgramDataField(mode=1, min_value=1, max_value=1),
-            PD_EXPENDABLES_ANODE: ProgramDataField(mode=2, min_value=0, max_value=2),
         },
     ),
     BoilerProfile(
@@ -229,10 +239,18 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
         ],
+        sensors={
+            FEATURE_TANK: SensorConfig(
+                device_class=SensorDeviceClass.VOLUME_STORAGE,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfVolume.LITERS,
+            ),
+        },
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -254,6 +272,7 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_TURN_ON,
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -272,10 +291,15 @@ PROFILES = [
                     val[0] if isinstance(val, list) and len(val) > 0 else None
                 ),
             ),
+            FEATURE_TANK: SensorConfig(
+                device_class=SensorDeviceClass.VOLUME_STORAGE,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfVolume.LITERS,
+            ),
         },
         program_data_fields={
             PD_TURN_ON: ProgramDataField(mode=0),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=1, offset=1),
+            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=1),
         },
     ),
     BoilerProfile(
@@ -290,6 +314,7 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -297,19 +322,25 @@ PROFILES = [
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
+            FEATURE_KEEP_WARM,
             PD_DISPLAY_HALF_POWER,
         ],
         sensors={
-            PD_EXPENDABLES_ANODE: SensorConfig(
+            FEATURE_EXPENDABLES_ANODE: SensorConfig(
                 device_class=SensorDeviceClass.DURATION,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=UnitOfTime.DAYS,
+                # Hommyn displays 500 as an unknown resource.
+                value_fn=lambda val: (
+                    val[0]
+                    if isinstance(val, list) and len(val) > 0 and val[0] != 500
+                    else None
+                ),
             ),
         },
         program_data_fields={
             PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0),
             PD_LAST_PROGRAM: ProgramDataField(mode=1, min_value=1, max_value=1),
-            PD_EXPENDABLES_ANODE: ProgramDataField(mode=2, min_value=0, max_value=2),
         },
     ),
     BoilerProfile(
@@ -324,6 +355,7 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -331,12 +363,12 @@ PROFILES = [
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
+            FEATURE_KEEP_WARM,
             PD_DISPLAY_HALF_POWER,
         ],
         program_data_fields={
             PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0),
             PD_LAST_PROGRAM: ProgramDataField(mode=1, min_value=1, max_value=1),
-            PD_EXPENDABLES_ANODE: ProgramDataField(mode=2, min_value=0, max_value=2),
         },
     ),
     BoilerProfile(
@@ -351,6 +383,7 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -358,19 +391,25 @@ PROFILES = [
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
+            FEATURE_KEEP_WARM,
             PD_DISPLAY_HALF_POWER,
         ],
         sensors={
-            PD_EXPENDABLES_ANODE: SensorConfig(
+            FEATURE_EXPENDABLES_ANODE: SensorConfig(
                 device_class=SensorDeviceClass.DURATION,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=UnitOfTime.DAYS,
+                # Hommyn displays 500 as an unknown resource.
+                value_fn=lambda val: (
+                    val[0]
+                    if isinstance(val, list) and len(val) > 0 and val[0] != 500
+                    else None
+                ),
             ),
         },
         program_data_fields={
             PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0),
             PD_LAST_PROGRAM: ProgramDataField(mode=1, min_value=1, max_value=1),
-            PD_EXPENDABLES_ANODE: ProgramDataField(mode=2, min_value=0, max_value=2),
         },
     ),
     BoilerProfile(
@@ -391,10 +430,13 @@ PROFILES = [
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
         ],
+        switches=[
+            FEATURE_BSS,
+        ],
     ),
     BoilerProfile(
         vendor=VENDOR_RUSCLIMATE,
-        device_type=2,
+        device_type=93,
         min_temp=30,
         max_temp=75,
         operation_modes_map={
@@ -404,10 +446,18 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
         ],
+        sensors={
+            FEATURE_TANK: SensorConfig(
+                device_class=SensorDeviceClass.VOLUME_STORAGE,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfVolume.LITERS,
+            ),
+        },
         switches=[
             FEATURE_SMART_MODE,
             FEATURE_BSS,
@@ -429,6 +479,7 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,
@@ -454,6 +505,7 @@ PROFILES = [
             STATE_PERFORMANCE: 3,
         },
         default_operation_mode=STATE_ECO,
+        turn_on_program_data_field=PD_LAST_PROGRAM,
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
             FEATURE_ERROR,

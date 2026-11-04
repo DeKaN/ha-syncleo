@@ -37,6 +37,7 @@ class NumberBounds:
     min_value: int = 0
     max_value: int = 1
     step: int = 1
+    unit_of_measurement: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -79,6 +80,13 @@ class SelectConfig:
 
 
 @dataclass(kw_only=True)
+class PresetConfig:
+    mode: int
+    required_program_data_field: str | None = None
+    max_temp_offset_field: str | None = None
+
+
+@dataclass(kw_only=True)
 class SensorConfig:
     required_program_data_field: str | None = None
     device_class: SensorDeviceClass | None = None
@@ -91,6 +99,7 @@ class SensorConfig:
 @dataclass(kw_only=True)
 class SwitchConfig:
     required_program_data_field: str | None = None
+    inverted: bool = False
 
 
 DEFAULT_SENSOR_CONFIGS = {
@@ -281,8 +290,7 @@ class ClimateProfile(
 
     cmd_current_humidity: UdpCommandType | None = None
 
-    preset_modes_map: dict[str, int] = field(default_factory=dict)
-    preset_mode_requirements: dict[str, str] = field(default_factory=dict)
+    presets: dict[str, PresetConfig] = field(default_factory=dict)
     target_temperature_requirement: str | None = None
 
     cmd_fan_mode: UdpCommandType | None = None
@@ -347,6 +355,7 @@ class WaterHeaterProfile(
 
     operation_modes_map: dict[str, int]
     default_operation_mode: str
+    turn_on_program_data_field: str | None = None
 
     @property
     def supported_platforms(self) -> list[Platform]:

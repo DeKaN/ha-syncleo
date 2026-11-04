@@ -153,6 +153,9 @@
       },
       "vacation_temperature": {
         "name": "Vacation temperature"
+      },
+      "timer": {
+        "name": "Timer"
       }
     },
     "sensor": {
@@ -233,6 +236,7 @@
       "night": {
         "name": "Night mode settings",
         "state": {
+          "night_mode_adult": "Adult",
           "night_mode_off": "Off",
           "night_mode_standard": "Standard",
           "night_mode_child": "Child",
@@ -288,6 +292,9 @@
       "auto_off_backlight": {
         "name": "Auto-off backlight"
       },
+      "auto_off_display": {
+        "name": "Auto off display"
+      },
       "backlight": {
         "name": "Backlight"
       },
@@ -329,6 +336,9 @@
       },
       "night": {
         "name": "Night Mode"
+      },
+      "noiseless": {
+        "name": "Noiseless"
       },
       "selfclean": {
         "name": "Self clean"

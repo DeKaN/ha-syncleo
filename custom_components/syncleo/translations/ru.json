@@ -153,6 +153,9 @@
       },
       "vacation_temperature": {
         "name": "Температура режима Отпуск"
+      },
+      "timer": {
+        "name": "Таймер"
       }
     },
     "select": {
@@ -195,6 +198,7 @@
       "night": {
         "name": "Настройки ночного режима",
         "state": {
+          "night_mode_adult": "Для взрослых",
           "night_mode_off": "Выключен",
           "night_mode_standard": "Стандартный",
           "night_mode_child": "Детский",
@@ -288,11 +292,14 @@
       "auto_off_backlight": {
         "name": "Автоотключение подсветки"
       },
+      "auto_off_display": {
+        "name": "Автоотключение дисплея"
+      },
       "backlight": {
         "name": "Подсветка"
       },
       "breeze_away": {
-        "name": "Деликативный обдув"
+        "name": "Деликатный обдув"
       },
       "breezer_damper": {
         "name": "Рециркуляция"
@@ -307,7 +314,7 @@
         "name": "Обнаружение открытого окна"
       },
       "display_half_power": {
-        "name": "50% подсветка"
+        "name": "Подсветка 50%"
       },
       "energy_saving": {
         "name": "Экономичный режим"
@@ -329,6 +336,9 @@
       },
       "night": {
         "name": "Ночной режим"
+      },
+      "noiseless": {
+        "name": "Бесшумный режим"
       },
       "selfclean": {
         "name": "Самоочистка"

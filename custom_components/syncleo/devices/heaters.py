@@ -5,26 +5,28 @@ from homeassistant.components.climate.const import (
     HVACMode,
 )
 from homeassistant.components.sensor import SensorStateClass
+from homeassistant.const import UnitOfTime
 
 from ..const import (
     FEATURE_ACCESS_CONTROL,
     FEATURE_AURUS_PF_AUTO_OFF_DISPLAY,
     FEATURE_AURUS_PF_HALF_POWER,
     FEATURE_AURUS_SCREENSAVER_MODE,
-    FEATURE_BACKLIGHT,
     FEATURE_CHILD_LOCK,
     FEATURE_DAMPER,
     FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
     FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
+    FEATURE_DISPLAY_HALF_POWER,
     FEATURE_ERROR,
     FEATURE_POWER_LEVEL,
+    FEATURE_TIMER,
     FEATURE_VOLUME,
     PD_ANTI_FROST_TEMP,
     PD_AUTO_OFF_DISPLAY,
     PD_CURRENT_PRESET,
     PD_DAMPER,
-    PD_DISPLAY_HALF_POWER,
     PD_ECO_DELTA,
+    PD_HALF_POWER,
     PD_MIN_VOLTAGE,
     PD_POWER,
     PD_TIME_END,
@@ -43,9 +45,11 @@ from ..const import (
 from .profiles import (
     HeaterProfile,
     NumberConfig,
+    PresetConfig,
     ProgramDataField,
     SelectConfig,
     SensorConfig,
+    SwitchConfig,
 )
 
 PROFILES = [
@@ -56,11 +60,11 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
@@ -71,16 +75,29 @@ PROFILES = [
             ),
         },
         binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
-        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
+        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP, FEATURE_TIMER],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=5),
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+        },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
+            PD_AUTO_OFF_DISPLAY,
         ],
+        switch_configs={
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
+        },
     ),
     HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
@@ -89,32 +106,45 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
             ),
         },
         binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
-        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
+        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP, FEATURE_TIMER],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=5),
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+        },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
+            PD_AUTO_OFF_DISPLAY,
         ],
+        switch_configs={
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
+        },
     ),
     HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
@@ -123,11 +153,11 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
@@ -137,14 +167,23 @@ PROFILES = [
         },
         binary_sensors=[
             FEATURE_ACCESS_CONTROL,
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_ERROR,
             FEATURE_VOLUME,
         ],
-        numbers=[FEATURE_POWER_LEVEL, PD_CURRENT_PRESET],
+        numbers=[FEATURE_POWER_LEVEL, PD_CURRENT_PRESET, FEATURE_TIMER],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=5),
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
             PD_CURRENT_PRESET: NumberConfig(min_value=1, max_value=6),
+        },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
             FEATURE_CHILD_LOCK,
@@ -158,11 +197,11 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
@@ -172,12 +211,21 @@ PROFILES = [
             FEATURE_ERROR,
             FEATURE_VOLUME,
         ],
-        numbers=[FEATURE_POWER_LEVEL],
+        numbers=[FEATURE_POWER_LEVEL, FEATURE_TIMER],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=5),
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+        },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
         ],
     ),
@@ -188,16 +236,17 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        turn_on_program_data_field=PD_TURN_ON,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -205,16 +254,29 @@ PROFILES = [
             PD_TURN_ON: ProgramDataField(mode=4, offset=0),
         },
         binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
-        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
+        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP, FEATURE_TIMER],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=5),
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+        },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
+            PD_AUTO_OFF_DISPLAY,
         ],
+        switch_configs={
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
+        },
     ),
     HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
@@ -223,16 +285,17 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        turn_on_program_data_field=PD_TURN_ON,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -244,131 +307,15 @@ PROFILES = [
             FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
         ],
         binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
-        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
+        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP, FEATURE_TIMER],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=10),
-        },
-        selects={
-            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
-                options_map={},
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
             ),
-        },
-        switches=[
-            FEATURE_BACKLIGHT,
-            FEATURE_CHILD_LOCK,
-            FEATURE_DAMPER,
-            FEATURE_VOLUME,
-        ],
-    ),
-    HeaterProfile(
-        vendor=VENDOR_RUSCLIMATE,
-        device_type=31,
-        min_temp=10,
-        max_temp=35,
-        hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
-        default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
-        },
-        program_data_fields={
-            PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
-            PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
-            PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
-            PD_ANTI_FROST_TEMP: ProgramDataField(
-                mode=3, offset=0, min_value=3, max_value=7
-            ),
-            PD_TURN_ON: ProgramDataField(mode=4, offset=0),
-        },
-        data_source_features=[
-            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
-            FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
-        ],
-        binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
-        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
-        number_configs={
-            FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=10),
-        },
-        selects={
-            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
-                options_map={},
-            ),
-        },
-        switches=[
-            FEATURE_BACKLIGHT,
-            FEATURE_CHILD_LOCK,
-            FEATURE_DAMPER,
-            FEATURE_VOLUME,
-        ],
-    ),
-    HeaterProfile(
-        vendor=VENDOR_RUSCLIMATE,
-        device_type=42,
-        min_temp=10,
-        max_temp=35,
-        hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
-        default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
-        },
-        program_data_fields={
-            PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
-            PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
-            PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
-            PD_ANTI_FROST_TEMP: ProgramDataField(
-                mode=3, offset=0, min_value=3, max_value=7
-            ),
-        },
-        binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
-        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
-        number_configs={
-            FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=5),
-        },
-        switches=[
-            FEATURE_BACKLIGHT,
-            FEATURE_CHILD_LOCK,
-            FEATURE_DAMPER,
-            FEATURE_VOLUME,
-        ],
-    ),
-    HeaterProfile(
-        vendor=VENDOR_RUSCLIMATE,
-        device_type=46,
-        min_temp=10,
-        max_temp=35,
-        hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
-        default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
-        },
-        program_data_fields={
-            PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
-            PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
-            PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
-            PD_ANTI_FROST_TEMP: ProgramDataField(
-                mode=3, offset=0, min_value=3, max_value=7
-            ),
-            PD_TURN_ON: ProgramDataField(mode=4, offset=0),
-        },
-        data_source_features=[
-            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
-            FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
-        ],
-        binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
-        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
-        number_configs={
-            FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=10),
         },
         selects={
             FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
@@ -379,64 +326,34 @@ PROFILES = [
             PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
         },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
+            PD_AUTO_OFF_DISPLAY,
         ],
+        switch_configs={
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
+        },
     ),
     HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
-        device_type=47,
-        min_temp=5,
+        device_type=31,
+        min_temp=10,
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
-        },
-        program_data_fields={
-            PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
-            PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
-            PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
-            PD_ANTI_FROST_TEMP: ProgramDataField(
-                mode=3, offset=0, min_value=3, max_value=7
-            ),
-            PD_TURN_ON: ProgramDataField(mode=4, offset=0),
-        },
-        binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
-        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
-        number_configs={
-            FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=5),
-        },
-        switches=[
-            FEATURE_BACKLIGHT,
-            FEATURE_CHILD_LOCK,
-            FEATURE_DAMPER,
-            FEATURE_VOLUME,
-        ],
-    ),
-    HeaterProfile(
-        vendor=VENDOR_RUSCLIMATE,
-        device_type=49,
-        min_temp=5,
-        max_temp=35,
-        hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
-        default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        turn_on_program_data_field=PD_TURN_ON,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -448,21 +365,246 @@ PROFILES = [
             FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
         ],
         binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
-        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
+        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP, FEATURE_TIMER],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=10),
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
         },
         selects={
             FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
                 options_map={},
             ),
         },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
+        },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
+            PD_AUTO_OFF_DISPLAY,
         ],
+        switch_configs={
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
+        },
+    ),
+    HeaterProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=42,
+        min_temp=10,
+        max_temp=35,
+        hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
+        default_hvac_mode=HVACMode.HEAT,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
+        },
+        program_data_fields={
+            PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
+            PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
+            PD_ANTI_FROST_TEMP: ProgramDataField(
+                mode=3, offset=0, min_value=3, max_value=7
+            ),
+        },
+        binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
+        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP, FEATURE_TIMER],
+        number_configs={
+            FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=5),
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+        },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
+        },
+        switches=[
+            FEATURE_DISPLAY_HALF_POWER,
+            FEATURE_CHILD_LOCK,
+            FEATURE_DAMPER,
+            FEATURE_VOLUME,
+            PD_AUTO_OFF_DISPLAY,
+        ],
+        switch_configs={
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
+        },
+    ),
+    HeaterProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=46,
+        min_temp=10,
+        max_temp=35,
+        hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
+        default_hvac_mode=HVACMode.HEAT,
+        turn_on_program_data_field=PD_TURN_ON,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
+        },
+        program_data_fields={
+            PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
+            PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
+            PD_ANTI_FROST_TEMP: ProgramDataField(
+                mode=3, offset=0, min_value=3, max_value=7
+            ),
+            PD_TURN_ON: ProgramDataField(mode=4, offset=0),
+        },
+        data_source_features=[
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
+            FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
+        ],
+        binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
+        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP, FEATURE_TIMER],
+        number_configs={
+            FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=10),
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+        },
+        selects={
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
+                options_map={},
+            ),
+        },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
+        },
+        switches=[
+            FEATURE_DISPLAY_HALF_POWER,
+            FEATURE_CHILD_LOCK,
+            FEATURE_DAMPER,
+            FEATURE_VOLUME,
+            PD_AUTO_OFF_DISPLAY,
+        ],
+        switch_configs={
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
+        },
+    ),
+    HeaterProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=47,
+        min_temp=10,
+        max_temp=35,
+        hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
+        default_hvac_mode=HVACMode.HEAT,
+        turn_on_program_data_field=PD_TURN_ON,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
+        },
+        program_data_fields={
+            PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=5),
+            PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
+            PD_ANTI_FROST_TEMP: ProgramDataField(
+                mode=3, offset=0, min_value=3, max_value=7
+            ),
+            PD_TURN_ON: ProgramDataField(mode=4, offset=0),
+        },
+        binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
+        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP, FEATURE_TIMER],
+        number_configs={
+            FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=5),
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+        },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
+        },
+        switches=[
+            FEATURE_DISPLAY_HALF_POWER,
+            FEATURE_CHILD_LOCK,
+            FEATURE_DAMPER,
+            FEATURE_VOLUME,
+            PD_AUTO_OFF_DISPLAY,
+        ],
+        switch_configs={
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
+        },
+    ),
+    HeaterProfile(
+        vendor=VENDOR_RUSCLIMATE,
+        device_type=49,
+        min_temp=10,
+        max_temp=35,
+        hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
+        default_hvac_mode=HVACMode.HEAT,
+        turn_on_program_data_field=PD_TURN_ON,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2, max_temp_offset_field=PD_ECO_DELTA),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
+        },
+        program_data_fields={
+            PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
+            PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
+            PD_ANTI_FROST_TEMP: ProgramDataField(
+                mode=3, offset=0, min_value=3, max_value=7
+            ),
+            PD_TURN_ON: ProgramDataField(mode=4, offset=0),
+        },
+        data_source_features=[
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
+            FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
+        ],
+        binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
+        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP, FEATURE_TIMER],
+        number_configs={
+            FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=10),
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
+        },
+        selects={
+            FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
+                options_map={},
+            ),
+        },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
+        },
+        switches=[
+            FEATURE_DISPLAY_HALF_POWER,
+            FEATURE_CHILD_LOCK,
+            FEATURE_DAMPER,
+            FEATURE_VOLUME,
+            PD_AUTO_OFF_DISPLAY,
+        ],
+        switch_configs={
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
+        },
     ),
     HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
@@ -471,16 +613,17 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
+        turn_on_program_data_field=PD_TURN_ON,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
             PD_AUTO_OFF_DISPLAY: ProgramDataField(mode=0, offset=1),
-            PD_DISPLAY_HALF_POWER: ProgramDataField(mode=0, offset=2),
+            PD_HALF_POWER: ProgramDataField(mode=0, offset=2),
             PD_ECO_DELTA: ProgramDataField(mode=2, offset=0, min_value=3, max_value=7),
             PD_ANTI_FROST_TEMP: ProgramDataField(
                 mode=3, offset=0, min_value=3, max_value=7
@@ -492,21 +635,34 @@ PROFILES = [
             FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
         ],
         binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
-        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP],
+        numbers=[FEATURE_POWER_LEVEL, PD_ECO_DELTA, PD_ANTI_FROST_TEMP, FEATURE_TIMER],
         number_configs={
             FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=10),
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
         },
         selects={
             FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE: SelectConfig(
                 options_map={},
             ),
         },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
+        },
         switches=[
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,
+            PD_AUTO_OFF_DISPLAY,
         ],
+        switch_configs={
+            FEATURE_DISPLAY_HALF_POWER: SwitchConfig(inverted=True),
+        },
     ),
     HeaterProfile(
         vendor=VENDOR_RUSCLIMATE,
@@ -515,13 +671,14 @@ PROFILES = [
         max_temp=35,
         hvac_modes_map={HVACMode.OFF: 0, HVACMode.HEAT: 1},
         default_hvac_mode=HVACMode.HEAT,
-        preset_modes_map={
-            PRESET_NONE: 0,
-            PRESET_COMFORT: 1,
-            PRESET_ECO: 2,
-            PRESET_ANTI_FROST: 3,
-            PRESET_MANUAL: 4,
-            PRESET_VACATION: 5,
+        turn_on_program_data_field=PD_TURN_ON,
+        presets={
+            PRESET_NONE: PresetConfig(mode=0),
+            PRESET_COMFORT: PresetConfig(mode=1),
+            PRESET_ECO: PresetConfig(mode=2),
+            PRESET_ANTI_FROST: PresetConfig(mode=3),
+            PRESET_MANUAL: PresetConfig(mode=4),
+            PRESET_VACATION: PresetConfig(mode=5),
         },
         program_data_fields={
             PD_POWER: ProgramDataField(mode=0, offset=0, min_value=0, max_value=10),
@@ -548,16 +705,27 @@ PROFILES = [
             FEATURE_DATA_SOURCE_CURRENT_TEMPERATURE,
             FEATURE_DATA_SOURCE_TARGET_TEMPERATURE,
         ],
-        binary_sensors=[FEATURE_ACCESS_CONTROL, FEATURE_ERROR],
+        binary_sensors=[
+            FEATURE_ACCESS_CONTROL,
+            FEATURE_ERROR,
+            PD_DAMPER,
+        ],
         numbers=[
             FEATURE_POWER_LEVEL,
             PD_ECO_DELTA,
             PD_ANTI_FROST_TEMP,
             PD_MIN_VOLTAGE,
             PD_VACATION_TEMPERATURE,
+            FEATURE_TIMER,
         ],
         number_configs={
-            FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=10),
+            FEATURE_POWER_LEVEL: NumberConfig(min_value=0, max_value=5),
+            FEATURE_TIMER: NumberConfig(
+                min_value=0,
+                max_value=86340,
+                step=60,
+                unit_of_measurement=UnitOfTime.SECONDS,
+            ),
         },
         selects={
             FEATURE_AURUS_SCREENSAVER_MODE: SelectConfig(
@@ -572,10 +740,13 @@ PROFILES = [
                 options_map={},
             ),
         },
+        sensors={
+            PD_POWER: SensorConfig(state_class=SensorStateClass.MEASUREMENT),
+        },
         switches=[
             FEATURE_AURUS_PF_AUTO_OFF_DISPLAY,
             FEATURE_AURUS_PF_HALF_POWER,
-            FEATURE_BACKLIGHT,
+            FEATURE_DISPLAY_HALF_POWER,
             FEATURE_CHILD_LOCK,
             FEATURE_DAMPER,
             FEATURE_VOLUME,

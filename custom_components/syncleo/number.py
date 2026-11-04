@@ -48,6 +48,7 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
             self._attr_native_min_value = int(config.min_value)
             self._attr_native_max_value = int(config.max_value)
             self._attr_native_step = int(config.step)
+            self._attr_native_unit_of_measurement = config.unit_of_measurement
         else:
             _LOGGER.warning(
                 "No number_config found for %s, using defaults", feature_key
