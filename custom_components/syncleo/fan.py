@@ -11,7 +11,7 @@ from homeassistant.util.percentage import (
 from pysyncleo.commands import CmdMode, CmdSpeed, UdpCommandType
 
 from .const import TRANLATION_KEY_FAN
-from .devices import VentilationProfile
+from .devices import AirCleanerProfile, VentilationProfile
 from .entity import SyncleoBaseEntity
 from .models import SyncleoConfigEntry
 from .utils import get_device_profile_by_device
@@ -25,7 +25,7 @@ async def async_setup_entry(
     conn = entry.runtime_data
     profile = get_device_profile_by_device(conn.device)
 
-    if isinstance(profile, VentilationProfile):
+    if isinstance(profile, (AirCleanerProfile, VentilationProfile)):
         async_add_entities([SyncleoFan(conn, profile, entry)])
 
 
@@ -36,7 +36,7 @@ class SyncleoFan(SyncleoBaseEntity, FanEntity):
     def __init__(
         self,
         connection,
-        profile: VentilationProfile,
+        profile: AirCleanerProfile | VentilationProfile,
         entry: SyncleoConfigEntry,
     ):
         super().__init__(connection, profile, entry)
@@ -51,8 +51,13 @@ class SyncleoFan(SyncleoBaseEntity, FanEntity):
 
         self._is_on = False
         self._current_preset_mode: str | None = None
-        self._raw_speed = 0
-        self._speed_range = (1, profile.speed_count)
+        self._raw_speed: int | None = (
+            None if profile.speed_preset_mode is not None else 0
+        )
+        self._speed_range = (
+            profile.min_speed,
+            profile.min_speed + profile.speed_count - 1,
+        )
 
     @property
     def is_on(self) -> bool | None:
@@ -60,12 +65,29 @@ class SyncleoFan(SyncleoBaseEntity, FanEntity):
 
     @property
     def preset_mode(self) -> str | None:
+        if self._current_preset_mode == self._profile.speed_preset_mode:
+            return None
         return self._current_preset_mode
 
     @property
     def percentage(self) -> int | None:
-        if not self._is_on or self._raw_speed == 0:
+        if not self._is_on:
             return 0
+
+        if (
+            self._profile.speed_preset_mode is not None
+            and self._current_preset_mode != self._profile.speed_preset_mode
+        ):
+            return None
+        if self._raw_speed is None:
+            return None
+        if self._raw_speed == 0 and self._profile.speed_preset_mode is None:
+            return 0
+        if (
+            self._profile.speed_preset_mode is not None
+            and not self._speed_range[0] <= self._raw_speed <= self._speed_range[1]
+        ):
+            return None
 
         return ranged_value_to_percentage(self._speed_range, self._raw_speed)
 
@@ -114,7 +136,14 @@ class SyncleoFan(SyncleoBaseEntity, FanEntity):
         elif percentage is not None:
             await self.async_set_percentage(percentage)
         else:
-            await self.async_set_preset_mode(self._profile.default_preset_mode)
+            field_key = self._profile.turn_on_preset_field
+            last_program = self.get_known_program_data(field_key) if field_key else None
+            if last_program is not None:
+                await self.async_send_command(
+                    CmdMode(int.from_bytes(last_program, byteorder="little"))
+                )
+            else:
+                await self.async_set_preset_mode(self._profile.default_preset_mode)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         await self.async_send_command(CmdMode(0))
@@ -123,6 +152,9 @@ class SyncleoFan(SyncleoBaseEntity, FanEntity):
         raw_val = self._profile.preset_modes_map.get(preset_mode)
         if raw_val is not None:
             await self.async_send_command(CmdMode(raw_val))
+            speed = self._profile.preset_speeds.get(preset_mode)
+            if speed is not None:
+                await self.async_send_command(CmdSpeed(speed))
 
     async def async_set_percentage(self, percentage: int) -> None:
         if percentage == 0:
@@ -130,4 +162,9 @@ class SyncleoFan(SyncleoBaseEntity, FanEntity):
             return
 
         raw_speed = math.ceil(percentage_to_ranged_value(self._speed_range, percentage))
+        preset = self._profile.speed_preset_mode
+        if preset is not None and self._current_preset_mode != preset:
+            await self.async_send_command(
+                CmdMode(self._profile.preset_modes_map[preset])
+            )
         await self.async_send_command(CmdSpeed(raw_speed))

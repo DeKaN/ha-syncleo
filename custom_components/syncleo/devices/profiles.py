@@ -23,6 +23,7 @@ from ..const import (
     FEATURE_MQTT_LATENCY,
     FEATURE_RSSI,
     PROFILE_TYPE_AC,
+    PROFILE_TYPE_AIR_CLEANER,
     PROFILE_TYPE_BOILER,
     PROFILE_TYPE_BREEZER,
     PROFILE_TYPE_HEATER,
@@ -247,6 +248,38 @@ class DeviceBaseProfile(PlatformProviderBase):
 
 
 @dataclass(kw_only=True)
+class AirCleanerProfile(
+    DeviceBaseProfile,
+    ButtonMixin,
+    BinarySensorMixin,
+    NumberMixin,
+    SelectMixin,
+    SensorMixin,
+    SwitchMixin,
+):
+    """Profile for air cleaners exposed as fan entities."""
+
+    profile_type: str = PROFILE_TYPE_AIR_CLEANER
+    supported_features: FanEntityFeature = (
+        FanEntityFeature.SET_SPEED
+        | FanEntityFeature.PRESET_MODE
+        | FanEntityFeature.TURN_OFF
+        | FanEntityFeature.TURN_ON
+    )
+    speed_count: int
+    min_speed: int = 1
+    speed_preset_mode: str | None = None
+    preset_speeds: dict[str, int] = field(default_factory=dict)
+    preset_modes_map: dict[str, int] = field(default_factory=dict)
+    default_preset_mode: str
+    turn_on_preset_field: str | None = None
+
+    @property
+    def supported_platforms(self) -> list[Platform]:
+        return super().supported_platforms + [Platform.FAN]
+
+
+@dataclass(kw_only=True)
 class VentilationProfile(
     DeviceBaseProfile,
     BinarySensorMixin,
@@ -259,8 +292,12 @@ class VentilationProfile(
 
     supported_features: FanEntityFeature
     speed_count: int
+    min_speed: int = 1
+    speed_preset_mode: str | None = None
+    preset_speeds: dict[str, int] = field(default_factory=dict)
     preset_modes_map: dict[str, int] = field(default_factory=dict)
     default_preset_mode: str
+    turn_on_preset_field: str | None = None
 
     @property
     def supported_platforms(self) -> list[Platform]:
