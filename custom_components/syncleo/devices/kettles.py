@@ -1,3 +1,5 @@
+from typing import Any
+
 from homeassistant.components.water_heater import STATE_OFF
 
 from ..const import (
@@ -52,7 +54,7 @@ def _create_polaris_kettle(
     if has_tea_time:
         modes[KETTLE_MODE_TEA_TIME] = 6
 
-    params = {
+    params: dict[str, Any] = {
         "vendor": VENDOR_POLARIS,
         "device_type": device_type,
         "default_operation_mode": KETTLE_MODE_BOILING,

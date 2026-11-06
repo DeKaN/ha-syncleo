@@ -868,11 +868,11 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pysyncleo", specifier = "==0.3.7" }]
+requires-dist = [{ name = "pysyncleo", specifier = "==0.4.1" }]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "homeassistant-stubs", specifier = ">=2026.5.0" },
+    { name = "homeassistant-stubs", specifier = ">=2026.10.0" },
     { name = "mypy", specifier = "==1.20.2" },
     { name = "pre-commit", specifier = ">=4.6.2" },
     { name = "ruff", specifier = ">=0.16.4" },
@@ -1018,14 +1018,14 @@ wheels = [
 
 [[package]]
 name = "homeassistant-stubs"
-version = "2026.8.2"
+version = "2026.10.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "homeassistant" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e2/b2/aa18dedc50cddf08c53c4779990ddc8968b2dd680d0d5fb230cd79a2c8f8/homeassistant_stubs-2026.8.2.tar.gz", hash = "sha256:3b267b1f50c994ce232010a4dd82d5f049a52895af4da07db52a707253ae7c70", size = 1436112, upload-time = "2026-08-15T01:53:24.893Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ca/9c/c77fc543d32be781d79f961a8397c96301510060aa390fa5957c0f3ede3d/homeassistant_stubs-2026.10.0.tar.gz", hash = "sha256:a0451e9c6bb213fe00d79f85fdf3e7a1d8e81073dc285fa85b57fd2a2e71bd7c", size = 3939, upload-time = "2026-10-03T12:24:17.808Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3f/b3/67552732538186f9f258bfdbb545c45ef0d96e6581102b218145505b0ae1/homeassistant_stubs-2026.8.2-py3-none-any.whl", hash = "sha256:ff10c6da8079329c80107dad77e62afe30a340c64615d170a0d86b1b76e59e6b", size = 4081282, upload-time = "2026-08-15T01:53:22.855Z" },
+    { url = "https://files.pythonhosted.org/packages/46/c9/8683c0b234c7b05e36c81652d6774949b8a61edbc6090b5d27b75438f334/homeassistant_stubs-2026.10.0-py3-none-any.whl", hash = "sha256:bb284111bbbdd21fba6b20689378ced6943ebe300fa44d315c8e9efa2cc9f1b4", size = 2624, upload-time = "2026-10-03T12:24:16.551Z" },
 ]
 
 [[package]]
@@ -1751,14 +1751,14 @@ sdist = { url = "https://files.pythonhosted.org/packages/08/64/a99f27d3b4347486c
 
 [[package]]
 name = "pysyncleo"
-version = "0.3.7"
+version = "0.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cryptography" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/fb/ad/a8eebfdfb005500cd2b334c1ad7293569e25af86333d7bb33be6a3c22570/pysyncleo-0.3.7.tar.gz", hash = "sha256:8a89c35e474a703b75753d86620fc85048d89f9a7e449dca14321fb9e33742f5", size = 42782, upload-time = "2026-08-24T21:58:54.782Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1d/3b/9e777f48afc8ddf24f70a1b8c245b13f8438fdce6b9934366a30870e9edf/pysyncleo-0.4.1.tar.gz", hash = "sha256:43fea53e10e1a6fa0fb87e9be312adf967e701d178c0929e27152703f7ade44d", size = 43249, upload-time = "2026-11-04T23:15:04.179Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/32/97/2a0d803544b14eed7a28b1c6852cbb15e651cf6bfc4b3e96113f3d3f019b/pysyncleo-0.3.7-py3-none-any.whl", hash = "sha256:cc1091dcfdb5bbe108c319887545e99d950dab3971c0f7e5789db52893091173", size = 16270, upload-time = "2026-08-24T21:58:53.761Z" },
+    { url = "https://files.pythonhosted.org/packages/2d/3a/bfb5e079b65550caffe16ca76d8291569035984abe038e4f57c9b29e21a3/pysyncleo-0.4.1-py3-none-any.whl", hash = "sha256:48f4c2de1772d625b90d89c71d987a75f32762f5305b5763740b8f0666bc7512", size = 16767, upload-time = "2026-11-04T23:15:02.991Z" },
 ]
 
 [[package]]

@@ -5,9 +5,9 @@ from typing import Any
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
     ATTR_RGB_COLOR,
-    ColorMode,
     LightEntity,
 )
+from homeassistant.components.light.const import ColorMode
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util.color import brightness_to_value, value_to_brightness
@@ -93,7 +93,7 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
         return (r, g, b)
 
     async def async_turn_on(self, **kwargs: Any) -> None:
-        updates = {}
+        updates: dict[str, bytes] = {}
 
         if ATTR_RGB_COLOR in kwargs:
             r, g, b = kwargs[ATTR_RGB_COLOR]

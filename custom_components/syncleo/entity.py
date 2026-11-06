@@ -152,15 +152,13 @@ FEATURE_TO_COMMAND_MAP = {
 }
 
 
-class SyncleoBaseEntity(Entity):
+class SyncleoBaseEntity[ProfileT: DeviceBaseProfile](Entity):
     """Base class for all Syncleo entities."""
 
     _attr_has_entity_name = True
     _device_connection_states: ClassVar[dict[str, ConnectionState]] = {}
 
-    def __init__(
-        self, connection, profile: DeviceBaseProfile, entry: SyncleoConfigEntry
-    ):
+    def __init__(self, connection, profile: ProfileT, entry: SyncleoConfigEntry):
         self._connection = connection
         self._profile = profile
         self._entry = entry

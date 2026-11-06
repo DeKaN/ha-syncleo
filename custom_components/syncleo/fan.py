@@ -29,7 +29,7 @@ async def async_setup_entry(
         async_add_entities([SyncleoFan(conn, profile, entry)])
 
 
-class SyncleoFan(SyncleoBaseEntity, FanEntity):
+class SyncleoFan(SyncleoBaseEntity[VentilationProfile], FanEntity):
     _attr_name = None
     _attr_translation_key = TRANLATION_KEY_FAN
 

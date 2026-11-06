@@ -34,7 +34,7 @@ async def async_setup_entry(
         async_add_entities([SyncleoClimate(conn, profile, entry)])
 
 
-class SyncleoClimate(SyncleoBaseEntity, ClimateEntity):
+class SyncleoClimate(SyncleoBaseEntity[ClimateProfile], ClimateEntity):
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_name = None
     _attr_translation_key = TRANLATION_KEY_CLIMATE

@@ -29,7 +29,7 @@ async def async_setup_entry(
         async_add_entities([SyncleoWaterHeater(conn, profile, entry)])
 
 
-class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
+class SyncleoWaterHeater(SyncleoBaseEntity[WaterHeaterProfile], WaterHeaterEntity):
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_name = None
 
@@ -37,7 +37,6 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
         """Initialize the water heater entity."""
         super().__init__(connection, profile, entry)
 
-        self._profile = profile
         self._attr_unique_id = f"{self._device_unique_id}_{profile.profile_type}"
         self._attr_translation_key = f"{DOMAIN}_{profile.profile_type}"
         self._attr_min_temp = profile.min_temp

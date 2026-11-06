@@ -5,12 +5,11 @@ from homeassistant.components.climate.const import (
 )
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.const import (
-    CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
-    CONCENTRATION_PARTS_PER_MILLION,
     PERCENTAGE,
     STATE_OFF,
     EntityCategory,
-    # UnitOfDensity,  # Not available in the minimum supported HA 2026.5.0.
+    UnitOfDensity,
+    UnitOfRatio,
     UnitOfTime,
 )
 from pysyncleo.commands import CmdExpendables, CmdProgramData
@@ -160,14 +159,12 @@ PROFILES = [
             FEATURE_CURRENT_PM2: SensorConfig(
                 device_class=SensorDeviceClass.PM25,
                 state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
-                # TODO: migrate before HA 2027.8 removes the legacy constant.
-                # unit_of_measurement=UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
+                unit_of_measurement=UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
             ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 device_class=SensorDeviceClass.CO2,
                 state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+                unit_of_measurement=UnitOfRatio.PARTS_PER_MILLION,
             ),
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,
@@ -231,7 +228,7 @@ PROFILES = [
                 required_program_data_field=PD_CO2_INSTALLED,
                 device_class=SensorDeviceClass.CO2,
                 state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+                unit_of_measurement=UnitOfRatio.PARTS_PER_MILLION,
             ),
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,
@@ -315,14 +312,12 @@ PROFILES = [
             FEATURE_CURRENT_PM2: SensorConfig(
                 device_class=SensorDeviceClass.PM25,
                 state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
-                # TODO: migrate before HA 2027.8 removes the legacy constant.
-                # unit_of_measurement=UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
+                unit_of_measurement=UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
             ),
             FEATURE_CURRENT_CO2: SensorConfig(
                 device_class=SensorDeviceClass.CO2,
                 state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+                unit_of_measurement=UnitOfRatio.PARTS_PER_MILLION,
             ),
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,
@@ -398,7 +393,7 @@ PROFILES = [
                 required_program_data_field=PD_CO2_INSTALLED,
                 device_class=SensorDeviceClass.CO2,
                 state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+                unit_of_measurement=UnitOfRatio.PARTS_PER_MILLION,
             ),
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,
@@ -517,7 +512,7 @@ PROFILES = [
             FEATURE_CURRENT_CO2: SensorConfig(
                 device_class=SensorDeviceClass.CO2,
                 state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+                unit_of_measurement=UnitOfRatio.PARTS_PER_MILLION,
             ),
             FEATURE_REMAINING_TIME: SensorConfig(
                 device_class=SensorDeviceClass.DURATION,
@@ -645,7 +640,7 @@ PROFILES = [
             FEATURE_CURRENT_CO2: SensorConfig(
                 device_class=SensorDeviceClass.CO2,
                 state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+                unit_of_measurement=UnitOfRatio.PARTS_PER_MILLION,
             ),
             FEATURE_REMAINING_TIME: SensorConfig(
                 device_class=SensorDeviceClass.DURATION,
