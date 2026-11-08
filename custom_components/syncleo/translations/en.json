@@ -151,11 +151,11 @@
       "swing_vertical": {
         "name": "Vertical blinds position"
       },
-      "vacation_temperature": {
-        "name": "Vacation temperature"
-      },
       "timer": {
         "name": "Timer"
+      },
+      "vacation_temperature": {
+        "name": "Vacation temperature"
       }
     },
     "sensor": {
@@ -177,8 +177,11 @@
       "current_pm2": {
         "name": "PM2.5"
       },
+      "current_humidity": {
+        "name": "Current humidity"
+      },
       "current_temperature": {
-        "name": "Inlet temperature"
+        "name": "Current temperature"
       },
       "expendables_anode": {
         "name": "Anode resource, d"
@@ -197,6 +200,9 @@
       }
     },
     "select": {
+      "air_cleaner_display_brightness": {
+        "name": "Display brightness"
+      },
       "aurus_screensaver_mode": {
         "name": "Screensaver mode",
         "state": {
@@ -204,6 +210,16 @@
           "screensaver_1": "1 min",
           "screensaver_3": "3 min",
           "screensaver_5": "5 min"
+        }
+      },
+      "backlight_mode": {
+        "name": "Backlight mode",
+        "state": {
+          "off": "Display and all light off",
+          "all": "All light on, display off",
+          "upper": "Upper light on, display off",
+          "middle": "Middle light on, display off",
+          "lower": "Lower light on, display off"
         }
       },
       "breezer_melody": {
@@ -231,6 +247,15 @@
           "kettle_preset_oolong_tea": "Oolong tea",
           "kettle_preset_white_tea": "White tea",
           "kettle_preset_herbal_tea": "Herbal tea"
+        }
+      },
+      "light_time": {
+        "name": "Display auto off",
+        "state": {
+          "off": "Off",
+          "1": "1 min",
+          "3": "3 min",
+          "5": "5 min"
         }
       },
       "night": {
@@ -268,6 +293,9 @@
       }
     },
     "switch": {
+      "air_cleaner_child_lock": {
+        "name": "Child lock"
+      },
       "anti_meldew": {
         "name": "Anti – Mildew"
       },
