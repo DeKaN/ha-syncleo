@@ -44,6 +44,12 @@
       },
       "reset_prefilter": {
         "name": "Сброс ресурса префильтра"
+      },
+      "cooker_start": {
+        "name": "Старт программы"
+      },
+      "cooker_stop": {
+        "name": "Стоп"
       }
     },
     "binary_sensor": {
@@ -156,6 +162,12 @@
       },
       "timer": {
         "name": "Таймер"
+      },
+      "cooker_target_temperature": {
+        "name": "Целевая температура"
+      },
+      "cooker_delay_start": {
+        "name": "Отложенный старт"
       }
     },
     "select": {
@@ -227,6 +239,9 @@
         "state": {
           "datasource_preset_none": "Встроенный датчик"
         }
+      },
+      "cooker_program": {
+        "name": "Программа"
       }
     },
     "sensor": {
@@ -265,6 +280,9 @@
       },
       "power": {
         "name": "Текущая мощность"
+      },
+      "cooker_current_temperature": {
+        "name": "Температура в чаше"
       }
     },
     "switch": {

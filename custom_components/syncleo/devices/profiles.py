@@ -26,6 +26,7 @@ from ..const import (
     PROFILE_TYPE_BOILER,
     PROFILE_TYPE_BREEZER,
     PROFILE_TYPE_HEATER,
+    PROFILE_TYPE_COOKER,
     PROFILE_TYPE_KETTLE,
 )
 
@@ -410,6 +411,32 @@ class KettleProfile(WaterHeaterProfile):
         | WaterHeaterEntityFeature.OPERATION_MODE
         | WaterHeaterEntityFeature.ON_OFF
     )
+
+
+@dataclass(kw_only=True)
+class CookerProfile(
+    DeviceBaseProfile,
+    BinarySensorMixin,
+    ButtonMixin,
+    NumberMixin,
+    SelectMixin,
+    SensorMixin,
+    SwitchMixin,
+):
+    """Profile for multicookers (Syncleo cookers, e.g. Polaris PMC-0528WIFI).
+
+    The device pushes its whole state on connect (mode, target temperature/time,
+    keep warm, child lock, error, current temperature) and acknowledges writes,
+    so a cooker is modelled with plain switches/numbers/sensors.
+    """
+
+    profile_type: str = PROFILE_TYPE_COOKER
+
+    # name -> (program code, default temperature °C, default duration, seconds)
+    programs: dict[str, tuple[int, int, int]] = field(default_factory=dict)
+    # runtime state shared by the select and the start button
+    selected_program: str | None = None
+
 
 
 # ==========================================

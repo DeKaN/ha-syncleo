@@ -3,6 +3,8 @@
 | :--- | :--- | :--- |
 | Polaris | 2 | PWK1775CGLD |
 | Polaris | 98 | PWK1775CGLD |
+| Polaris | 48 | PMC-0528WIFI (multicooker) |
+| Polaris | 268 | PMC-0528WIFI (multicooker) |
 |&nbsp;|||
 | Rusclimate | 2 | Electrolux SI (SE/BE) EEC, Electrolux Smartinverter, Electrolux Smartinverter PRO, Electrolux Smartinverter PRO 2.0, Electrolux Smartinverter Enamel |
 | Rusclimate | 3 | Ballu ONEAIR ASP-200 |

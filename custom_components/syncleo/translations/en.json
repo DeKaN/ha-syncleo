@@ -44,6 +44,12 @@
       },
       "reset_prefilter": {
         "name": "Reset prefilter life"
+      },
+      "cooker_start": {
+        "name": "Start program"
+      },
+      "cooker_stop": {
+        "name": "Stop"
       }
     },
     "binary_sensor": {
@@ -156,6 +162,12 @@
       },
       "timer": {
         "name": "Timer"
+      },
+      "cooker_target_temperature": {
+        "name": "Target temperature"
+      },
+      "cooker_delay_start": {
+        "name": "Delay start"
       }
     },
     "sensor": {
@@ -194,6 +206,9 @@
       },
       "power": {
         "name": "Current power"
+      },
+      "cooker_current_temperature": {
+        "name": "Cooker temperature"
       }
     },
     "select": {
@@ -265,6 +280,9 @@
         "state": {
           "datasource_preset_none": "Internal Sensor"
         }
+      },
+      "cooker_program": {
+        "name": "Cooking program"
       }
     },
     "switch": {

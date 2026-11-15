@@ -17,6 +17,7 @@ from pysyncleo.commands import (
     CmdCurrentTemperature,
     CmdDamper,
     CmdDataSource,
+    CmdDelayStart,
     CmdError,
     CmdExpendables,
     CmdInitDiagnostic,
@@ -93,6 +94,9 @@ from .const import (
     FEATURE_ULTRAVIOLET,
     FEATURE_VOLUME,
     FEATURE_WARM_STREAM,
+    FEATURE_COOKER_CURRENT_TEMPERATURE,
+    FEATURE_COOKER_DELAY_START,
+    FEATURE_COOKER_TARGET_TEMPERATURE,
 )
 from .devices import DeviceBaseProfile
 from .models import SyncleoConfigEntry
@@ -147,6 +151,9 @@ FEATURE_TO_COMMAND_MAP = {
     FEATURE_GOLDSTAR_GSTI_CLEAN: CmdPlaceholder2,
     FEATURE_GOLDSTAR_GSTI_DAMPER: CmdDamper,
     FEATURE_KETTLE_TEMPERATURE_PRESET: CmdTargetTemperature,
+    FEATURE_COOKER_CURRENT_TEMPERATURE: CmdCurrentTemperature,
+    FEATURE_COOKER_TARGET_TEMPERATURE: CmdTargetTemperature,
+    FEATURE_COOKER_DELAY_START: CmdDelayStart,
     FEATURE_SHUFT_SFMS_07_09_FREEZE_PROTECTION: CmdPlaceholder1,
     FEATURE_SHUFT_SFMS_09_ANTI_MELDEW: CmdPlaceholder2,
 }
