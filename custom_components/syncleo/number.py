@@ -5,6 +5,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
+from .const import FEATURE_TIMER, PROFILE_TYPE_COOKER
 from .devices import NumberMixin
 from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
 from .utils import get_device_profile_by_device
@@ -32,6 +33,13 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
         super().__init__(conn, profile, entry)
         self._feature_key = feature_key
         self._is_program_data = feature_key in profile.program_data_fields
+        # Syncleo cookers report the cook timer in seconds while HA shows minutes
+        self._value_scale = (
+            60
+            if getattr(profile, "profile_type", None) == PROFILE_TYPE_COOKER
+            and feature_key == FEATURE_TIMER
+            else 1
+        )
         self._cmd_class = FEATURE_TO_COMMAND_MAP.get(feature_key)
 
         self._attr_unique_id = f"{self._device_unique_id}_{feature_key}"
@@ -91,7 +99,7 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
                 value,
             )
         elif self._cmd_class and cmd.command_type == self._cmd_class.command_type:
-            value = float(cmd.value)
+            value = float(cmd.value) / self._value_scale
             _LOGGER.debug(
                 "Handle command update for device %s, raw: %s, processed: %s",
                 self._attr_unique_id,
@@ -118,7 +126,9 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
 
             await self.async_set_program_data(self._feature_key, data)
         elif self._cmd_class:
-            await self.async_send_command(self._cmd_class(value))
+            await self.async_send_command(
+                self._cmd_class(value * self._value_scale)
+            )
         else:
             _LOGGER.error(
                 "No command class or program data field defined for feature: %s",
