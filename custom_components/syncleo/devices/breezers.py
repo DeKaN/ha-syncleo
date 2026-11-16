@@ -1,11 +1,12 @@
 from homeassistant.components.fan import FanEntityFeature
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.const import (
-    CONCENTRATION_PARTS_PER_MILLION,
+    UnitOfRatio,
     PERCENTAGE,
     STATE_OFF,
     UnitOfTemperature,
 )
+from homeassistant.components.climate.const import HVACMode, ClimateEntityFeature
 
 from ..const import (
     FEATURE_BACKLIGHT,
@@ -185,7 +186,7 @@ PROFILES = [
             FEATURE_CURRENT_CO2: SensorConfig(
                 device_class=SensorDeviceClass.CO2,
                 state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+                unit_of_measurement=UnitOfRatio.PARTS_PER_MILLION,
             ),
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,
@@ -284,6 +285,8 @@ PROFILES = [
             PRESET_VENTILATION: 5,
         },
         default_preset_mode=PRESET_AUTO,
+        hvac_modes=[HVACMode.OFF, HVACMode.FAN_ONLY],
+        hvac_mode=HVACMode.AUTO,
         program_data_fields={
             PD_HEATER_INSTALLED: ProgramDataField(mode=0),
             PD_CO2_INSTALLED: ProgramDataField(mode=0, offset=1),
@@ -321,7 +324,7 @@ PROFILES = [
             FEATURE_CURRENT_CO2: SensorConfig(
                 device_class=SensorDeviceClass.CO2,
                 state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
+                unit_of_measurement=UnitOfRatio.PARTS_PER_MILLION,
             ),
             FEATURE_EXPENDABLES_FILTER: SensorConfig(
                 state_class=SensorStateClass.MEASUREMENT,

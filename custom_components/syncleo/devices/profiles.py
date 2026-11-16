@@ -1,9 +1,13 @@
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
+from datetime import time
 from homeassistant.components.climate.const import HVACMode, ClimateEntityFeature
 from homeassistant.components.fan import FanEntityFeature
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.components.water_heater import WaterHeaterEntityFeature
+from homeassistant.components.humidifier import HumidifierDeviceClass, HumidifierEntityFeature
+from homeassistant.components.switch import SwitchEntity
+from homeassistant.components.time import TimeEntity
 from homeassistant.const import (
     SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
     EntityCategory,
@@ -15,10 +19,13 @@ from pysyncleo.models import DiagnosticStatus
 
 from ..const import (
     FEATURE_RSSI,
+    FEATURE_ERROR,
     PROFILE_TYPE_AC,
     PROFILE_TYPE_BOILER,
     PROFILE_TYPE_HEATER,
+    PROFILE_TYPE_HUMIDIFIER,
     PROFILE_TYPE_KETTLE,
+    PROFILE_TYPE_AIRCLEANER,
 )
 
 
@@ -52,7 +59,7 @@ class LightConfig:
     red_key: str
     green_key: str
     blue_key: str
-    brightness_key: Optional[str] = None
+    brightness_key: Optional[str] = None              # не нужнен
     brightness_levels: int = 255
 
 
@@ -72,11 +79,13 @@ class SensorConfig:
     unit_of_measurement: str | None = None
     entity_category: EntityCategory | None = None
     value_fn: Callable[[Any], Any] = lambda x: x
+    translation_key: str | None = None
 
 
 RSSI_SENSOR_CONFIG = SensorConfig(
     device_class=SensorDeviceClass.SIGNAL_STRENGTH,
-    unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+    unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT, # SIGNAL_STRENGTH_DECIBELS
+    state_class=SensorStateClass.MEASUREMENT,
     entity_category=EntityCategory.DIAGNOSTIC,
     value_fn=lambda status: (
         status.rssi - 256
@@ -84,8 +93,32 @@ RSSI_SENSOR_CONFIG = SensorConfig(
         else status.rssi
         if isinstance(status, DiagnosticStatus)
         else None
-    ),
+    )
 )
+ERROR_SENSOR_CONFIG = SensorConfig(
+        device_class=None,
+        unit_of_measurement=None,
+        state_class=None,
+        translation_key="error_text",
+)
+
+
+@dataclass(kw_only=True)
+class SwitchConfig:
+    translation_key: str | None = None
+
+
+@dataclass(kw_only=True)
+class BinarySensorConfig:
+    translation_key: str | None = None
+
+
+@dataclass(kw_only=True)
+class TimeConfig:
+    min_time: int | None = None
+    max_time: int | None = None
+    default_time: int | None = None
+    translation_key: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -98,12 +131,26 @@ class PlatformProviderBase:
 @dataclass(kw_only=True)
 class BinarySensorMixin(PlatformProviderBase):
     binary_sensors: list[str] = field(default_factory=list)
+    binary_sensor_configs: dict[str, BinarySensorConfig] = field(default_factory=dict)
 
     @property
     def supported_platforms(self) -> List[Platform]:
         platforms = super().supported_platforms
         return (
             platforms + [Platform.BINARY_SENSOR] if self.binary_sensors else platforms
+        )
+
+
+@dataclass(kw_only=True)
+class TimeMixin(PlatformProviderBase):
+    times: list[str] = field(default_factory=list)
+    time_configs: dict[str, TimeConfig] = field(default_factory=dict)
+
+    @property
+    def supported_platforms(self) -> List[Platform]:
+        platforms = super().supported_platforms
+        return (
+            platforms + [Platform.TIME] if self.times else platforms
         )
 
 
@@ -147,6 +194,8 @@ class SensorMixin(PlatformProviderBase):
             self.sensors = {}
         if FEATURE_RSSI not in self.sensors:
             self.sensors[FEATURE_RSSI] = RSSI_SENSOR_CONFIG
+        if FEATURE_ERROR not in self.sensors:
+            self.sensors[FEATURE_ERROR] = ERROR_SENSOR_CONFIG
 
     @property
     def supported_platforms(self) -> List[Platform]:
@@ -157,7 +206,8 @@ class SensorMixin(PlatformProviderBase):
 @dataclass(kw_only=True)
 class SwitchMixin(PlatformProviderBase):
     switches: List[str] = field(default_factory=list)
-
+    switch_configs: dict[str, SwitchConfig] = field(default_factory=dict)
+    
     @property
     def supported_platforms(self) -> List[Platform]:
         platforms = super().supported_platforms
@@ -191,8 +241,41 @@ class BreezerProfile(
 
     supported_features: FanEntityFeature
     speed_count: int
+#    speed_list: Tuple[str, ...] = field(default=("off", "one", "two", "three", "four", "five", "six", "seven", "eight"))
     preset_modes_map: Dict[str, int] = field(default_factory=dict)
     default_preset_mode: str
+
+    hvac_modes: List[HVACMode] = field(
+        default_factory=lambda: [HVACMode.OFF, HVACMode.FAN_ONLY]
+    )
+    hvac_mode: HVACMode = field(default=HVACMode.OFF)
+
+    @property
+    def supported_platforms(self) -> List[Platform]:
+        return super().supported_platforms + [Platform.FAN]
+
+
+@dataclass(kw_only=True)
+class AirCleanerProfile(
+    DeviceBaseProfile,
+    NumberMixin,
+    SelectMixin,
+    SensorMixin,
+    SwitchMixin,
+    TimeMixin,
+):
+    """Profile for AirCleaner systems."""
+    profile_type: str = PROFILE_TYPE_AIRCLEANER
+    supported_features: FanEntityFeature = (
+        FanEntityFeature.SET_SPEED
+        | FanEntityFeature.PRESET_MODE
+        | FanEntityFeature.TURN_OFF
+        | FanEntityFeature.TURN_ON
+    )
+    speed_count: int = 3
+    preset_modes_map: Dict[str, int] = field(default_factory=dict)
+    default_preset_mode: str
+#    speed_list: Tuple[str, ...] = field(default=("auto", "one", "two", "three"))
 
     @property
     def supported_platforms(self) -> List[Platform]:
@@ -307,38 +390,35 @@ class KettleProfile(WaterHeaterProfile):
     )
 
 
+
+
+@dataclass(kw_only=True)
+class HumidifierProfile(
+    DeviceBaseProfile,
+    NumberMixin,
+    SensorMixin,
+    SwitchMixin,
+    TimeMixin,
+    LightMixin,
+):
+    """Profile for Humidifiers."""
+    profile_type: str = PROFILE_TYPE_HUMIDIFIER
+    min_humidity: int = 30
+    max_humidity: int = 80
+    device_class: HumidifierDeviceClass = HumidifierDeviceClass.HUMIDIFIER,
+    supported_features: HumidifierEntityFeature = HumidifierEntityFeature.MODES
+    preset_modes_map: Dict[str, int] = field(default_factory=dict)
+    default_preset_mode: str
+    cmd_current_humidity: Optional[UdpCommandType] = None
+    cmd_humidifier_mode: Optional[UdpCommandType] = None
+
+    @property
+    def supported_platforms(self) -> List[Platform]:
+        return super().supported_platforms + [Platform.HUMIDIFIER]
+
 # ==========================================
 #     TEMPLATES FOR FUTURE DEVICE PROFILES
 # ==========================================
-
-# @dataclass(kw_only=True)
-# class HumidifierProfile(DeviceBaseProfile):
-#     """Profile for Humidifiers."""
-
-#     min_humidity: int
-#     max_humidity: int
-#     supported_features: HumidifierEntityFeature
-#     cmd_mode: UdpCommandType
-#     modes_map: Dict[str, int]
-#     cmd_target_humidity: UdpCommandType
-#     cmd_current_humidity: Optional[UdpCommandType] = None
-#     switches: List[str] = field(default_factory=list)
-#     sensors: List[str] = field(default_factory=list)
-#     speed_map: Dict[str, int] = field(default_factory=dict)
-
-#     @property
-#     def supported_platforms(self) -> List[Platform]:
-#         platforms = [Platform.HUMIDIFIER]
-
-#         if self.switches:
-#             platforms.append(Platform.SWITCH)
-#         if self.sensors:
-#             platforms.append(Platform.SENSOR)
-#         if self.speed_map:
-#             platforms.append(Platform.SELECT)
-
-#         return platforms
-
 
 # @dataclass(kw_only=True)
 # class FanProfile(DeviceBaseProfile):

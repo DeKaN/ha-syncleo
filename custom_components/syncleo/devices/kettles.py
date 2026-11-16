@@ -1,12 +1,16 @@
 from homeassistant.components.water_heater import STATE_OFF
+from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
+from homeassistant.const import UnitOfTemperature, UnitOfMass
 
 from ..const import (
     FEATURE_BACKLIGHT,
     FEATURE_CHILD_LOCK,
+    FEATURE_CURRENT_TEMPERATURE,
     FEATURE_ERROR,
     FEATURE_KETTLE_TEMPERATURE_PRESET,
     FEATURE_NIGHT,
     FEATURE_VOLUME,
+    FEATURE_WEIGHT,
     KETTLE_MODE_BOILING,
     KETTLE_MODE_BOILING_KEEP,
     KETTLE_MODE_IQ_BOILING,
@@ -30,7 +34,7 @@ from ..const import (
     PD_BACKLIGHT_RED,
     VENDOR_POLARIS,
 )
-from .profiles import KettleProfile, LightConfig, ProgramDataField, SelectConfig
+from .profiles import KettleProfile, LightConfig, ProgramDataField, SelectConfig, SensorConfig, BinarySensorConfig
 
 
 def _create_polaris_kettle(
@@ -57,7 +61,15 @@ def _create_polaris_kettle(
         "device_type": device_type,
         "default_operation_mode": KETTLE_MODE_BOILING,
         "operation_modes_map": modes,
-        "binary_sensors": [FEATURE_ERROR],
+#        "binary_sensors": [FEATURE_ERROR],
+        "sensors": {
+            FEATURE_CURRENT_TEMPERATURE: SensorConfig(
+                device_class=SensorDeviceClass.TEMPERATURE,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfTemperature.CELSIUS,
+                translation_key="current_temperature_kettle",
+            ),
+        },
         "switches": [FEATURE_CHILD_LOCK],
         "selects": {
             FEATURE_KETTLE_TEMPERATURE_PRESET: SelectConfig(
@@ -88,6 +100,12 @@ PROFILES = [
         has_tea_time=True,
         target_temp_step=5.0,
         switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=6,
@@ -97,6 +115,12 @@ PROFILES = [
         device_type=8,
         has_tea_time=True,
         switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=29,
@@ -143,6 +167,12 @@ PROFILES = [
         has_tea_time=True,
         target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=52,
@@ -152,6 +182,12 @@ PROFILES = [
         device_type=53,
         has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=54,
@@ -162,6 +198,12 @@ PROFILES = [
         has_tea_time=True,
         target_temp_step=5.0,
         switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=57,
@@ -171,6 +213,12 @@ PROFILES = [
         device_type=58,
         has_tea_time=True,
         switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=59,
@@ -181,6 +229,12 @@ PROFILES = [
         has_tea_time=True,
         target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=61,
@@ -190,6 +244,12 @@ PROFILES = [
         device_type=62,
         has_tea_time=True,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=63,
@@ -216,6 +276,12 @@ PROFILES = [
         has_tea_time=True,
         target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(device_type=86,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
@@ -253,6 +319,19 @@ PROFILES = [
         has_tea_time=True,
         target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        sensors={
+            FEATURE_WEIGHT: SensorConfig(
+                device_class=SensorDeviceClass.WEIGHT,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfMass.GRAMS,
+            ),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=105,
@@ -292,17 +371,36 @@ PROFILES = [
     ),
     _create_polaris_kettle(
         device_type=121,
-        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME]
+        switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=139,
         has_tea_time=True,
         target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=164,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        sensors={
+            FEATURE_WEIGHT: SensorConfig(
+                device_class=SensorDeviceClass.WEIGHT,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfMass.GRAMS,
+            ),
+        },
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
@@ -320,6 +418,12 @@ PROFILES = [
         device_type=165,
         has_tea_time=True,
         switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=175,
@@ -373,12 +477,38 @@ PROFILES = [
         device_type=185,
         has_tea_time=True,
         switches=[FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        sensors={
+            FEATURE_WEIGHT: SensorConfig(
+                device_class=SensorDeviceClass.WEIGHT,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfMass.GRAMS,
+            ),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=188,
         has_tea_time=True,
         target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        sensors={
+            FEATURE_WEIGHT: SensorConfig(
+                device_class=SensorDeviceClass.WEIGHT,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfMass.GRAMS,
+            ),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=189,
@@ -445,10 +575,23 @@ PROFILES = [
                 blue_key=PD_BACKLIGHT_BLUE,
             ),
         },
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=208,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        sensors={
+            FEATURE_WEIGHT: SensorConfig(
+                device_class=SensorDeviceClass.WEIGHT,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfMass.GRAMS,
+            ),
+        },
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
@@ -467,10 +610,30 @@ PROFILES = [
         has_tea_time=True,
         target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        sensors={
+            FEATURE_WEIGHT: SensorConfig(
+                device_class=SensorDeviceClass.WEIGHT,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfMass.GRAMS,
+            ),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=244,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        sensors={
+            FEATURE_WEIGHT: SensorConfig(
+                device_class=SensorDeviceClass.WEIGHT,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfMass.GRAMS,
+            ),
+        },
         program_data_fields={
             PD_BACKLIGHT_RED: ProgramDataField(mode=0, max_value=255),
             PD_BACKLIGHT_GREEN: ProgramDataField(mode=0, offset=1, max_value=255),
@@ -487,6 +650,13 @@ PROFILES = [
     _create_polaris_kettle(
         device_type=245,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        sensors={
+            FEATURE_WEIGHT: SensorConfig(
+                device_class=SensorDeviceClass.WEIGHT,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfMass.GRAMS,
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=253,
@@ -558,12 +728,38 @@ PROFILES = [
         has_boiling_keep=True,
         target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        sensors={
+            FEATURE_WEIGHT: SensorConfig(
+                device_class=SensorDeviceClass.WEIGHT,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfMass.GRAMS,
+            ),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=263,
         has_tea_time=True,
         target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        sensors={
+            FEATURE_WEIGHT: SensorConfig(
+                device_class=SensorDeviceClass.WEIGHT,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfMass.GRAMS,
+            ),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=271,
@@ -586,6 +782,19 @@ PROFILES = [
         has_tea_time=True,
         target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        sensors={
+            FEATURE_WEIGHT: SensorConfig(
+                device_class=SensorDeviceClass.WEIGHT,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfMass.GRAMS,
+            ),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=294,
@@ -593,6 +802,19 @@ PROFILES = [
         has_boiling_keep=True,
         target_temp_step=5.0,
         switches=[FEATURE_BACKLIGHT, FEATURE_CHILD_LOCK, FEATURE_VOLUME],
+        sensors={
+            FEATURE_WEIGHT: SensorConfig(
+                device_class=SensorDeviceClass.WEIGHT,
+                state_class=SensorStateClass.MEASUREMENT,
+                unit_of_measurement=UnitOfMass.GRAMS,
+            ),
+        },
+        binary_sensors=[FEATURE_ERROR],
+        binary_sensor_configs={
+            FEATURE_ERROR: BinarySensorConfig(
+                translation_key="out_base",
+            ),
+        },
     ),
     _create_polaris_kettle(
         device_type=308,

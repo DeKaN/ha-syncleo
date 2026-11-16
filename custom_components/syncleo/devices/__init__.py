@@ -12,8 +12,12 @@ from .profiles import (
     SelectMixin,
     SensorConfig,
     SensorMixin,
+    SwitchConfig,
     SwitchMixin,
+    TimeMixin,
     WaterHeaterProfile,
+    HumidifierProfile,
+    AirCleanerProfile,
 )
 
 from .air_conditioners import PROFILES as CONDITIONER_PROFILES
@@ -21,6 +25,8 @@ from .boilers import PROFILES as BOILER_PROFILES
 from .breezers import PROFILES as BREEZER_PROFILES
 from .heaters import PROFILES as HEATER_PROFILES
 from .kettles import PROFILES as KETTLE_PROFILES
+from .humidifiers import PROFILES as HUMIDIFIER_PROFILES
+from .air_cleaners import PROFILES as AIRCLEANER_PROFILES
 
 _ALL_PROFILES = (
     CONDITIONER_PROFILES
@@ -28,6 +34,8 @@ _ALL_PROFILES = (
     + BREEZER_PROFILES
     + HEATER_PROFILES
     + KETTLE_PROFILES
+    + HUMIDIFIER_PROFILES
+    + AIRCLEANER_PROFILES
 )
 
 DEVICE_PROFILES: Dict[Tuple[str, int], DeviceBaseProfile] = {
@@ -47,6 +55,10 @@ __all__ = [
     "SelectMixin",
     "SensorConfig",
     "SensorMixin",
+    "SwitchConfig",
     "SwitchMixin",
+    "TimeMixin",
     "WaterHeaterProfile",
+    "HumidifierProfile",
+    "AirCleanerProfile",
 ]
