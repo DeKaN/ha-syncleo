@@ -36,9 +36,18 @@ class SyncleoBinarySensor(SyncleoBaseEntity, BinarySensorEntity):
 
         self._feature_key = feature_key
         self._cmd_class = FEATURE_TO_COMMAND_MAP.get(feature_key)
-
-        self._attr_unique_id = f"{self._device_unique_id}_{feature_key}"
-        self._attr_translation_key = feature_key
+        
+        if isinstance(profile, BinarySensorMixin) and feature_key in profile.binary_sensor_configs:
+            config = profile.binary_sensor_configs.get(feature_key)
+            if hasattr(config, 'translation_key'):
+                self._attr_unique_id = f"{self._device_unique_id}_{config.translation_key}"
+                self._attr_translation_key = config.translation_key
+            else:
+                self._attr_unique_id = f"{self._device_unique_id}_{feature_key}"
+                self._attr_translation_key = feature_key
+        else:
+            self._attr_unique_id = f"{self._device_unique_id}_{feature_key}"
+            self._attr_translation_key = feature_key
         self._is_on = False
 
     @property
@@ -57,7 +66,11 @@ class SyncleoBinarySensor(SyncleoBaseEntity, BinarySensorEntity):
                 self._attr_unique_id,
                 cmd,
             )
-            is_on = bool(cmd.value)
+            if self._attr_translation_key == "out_base":
+                is_on = True if int(cmd.value) == 2 else False
+                _LOGGER.info("Binary sensor out base %s", is_on)
+            else:
+                is_on = bool(cmd.value)
 
         if is_on != self._is_on:
             self._is_on = is_on

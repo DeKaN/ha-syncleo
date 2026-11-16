@@ -19,7 +19,7 @@ from .models import SyncleoConfigEntry, SyncleoDomainData
 from .utils import get_device_profile
 
 _LOGGER = logging.getLogger(__name__)
-
+_DEBUG_SERVICES = True
 
 async def async_setup_entry(hass: HomeAssistant, entry: SyncleoConfigEntry) -> bool:
     """Set up Syncleo from a config entry."""
@@ -40,6 +40,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: SyncleoConfigEntry) -> b
             hass.data[DOMAIN] = SyncleoDomainData(
                 manager=manager, transport=transport, ha_uuid=ha_uuid
             )
+
+
+
+
+            # Регистрируем отладочные сервисы если включен DEBUG_SERVICES
+            if _DEBUG_SERVICES:
+#                try:
+                    
+                    from .debug_helpers import async_register_debug_services
+
+                    await async_register_debug_services(hass)
+                    _LOGGER.info("Debug services enabled - debug services registered")
+#                except ImportError:
+#                    _LOGGER.warning("debug_helpers.py not found. Debug services disabled.")
+#                except Exception as e:
+#                    _LOGGER.error(f"Failed to register debug services: {e}")
 
     domain_data: SyncleoDomainData = hass.data[DOMAIN]
     manager = domain_data.manager

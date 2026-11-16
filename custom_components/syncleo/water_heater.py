@@ -25,6 +25,8 @@ from .const import (
     KETTLE_MODE_TEA_TIME,
     POLARIS_DEVICE,
     HOMMYN_DEVICE,
+    PROFILE_TYPE_BOILER,
+    PROFILE_TYPE_KETTLE,
 )
 from .devices import WaterHeaterProfile
 from .entity import SyncleoBaseEntity
@@ -55,11 +57,8 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
         """Initialize the water heater entity."""
         super().__init__(connection, profile, entry)
         
-        if entry.data[CONF_VENDOR] == 'Polaris':
-            self._device_type_class = POLARIS_DEVICE[int(entry.data[CONF_DEVICE_CLASS])]["class"]
-        else:
-            self._device_type_class = HOMMYN_DEVICE[int(entry.data[CONF_DEVICE_CLASS])]["class"]
         self._profile = profile
+        self._device_type_class = profile.profile_type
         self._attr_unique_id = f"{self._device_unique_id}_{profile.profile_type}"
         self._attr_translation_key = f"{DOMAIN}_{profile.profile_type}"
         self._attr_min_temp = profile.min_temp
@@ -71,21 +70,10 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
 
         self._op_mode_map = profile.operation_modes_map
         self._rev_op_mode_map = {v: k for k, v in self._op_mode_map.items()}
-
         self._attr_operation_list = list(self._op_mode_map.keys())
-
         self._current_operation = STATE_OFF
         self._target_temp = None
         self._current_temp = None
-
-    @property
-    def state(self) -> str | None:
-        """Return the current state."""
-        return self._current_operation
-
-    @property
-    def supported_features(self) -> WaterHeaterEntityFeature:
-        return self._attr_supported_features
 
     @property
     def current_operation(self) -> str | None:
@@ -138,23 +126,20 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
         if temp is not None:
             temp = max(self._attr_min_temp, min(self._attr_max_temp, float(temp)))
             
-            if self._device_type_class != "kettle":
+            if self._device_type_class != PROFILE_TYPE_KETTLE:
                 await self.async_send_command(CmdTargetTemperature(temp))
-     
-            if self._device_type_class == "kettle" and self.current_operation == STATE_OFF:
+            elif self.current_operation == STATE_OFF:
                 await self.async_send_command(CmdTargetTemperature(temp))
                 if int(temp) == 100:
                     await self.async_send_command(CmdMode(1))
                 else:
                     await self.async_send_command(CmdMode(3))
-            
-            if self._device_type_class == "kettle" and self.current_operation in (KETTLE_MODE_WARM_UP, KETTLE_MODE_WARM_UP_KEEP, KETTLE_MODE_BOILING_KEEP): # Нагрев, Нагрев с удержанием, Кипячение с удержанием
+            elif self.current_operation in (KETTLE_MODE_WARM_UP, KETTLE_MODE_WARM_UP_KEEP, KETTLE_MODE_BOILING_KEEP): # Нагрев, Нагрев с удержанием, Кипячение с удержанием
                 if int(temp) == 100:
                     await self.async_send_command(CmdMode(1))
                 else:
                     await self.async_send_command(CmdTargetTemperature(temp))
-            
-            if self._device_type_class == "kettle" and self.current_operation in (KETTLE_MODE_BOILING, KETTLE_MODE_IQ_BOILING, KETTLE_MODE_TEA_TIME): # Кипячение, IQ Кипячение, Чайная церемония
+            elif self.current_operation in (KETTLE_MODE_BOILING, KETTLE_MODE_IQ_BOILING, KETTLE_MODE_TEA_TIME): # Кипячение, IQ Кипячение, Чайная церемония
                 if int(temp) < 100:
                     await self.async_send_command(CmdTargetTemperature(temp))
                     await self.async_send_command(CmdMode(3))
@@ -167,7 +152,7 @@ class SyncleoWaterHeater(SyncleoBaseEntity, WaterHeaterEntity):
         if raw_val is not None:
             if raw_val > 1:
                 if int(self._target_temp) == 100 and operation_mode in (KETTLE_MODE_WARM_UP, KETTLE_MODE_WARM_UP_KEEP, KETTLE_MODE_BOILING_KEEP): # Нагрев, Нагрев с удержанием, Кипячение с удержанием
-                    self._target_temp = 95
+                    self._target_temp = self._attr_target_temperature_high - self._attr_target_temperature_step
                 await self.async_send_command(CmdTargetTemperature(self._target_temp))
             await self.async_send_command(CmdMode(raw_val))
             self._current_operation = operation_mode

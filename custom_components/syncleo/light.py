@@ -67,11 +67,12 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
         self._red_key = config.red_key
         self._green_key = config.green_key
         self._blue_key = config.blue_key
-        self._brightness_key = config.brightness_key
+        self._brightness_key = config.brightness_key    # Не нужен
         self._brightness_max_level = config.brightness_levels
-
-        self._brightness_levels = (1, self._brightness_max_level)
-        self._current_level = 255 # Если 0, то при первом включении будет яркость 0 (черный)
+###        self._brightness_levels = (1, self._brightness_max_level)
+###        self._current_level = 255 # Если 0, то при первом включении будет яркость 0 (черный)
+        self._brightness_levels = (1, self._brightness_max_level)   ####дубль#### self._brightness_max_level
+        self._current_level = self._brightness_max_level
         self._last_level = self._brightness_max_level
         self._is_on = False
 
@@ -89,62 +90,59 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
         g_bytes = self.get_program_data(self._green_key)
         b_bytes = self.get_program_data(self._blue_key)
 
-        r = r_bytes[0] if r_bytes else 0
-        g = g_bytes[0] if g_bytes else 0
-        b = b_bytes[0] if b_bytes else 0
+        r = r_bytes[0] if r_bytes else 1
+        g = g_bytes[0] if g_bytes else 1
+        b = b_bytes[0] if b_bytes else 1
 
         # Вычисляем яркость по максимальному каналу
         max_channel = max(r, g, b)
         
-        if max_channel == 0:
+###        if max_channel == 0:
             # Цвет черный - яркость 0, истинный цвет (0,0,0)
-            self._attr_brightness = 0
-            self._current_level = 0
-        else:
+###            self._attr_brightness = 0
+###            self._current_level = 0
+###        else:
             # Яркость для ползунка HA (0-255)
-            self._attr_brightness = max_channel
-            self._current_level = max_channel
+        self._attr_brightness = max_channel
+        self._current_level = max_channel
 
-            # Вычисляем "истинный" цвет.
-            # Если пришел 128,0,0 (тусклый красный), а яркость 128...
-            # То истинный цвет 255,0,0. Делим на коэффициент.
-            factor = 255.0 / max_channel
-            self._current_rgb = (
-                min(255, int(r * factor)),
-                min(255, int(g * factor)),
-                min(255, int(b * factor))
-            )
+        # Вычисляем "истинный" цвет.
+        # Если пришел 128,0,0 (тусклый красный), а яркость 128...
+        # То истинный цвет 255,0,0. Делим на коэффициент.
+        factor = 255.0 / max_channel
+        self._current_rgb = (
+            min(255, int(r * factor)),
+            min(255, int(g * factor)),
+            min(255, int(b * factor))
+        )
         return self._current_rgb
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         updates = {}
-        rgb = None
+        target_rgb = self._current_rgb or (255,255,255)
         if ATTR_RGB_COLOR in kwargs:
-            rgb = kwargs[ATTR_RGB_COLOR]
+            target_rgb = kwargs[ATTR_RGB_COLOR]
             updates |= {
-                self._red_key: bytes([rgb[0]]),
-                self._green_key: bytes([rgb[1]]),
-                self._blue_key: bytes([rgb[2]]),
+                self._red_key: bytes([target_rgb[0]]),
+                self._green_key: bytes([target_rgb[1]]),
+                self._blue_key: bytes([target_rgb[2]]),
             }
 
         if ATTR_BRIGHTNESS in kwargs:
-            target_level = math.ceil(
-                brightness_to_value(self._brightness_levels, kwargs[ATTR_BRIGHTNESS])
-            )
+            target_level = math.ceil(brightness_to_value(self._brightness_levels, kwargs[ATTR_BRIGHTNESS]))
         else:
-            target_level = (
-                self._last_level if self._last_level > 0 else self._brightness_max_level
-            )
+            target_level = self._last_level if self._last_level > 0 else self._brightness_max_level
         
-        target_rgb = rgb if rgb is not None else self._current_rgb or (255,255,255)
+###        target_rgb = rgb if rgb is not None else self._current_rgb or (255,255,255)
         
-        if (
-            self._brightness_key
-            and self._brightness_key in self._profile.program_data_fields
-        ):
-            updates[self._brightness_key] = bytes([target_level])
-        elif self._cmd_class:
+###        if (
+###            self._brightness_key
+###            and self._brightness_key in self._profile.program_data_fields
+###        ):
+###            updates[self._brightness_key] = bytes([target_level])
 
+        if self._cmd_class:
+            _LOGGER.info("CMD_CLASS %s",self._cmd_class)
             # Применяем яркость (HA передает ее от 0 до 255)
             factor = target_level / 255.0
             target_rgb = tuple(int(c * factor) for c in target_rgb)
@@ -153,10 +151,8 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
                 self._green_key: bytes([target_rgb[1]]),
                 self._blue_key: bytes([target_rgb[2]]),
             }
-
             await self.async_send_command(self._cmd_class(True))
         else:
-#            await self.async_send_command(CmdBacklight(state=True))
             _LOGGER.error(
                 "No command class or program data field defined for feature: %s",
                 self._feature_key,
@@ -172,15 +168,14 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
         self.async_write_ha_state()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
-        if (
-            self._brightness_key
-            and self._brightness_key in self._profile.program_data_fields
-        ):
-            await self.async_set_program_data(self._brightness_key, bytes([0]))
-        elif self._cmd_class:
+###        if (
+###            self._brightness_key
+###            and self._brightness_key in self._profile.program_data_fields
+###        ):
+###            await self.async_set_program_data(self._brightness_key, bytes([0]))
+        if self._cmd_class:
             await self.async_send_command(self._cmd_class(False))
         else:
-#            await self.async_send_command(CmdBacklight(state=False))
             _LOGGER.error(
                 "No command class or program data field defined for feature: %s",
                 self._feature_key,
@@ -197,29 +192,27 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
         super()._handle_device_update(cmd)
         need_update = False
 
-        if (
-            self._brightness_key
-            and self._brightness_key in self._profile.program_data_fields
-        ):
-            data = self.get_program_data(self._brightness_key)
-            if data:
-                self._current_level = data[0]
-                self._is_on = self._current_level > 0
-                if self._current_level > 0:
-                    self._last_level = self._current_level
-                need_update = True
+###        if (
+###            self._brightness_key
+###            and self._brightness_key in self._profile.program_data_fields
+###        ):
+###            data = self.get_program_data(self._brightness_key)
+###            if data:
+###                self._current_level = data[0]
+###                self._is_on = self._current_level > 0
+###                if self._current_level > 0:
+###                    self._last_level = self._current_level
+###                need_update = True
 
-        elif isinstance(cmd, CmdProgramData):
+        if isinstance(cmd, CmdProgramData):
             need_update = True
-            
-            
-        elif self._cmd_class and cmd.command_type == self._cmd_class.command_type:
+        _LOGGER.info("LIGHT VALUE %s",cmd.value)                                                ### Убрать
+        if self._cmd_class and cmd.command_type == self._cmd_class.command_type:
             self._is_on = bool(cmd.value)
             self._current_level = self._brightness_max_level if self._is_on else 0
             if self._current_level > 0:
                 self._last_level = self._current_level
             need_update = True
-
         else:
             _LOGGER.debug(
                 "Entity %s ignoring unrelated cmd: %s", self._attr_unique_id, cmd

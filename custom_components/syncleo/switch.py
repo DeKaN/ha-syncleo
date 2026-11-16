@@ -1,12 +1,13 @@
 import logging
-
 from homeassistant.components.switch import SwitchEntity
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util import slugify
 
-
-from .devices import DeviceBaseProfile, SwitchMixin
+from .devices import SwitchMixin
 from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
-from .models import SyncleoConfigEntry
+#from .models import SyncleoConfigEntry
 from .utils import get_device_profile
 
 
@@ -14,36 +15,84 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, entry: SyncleoConfigEntry, async_add_entities
-):
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+) -> None:
+    """Set up the Syncleo switch platform."""
     conn = entry.runtime_data
     profile = get_device_profile(conn.device)
 
     if isinstance(profile, SwitchMixin) and profile.switches:
+        _LOGGER.info("profile.switches %s", profile.switches)
         entities = [
-            SyncleoSwitch(conn, profile, entry, key)
-            for key in profile.switches
-            if key in FEATURE_TO_COMMAND_MAP
+            SyncleoSwitch(conn, profile, entry, feature_key)
+            for feature_key in profile.switches
         ]
         async_add_entities(entities)
 
 
+#    if isinstance(profile, SwitchMixin) and profile.switches:
+#        entities = []
+#        for feature_key in profile.switches:
+            # Получаем translation_key из switch_configs
+#            translation_key = feature_key  # значение по умолчанию
+            
+#            if feature_key in profile.switch_configs:
+#                config = profile.switch_configs[feature_key]
+#                if config.translation_key:
+#                    translation_key = config.translation_key
+#                    _LOGGER.info(f"Using translation_key '{translation_key}' for {feature_key}")
+            
+#            entities.append(SyncleoSwitch(conn, profile, entry, feature_key, translation_key))
+        
+#        async_add_entities(entities)
+
+#    await hass.async_add_executor_job(lambda: None)  # Даем время HA обработать
+#    from homeassistant.helpers import entity_registry as er
+#    entity_registry = er.async_get(hass)
+        
+#    for entity in entities:
+#        unique_id = entity.unique_id
+#        entity_id = entity_registry.async_get_entity_id("switch", "syncleo", unique_id)
+#        if entity_id:
+#            _LOGGER.info(f"✅ Entity registered: {entity_id}")
+#        else:
+#            _LOGGER.warning(f"❌ Entity NOT found: {unique_id}")
+
+
+
+
 class SyncleoSwitch(SyncleoBaseEntity, SwitchEntity):
-    def __init__(
-        self,
-        connection,
-        profile: DeviceBaseProfile,
-        entry: SyncleoConfigEntry,
-        feature_key: str,
-    ):
-        super().__init__(connection, profile, entry)
+    _attr_has_entity_name = True
+    
+    def __init__(self, conn, profile, entry, feature_key: str, translation_key: str = None):
+        super().__init__(conn, profile, entry)
         self._feature_key = feature_key
         self._is_program_data = feature_key in profile.program_data_fields
         self._cmd_class = FEATURE_TO_COMMAND_MAP.get(feature_key)
 
-        self._attr_unique_id = f"{self._device_unique_id}_{feature_key}"
-        self._attr_translation_key = feature_key
+        if self._is_program_data:
+            config = profile.program_data_fields[feature_key]
+        elif isinstance(profile, SwitchMixin) and feature_key in profile.switch_configs:
+            config = profile.switch_configs.get(feature_key)
+        else:
+            config = None
+#        _LOGGER.info("ENTRY %s", f"switch.{slugify(entry.title)}_{feature_key}")
+        if config:
+#            _LOGGER.info(f"Config for {feature_key}: translation_key={config.translation_key}")
+            self._attr_unique_id = f"{self._device_unique_id}_{config.translation_key}"
+#            self._attr_entity_id = f"switch.{slugify(entry.title)}_{feature_key}"
+            self._attr_translation_key = config.translation_key
+        else:
+#            _LOGGER.info(f"No config for {feature_key}, using feature_key as translation_key")
+            self._attr_unique_id = f"{self._device_unique_id}_{feature_key}"
+#        self._attr_entity_id = f"switch.{slugify(entry.title)}_{feature_key}"
+#        self._entity_id = f"switch.{slugify(entry.title)}_{feature_key}"
+#        self.entity_id = f"switch.{slugify(entry.title)}_{feature_key}"
+            self._attr_translation_key = feature_key
+#        self._attr_name = feature_key
+        _LOGGER.info("unique_id %s, translation_key %s", self._attr_unique_id, self._attr_translation_key)
         self._is_on = False
+
 
     @property
     def is_on(self) -> bool:

@@ -12,7 +12,7 @@ from homeassistant.util.percentage import (
 from pysyncleo.commands import CmdMode, CmdSpeed, UdpCommandType
 
 from .const import TRANLATION_KEY_FAN
-from .devices import BreezerProfile
+from .devices import BreezerProfile, AirCleanerProfile
 from .entity import SyncleoBaseEntity
 from .models import SyncleoConfigEntry
 from .utils import get_device_profile
@@ -28,7 +28,8 @@ async def async_setup_entry(
 
     if isinstance(profile, BreezerProfile):
         async_add_entities([SyncleoFan(conn, profile, entry)])
-
+    if isinstance(profile, AirCleanerProfile):
+        async_add_entities([SyncleoFan(conn, profile, entry)])
 
 class SyncleoFan(SyncleoBaseEntity, FanEntity):
     _attr_name = None

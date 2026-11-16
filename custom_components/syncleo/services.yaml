@@ -1,0 +1,267 @@
+emulate_connect:
+  name: Emulate Device Connect
+  description: Force a device connection state
+  fields:
+    mac:
+      name: MAC Address
+      description: MAC address of the device
+      required: true
+      example: "a1b2c3d4e5f6"
+      selector:
+        text:
+    state:
+      name: Connection State
+      description: Connection state to set
+      required: false
+      default: "connected"
+      selector:
+        select:
+          options:
+            - "connected"
+            - "disconnected"
+
+emulate_command:
+  name: Emulate Incoming Command
+  description: Emulate receiving a command from the device
+  fields:
+    mac:
+      name: MAC Address
+      description: MAC address of the device
+      required: true
+      example: "a1b2c3d4e5f6"
+      selector:
+        text:
+    command_type:
+      name: Command Type
+      description: Type of command to emulate
+      required: true
+      selector:
+        select:
+          options:
+            - "mode"
+            - "target_temperature"
+            - "temperature"
+            - "speed"
+            - "power"
+            - "child_lock"
+            - "backlight"
+            - "volume"
+            - "error"
+            - "program_data"
+    value:
+      name: Value
+      description: Value for the command
+      required: true
+      example: "1"
+      selector:
+        text:
+          multiline: false
+    mode:
+      name: Mode (for program_data)
+      description: Mode number for program_data command
+      required: false
+      default: 0
+      selector:
+        number:
+          min: 0
+          max: 255
+          step: 1
+    data:
+      name: Data (for program_data)
+      description: Hex data for program_data command
+      required: false
+      example: "0100"
+      selector:
+        text:
+          multiline: false
+
+emulate_update:
+  name: Emulate State Update
+  description: Emulate a complete state update
+  fields:
+    mac:
+      name: MAC Address
+      description: MAC address of the device
+      required: true
+      example: "a1b2c3d4e5f6"
+      selector:
+        text:
+    current_temperature:
+      name: Current Temperature
+      description: Current temperature value
+      required: false
+      selector:
+        number:
+          min: 30
+          max: 100
+          step: 1
+          unit_of_measurement: "°C"
+    target_temperature:
+      name: Target Temperature
+      description: Target temperature value
+      required: false
+      selector:
+        number:
+          min: 30
+          max: 100
+          step: 1
+          unit_of_measurement: "°C"
+    mode:
+      name: Operation Mode
+      description: Operation mode value
+      required: false
+      selector:
+        select:
+          options:
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+            - "4"
+            - "5"
+            - "6"
+    child_lock:
+      name: Child Lock
+      description: Child lock state
+      required: false
+      selector:
+        boolean: {}
+    backlight:
+      name: Backlight
+      description: Backlight state
+      required: false
+      selector:
+        boolean: {}
+    volume:
+      name: Volume
+      description: Volume state
+      required: false
+      selector:
+        boolean: {}
+    speed:
+      name: Speed
+      description: Speed state
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 9
+          step: 1
+    error:
+      name: Error
+      description: Error state
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 9
+          step: 1
+
+set_available:
+  name: Set Entity Availability
+  description: Manually set entity availability
+  fields:
+    entity_id:
+      name: Entity ID
+      description: Entity ID to set availability for
+      required: true
+      example: "switch.syncleo_a1b2c3d4e5f6_child_lock"
+      selector:
+        entity:
+          domain:
+            - switch
+            - water_heater
+            - update
+            - climate
+            - fan
+    available:
+      name: Available
+      description: Set available state
+      required: true
+      default: true
+      selector:
+        boolean: {}
+
+list_devices:
+  name: List Active Devices
+  description: List all currently active devices and their states
+  fields: {}
+
+emulate_program_data:
+  name: Emulate Program Data
+  description: Emulate program data update
+  fields:
+    mac:
+      name: MAC Address
+      description: MAC address of the device
+      required: true
+      example: "a1b2c3d4e5f6"
+      selector:
+        text:
+    mode:
+      name: Mode
+      description: Program data mode
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+          step: 1
+    data:
+      name: Data
+      description: Hex data to send
+      required: true
+      example: "0100"
+      selector:
+        text:
+          multiline: false
+
+emulate_discover:
+  name: Emulate Device Discovery
+  description: Emulate zeroconf discovery of a new device
+  fields:
+    mac:
+      name: MAC Address
+      description: MAC address of the device
+      required: true
+      example: "a1b2c3d4e5f6"
+      selector:
+        text:
+    ip:
+      name: IP Address
+      description: IP address of the device
+      required: false
+      default: "192.168.1.111"
+      selector:
+        text:
+          multiline: false
+    port:
+      name: Port
+      description: Port of the device
+      required: false
+      default: 54321
+      selector:
+        number:
+          min: 1
+          max: 65535
+          step: 1
+    vendor:
+      name: Vendor
+      description: Device vendor
+      required: false
+      default: "Polaris"
+      selector:
+        select:
+          options:
+            - "Polaris"
+            - "Rusclimate"
+    device_type:
+      name: Device Type
+      description: Device type number
+      required: true
+      default: 56
+      selector:
+        number:
+          min: 1
+          max: 999
+          step: 1

@@ -9,6 +9,17 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from .devices import SensorConfig, SensorMixin
 from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
 from .utils import get_device_profile
+from .const import (
+    VENDOR_RUSCLIMATE,
+    VENDOR_POLARIS,
+    PROFILE_TYPE_KETTLE,
+    PROFILE_TYPE_HUMIDIFIER,
+    FEATURE_ERROR,
+    KETTLE_ERROR,
+    HUMIDDIFIER_POLARIS_ERROR,
+    HUMIDDIFIER_RUSCLIMATE_ERROR,
+)
+
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -37,12 +48,13 @@ class SyncleoSensor(SyncleoBaseEntity, SensorEntity):
         super().__init__(connection, profile, entry)
 
         self._feature_key = feature_key
+        self._attr_translation_key = config.translation_key if config.translation_key else feature_key
         self._is_program_data = feature_key in profile.program_data_fields
         self._cmd_class = FEATURE_TO_COMMAND_MAP.get(feature_key)
         self._value_fn = config.value_fn
-
-        self._attr_unique_id = f"{self._device_unique_id}_{feature_key}"
-        self._attr_translation_key = feature_key
+        self._device_type_class = profile.profile_type
+        self._device_vendor = profile.vendor
+        self._attr_unique_id = f"{self._device_unique_id}_{config.translation_key}" if config.translation_key else f"{self._device_unique_id}_{feature_key}"
 
         self._attr_device_class = config.device_class
         self._attr_state_class = config.state_class
@@ -89,6 +101,13 @@ class SyncleoSensor(SyncleoBaseEntity, SensorEntity):
                 except Exception as e:
                     _LOGGER.warning("Sensor processing failed with error: %s", e)
                     value = None
+                if self._feature_key == FEATURE_ERROR:
+                    if self._device_type_class == PROFILE_TYPE_KETTLE:
+                        value = KETTLE_ERROR[value] if value in KETTLE_ERROR else value
+                    if self._device_type_class == PROFILE_TYPE_HUMIDIFIER and self._device_vendor == VENDOR_POLARIS:
+                        value = HUMIDDIFIER_POLARIS_ERROR[value] if value in HUMIDDIFIER_POLARIS_ERROR else value
+                    if self._device_type_class == PROFILE_TYPE_HUMIDIFIER and self._device_vendor == VENDOR_RUSCLIMATE:
+                        value = HUMIDDIFIER_RUSCLIMATE_ERROR[value] if value in HUMIDDIFIER_RUSCLIMATE_ERROR else value
 
         else:
             _LOGGER.debug(

@@ -59,5 +59,17 @@ def get_device_profile(device: SyncleoUdpDevice) -> DeviceBaseProfile | None:
     return profile
 
 
+def get_device_profile_by_device(vendor: str, device_type: int) -> DeviceBaseProfile | None:
+    profile = DEVICE_PROFILES.get((vendor.lower(), device_type))
+    if not profile:
+        _LOGGER.error(
+            "No profile found for vendor '%s' type %s",
+            vendor,
+            device_type,
+        )
+        return "unknown"
+    return profile.profile_type
+
+
 def get_device_firmware_url(profile: DeviceBaseProfile) -> str:
     return f"https://{FIRMVARE_HOST_BY_VENDOR[profile.vendor]}/{profile.vendor}/{profile.device_type}/slots/latest.json"

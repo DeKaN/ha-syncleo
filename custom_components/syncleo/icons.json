@@ -39,6 +39,91 @@
         "state": {
           "off": "mdi:alarm-light-off"
         }
+      },
+      "ionization": {
+        "default": "mdi:atom-variant"
+      },
+      "ultraviolet": {
+        "default": "mdi:white-balance-sunny"
+      },
+      "humidifier_warm_stream": {
+        "default": "mdi:heat-wave"
+      }
+    },
+    "binary_sensor": {
+      "out_base": {
+        "default": "mdi:home",
+        "state": {
+          "on": "mdi:home-off"
+        }
+      }
+    },
+    "sensor": {
+      "error_text": {
+        "default": "mdi:alert-circle",
+        "state": {
+          "no_error": "mdi:alert-circle-check-outline"
+        }
+      },
+      "expendables_filter": {
+        "default": "mdi:filter"
+      },
+      "expendables_clean": {
+        "default": "mdi:cup-water"
+      },
+      "weight": {
+        "default": "mdi:weight-gram"
+      }
+    },
+    "number": {
+      "humidifier_intensity": {
+        "default": "mdi:waves-arrow-up"
+      }
+    },
+    "humidifier": {
+      "humidifier": {
+        "default": "mdi:air-humidifier",
+        "state": {
+          "off": "mdi:air-humidifier-off"
+        },
+        "state_attributes": {
+          "mode": {
+            "state": {
+              "auto": "mdi:refresh-auto",
+              "baby": "mdi:baby-carriage",
+              "turbo": "mdi:rocket-launch",
+              "health": "mdi:heart-pulse",
+              "eco": "mdi:cloud-percent",
+              "manual": "mdi:gesture-tap",
+              "night": "mdi:power-sleep",
+              "fitnes": "mdi:walk",
+              "yoga": "mdi:yoga",
+              "meditation": "mdi:meditation",
+              "prana_hands": "mdi:human-handsdown",
+              "prana_auto": "mdi:human-handsup",
+              "aroma": "mdi:scent"
+            }
+          }
+        }
+      }
+    },
+    "fan": {
+      "syncleo_fan": {
+        "default": "mdi:air-purifier",
+        "state": {
+          "off": "mdi:air-purifier-off"
+        },
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "manual": "mdi:gesture-tap",
+              "auto": "mdi:fan-auto",
+              "night": "mdi:weather-night",
+              "turbo": "mdi:rocket-launch",
+              "ventilation": "mdi:fan"
+            }
+          }
+        }
       }
     }
   }

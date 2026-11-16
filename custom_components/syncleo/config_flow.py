@@ -23,6 +23,7 @@ from .const import (
     CONF_MANUFACTURER,
     DOMAIN,
     CONF_VENDOR,
+    CONF_MODEL_CLASS,
     CONF_PROTOCOL,
     CONF_PUBLIC_KEY,
     ZEROCONF_CURVE,
@@ -30,8 +31,10 @@ from .const import (
     ZEROCONF_MAC_ADDRESS,
     POLARIS_DEVICE,
     HOMMYN_DEVICE,
+    VENDOR_RUSCLIMATE,
+    VENDOR_POLARIS,
 )
-from .utils import parse_share_url
+from .utils import parse_share_url, get_device_profile_by_device
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -111,18 +114,11 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._discovered_properties,
         )
 
-        vendor_raw = self._discovered_properties.get(CONF_VENDOR) or "Syncleo"
-        vendor_name = vendor_raw.capitalize()
+        vendor_name = self._discovered_properties.get(CONF_VENDOR) or "Syncleo"
         device_type = self._discovered_properties.get(ZEROCONF_DEVICE_TYPE)
+        device_model = self.get_model_device(vendor_name, device_type)
 
-        if vendor_name == 'Polaris':
-            device_model = POLARIS_DEVICE[int(device_type)]
-        elif vendor_name == 'Rusclimate':
-            device_model = HOMMYN_DEVICE[int(device_type)]
-        else:
-            device_model = HOMMYN_DEVICE[0]
-
-        self.context["title_placeholders"] = {"name": f"{vendor_name} {device_model['model'].replace("_", "/")}"}
+        self.context["title_placeholders"] = {"name": f"{vendor_name.capitalize()} {device_model}"}
 
         return await self.async_step_zeroconf_confirm()
 
@@ -131,15 +127,10 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         host_str = self._discovered_host or "Unknown Host"
 
-        vendor_raw = self._discovered_properties.get(CONF_VENDOR) or "Syncleo"
-        vendor_name = vendor_raw.capitalize()
+        vendor_name = self._discovered_properties.get(CONF_VENDOR) or "Syncleo"
         device_type = self._discovered_properties.get(ZEROCONF_DEVICE_TYPE)
-        if vendor_name == 'Polaris':
-            device_model = POLARIS_DEVICE[int(device_type)]
-        elif vendor_name == 'Rusclimate':
-            device_model = HOMMYN_DEVICE[int(device_type)]
-        else:
-            device_model = HOMMYN_DEVICE[0]
+        device_model = self.get_model_device(vendor_name, device_type)
+        device_model_class = get_device_profile_by_device(vendor_name, int(device_type))       # Может быть ошибка при неизвестном
             
         if user_input is not None:
             try:
@@ -153,7 +144,7 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 if mac and format_mac(mac) != url_mac:
                     errors["base"] = "mac_mismatch"
 
-                device_type = self._discovered_properties.get(ZEROCONF_DEVICE_TYPE)
+#                device_type = self._discovered_properties.get(ZEROCONF_DEVICE_TYPE)
                 if device_type and int(device_type) != url_device_type and not errors:
                     errors["base"] = "type_mismatch"
 
@@ -162,8 +153,9 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     self._abort_if_unique_id_configured()
 
                     extracted_model = parsed_data[CONF_ATTRIBUTES].get(
-                        "model", "Unknown Model"
+                        "model", device_model
                     )
+                    
                     port = self._discovered_port
                     protocol = int(self._discovered_properties.get(CONF_PROTOCOL, "1"))
                     curve = int(self._discovered_properties.get(ZEROCONF_CURVE, 0))
@@ -180,11 +172,12 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_PORT: port,
                         CONF_MAC: url_mac,
                         CONF_MODEL: extracted_model,
+                        CONF_MODEL_CLASS: device_model_class,
                         CONF_ATTRIBUTES: parsed_data[CONF_ATTRIBUTES],
                         CONF_DEVICE_CLASS: int(device_type)
                         if device_type
                         else url_device_type,
-                        CONF_VENDOR: self._discovered_properties.get(CONF_VENDOR),
+                        CONF_VENDOR: vendor_name,
                         CONF_TOKEN: parsed_data[CONF_TOKEN],
                         CONF_PROTOCOL: protocol,
                         CONF_PUBLIC_KEY: pubkey,
@@ -211,7 +204,7 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_URL): str,
                 }
             ),
-            description_placeholders={"name": f"{vendor_name} {device_model['model'].replace("_", "/")}"},
+            description_placeholders={"name": f"{vendor_name.capitalize()} {device_model}"},
             errors=errors,
         )
 
@@ -219,20 +212,12 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Allow user to review and explicitly set the device manufacturer and model."""
 
         vendor = self._entry_data.get(CONF_VENDOR, "syncleo")
-        suggested_model = self._entry_data.get(CONF_MODEL, "Unknown Model")
-
         device_type = self._entry_data.get(CONF_DEVICE_CLASS, 0)
-        if vendor.capitalize() == 'Polaris':
-            device_model = POLARIS_DEVICE[device_type]
-        elif vendor.capitalize() == 'Rusclimate':
-            device_model = HOMMYN_DEVICE[device_type]
-        else:
-            device_model = HOMMYN_DEVICE[0]
+        suggested_model = self._entry_data.get(CONF_MODEL, "Unknown")
+        device_model_class = self._entry_data.get(CONF_MODEL_CLASS, "Unknown")
 
         suggested_manufacturer = vendor.capitalize()
-        if suggested_model == "Unknown Model":
-            suggested_model = device_model['model'].replace("_", "/")
-        suggested_class = await self.get_translated_type(device_model['class'])
+        suggested_class = await self.get_translated_type(device_model_class) if device_model_class != "Unknown" else suggested_model
 
         _LOGGER.info(
             "Calculated suggested manufacturer '%s', model '%s', class '%s'",
@@ -270,7 +255,7 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_FRIENDLY_NAME, default=suggested_class): str,
                 }
             ),
-            description_placeholders={"name": f"{vendor.capitalize()} {device_model['model'].replace("_", "/")}"},
+            description_placeholders={"name": f"{suggested_manufacturer} {suggested_model}"},
         )
 
     async def async_step_user(self, user_input=None) -> ConfigFlowResult:
@@ -282,3 +267,12 @@ class SyncleoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         translations = await async_get_translations(self.hass, language, "common", {DOMAIN})
         key = f"component.syncleo.common.{device_type_lang}"
         return translations.get(key, device_type_lang)
+        
+    def get_model_device(self, vendor_name, device_type) -> str:
+        if vendor_name.lower() == VENDOR_POLARIS and int(device_type) in POLARIS_DEVICE:
+            device_model = POLARIS_DEVICE[int(device_type)]
+        elif vendor_name.lower() == VENDOR_RUSCLIMATE and int(device_type) in HOMMYN_DEVICE:
+            device_model = HOMMYN_DEVICE[int(device_type)]
+        else:
+            device_model = HOMMYN_DEVICE[0]
+        return device_model
