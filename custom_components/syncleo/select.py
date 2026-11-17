@@ -6,8 +6,16 @@ from homeassistant.const import CONF_MAC
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from pysyncleo.commands import CmdDataSource, DataSource
+from pysyncleo.enums import UdpCommandType
 
-from .const import CONF_IS_VIRTUAL, DATASOURCE_PRESET_NONE, DOMAIN, VIRTUAL_DEVICE_TYPE
+from .const import (
+    CONF_IS_VIRTUAL,
+    DATASOURCE_PRESET_NONE,
+    DOMAIN,
+    FEATURE_COOKER_PROGRAM,
+    VIRTUAL_DEVICE_TYPE,
+)
+from .cooker_commands import parse_program_frame
 from .devices import SelectConfig, SelectMixin
 from .entity import FEATURE_TO_COMMAND_MAP, SyncleoBaseEntity
 from .utils import get_device_profile_by_device
@@ -42,6 +50,14 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
         self._config = config
         self._is_program_data = feature_key in profile.program_data_fields
         self._is_data_source = feature_key in profile.data_source_features
+        self._is_cooker_program = feature_key == FEATURE_COOKER_PROGRAM and bool(
+            getattr(profile, "programs", None)
+        )
+        self._program_names_by_code = (
+            {code: name for name, (code, _, _) in profile.programs.items()}
+            if self._is_cooker_program
+            else {}
+        )
         self._cmd_class = FEATURE_TO_COMMAND_MAP.get(feature_key)
 
         self._attr_unique_id = f"{self._device_unique_id}_{feature_key}"
@@ -90,6 +106,22 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
 
         current_option = self._current_option
 
+        if self._is_cooker_program and cmd.command_type == UdpCommandType.MULTI_STEP:
+            parsed = parse_program_frame(getattr(cmd, "_raw_tail", b""))
+            option = self._program_names_by_code.get(parsed[0]) if parsed else None
+            _LOGGER.debug(
+                "Cooker program update for %s: %s -> %s",
+                self._attr_unique_id,
+                parsed,
+                option,
+            )
+            if option != self._current_option:
+                self._current_option = option
+                if option:
+                    self._profile.selected_program = option
+                self.async_write_ha_state()
+            return
+
         if self._is_data_source and isinstance(cmd, CmdDataSource):
             cmd.map_features(self._profile.data_source_features)
             self._cached_data_source |= cmd.value
@@ -134,6 +166,16 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
             self.async_write_ha_state()
 
     async def async_select_option(self, option: str) -> None:
+        if self._is_cooker_program:
+            if option not in self._options_map:
+                _LOGGER.error("Unknown cooking program %s", option)
+                return
+            # choosing a program does not start it: use the start button
+            self._current_option = option
+            self._profile.selected_program = option
+            self.async_write_ha_state()
+            return
+
         if self._is_data_source:
             mac = next(
                 (m for m, title in self._virtual_sensors.items() if title == option),
