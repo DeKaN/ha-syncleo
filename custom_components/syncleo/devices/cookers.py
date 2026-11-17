@@ -10,8 +10,13 @@ temperature, duration), and the same frame starts it — verified by starting an
 "варка на пару" from this integration's protocol stack.
 """
 
+from collections.abc import Callable
+from functools import partial
+from typing import Any, cast
+
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.const import UnitOfTemperature, UnitOfTime
+from pysyncleo.commands import UdpCommand
 
 from ..const import (
     FEATURE_CHILD_LOCK,
@@ -83,41 +88,45 @@ def _start_command(profile: CookerProfile) -> CookerProgramCommand:
     return CookerProgramCommand(code=code, temperature=temperature, seconds=seconds)
 
 
-def _create_polaris_cooker(device_type: int, **kwargs) -> CookerProfile:
-    params = {
-        "vendor": VENDOR_POLARIS,
-        "device_type": device_type,
-        "binary_sensors": [FEATURE_ERROR],
-        "sensors": {
+def _create_polaris_cooker(device_type: int, **kwargs: Any) -> CookerProfile:
+    profile = CookerProfile(
+        vendor=VENDOR_POLARIS,
+        device_type=device_type,
+        binary_sensors=[FEATURE_ERROR],
+        sensors={
             FEATURE_COOKER_CURRENT_TEMPERATURE: SensorConfig(
                 device_class=SensorDeviceClass.TEMPERATURE,
                 state_class=SensorStateClass.MEASUREMENT,
                 unit_of_measurement=UnitOfTemperature.CELSIUS,
             ),
         },
-        "switches": [FEATURE_CHILD_LOCK, FEATURE_KEEP_WARM],
-        "numbers": [
+        switches=[FEATURE_CHILD_LOCK, FEATURE_KEEP_WARM],
+        numbers=[
             FEATURE_COOKER_TARGET_TEMPERATURE,
             FEATURE_TIMER,
             FEATURE_COOKER_DELAY_START,
         ],
-        "number_configs": dict(_COOKER_NUMBER_CONFIGS),
-        "selects": {
+        number_configs=dict(_COOKER_NUMBER_CONFIGS),
+        selects={
             FEATURE_COOKER_PROGRAM: SelectConfig(
                 options_map={
                     name: code for name, (code, _, _) in POLARIS_COOKER_PROGRAMS.items()
                 }
             )
         },
-        "programs": dict(POLARIS_COOKER_PROGRAMS),
-    } | kwargs
-
-    profile = CookerProfile(**params)
+        programs=dict(POLARIS_COOKER_PROGRAMS),
+        **kwargs,
+    )
+    # cooker commands are duck-typed on purpose (see cooker_commands.py), hence the casts
     profile.buttons = {
         FEATURE_COOKER_START: ButtonConfig(
-            command_factory=lambda p=profile: _start_command(p)
+            command_factory=cast(
+                Callable[[], UdpCommand], partial(_start_command, profile)
+            )
         ),
-        FEATURE_COOKER_STOP: ButtonConfig(command_factory=CookerStopCommand),
+        FEATURE_COOKER_STOP: ButtonConfig(
+            command_factory=cast(Callable[[], UdpCommand], CookerStopCommand)
+        ),
     }
     return profile
 
