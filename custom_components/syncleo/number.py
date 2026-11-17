@@ -126,9 +126,7 @@ class SyncleoNumber(SyncleoBaseEntity, NumberEntity):
 
             await self.async_set_program_data(self._feature_key, data)
         elif self._cmd_class:
-            await self.async_send_command(
-                self._cmd_class(value * self._value_scale)
-            )
+            await self.async_send_command(self._cmd_class(value * self._value_scale))
         else:
             _LOGGER.error(
                 "No command class or program data field defined for feature: %s",

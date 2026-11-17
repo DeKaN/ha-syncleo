@@ -25,8 +25,8 @@ from ..const import (
     PROFILE_TYPE_AC,
     PROFILE_TYPE_BOILER,
     PROFILE_TYPE_BREEZER,
-    PROFILE_TYPE_HEATER,
     PROFILE_TYPE_COOKER,
+    PROFILE_TYPE_HEATER,
     PROFILE_TYPE_KETTLE,
 )
 
@@ -436,7 +436,6 @@ class CookerProfile(
     programs: dict[str, tuple[int, int, int]] = field(default_factory=dict)
     # runtime state shared by the select and the start button
     selected_program: str | None = None
-
 
 
 # ==========================================

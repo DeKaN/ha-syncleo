@@ -50,15 +50,11 @@ class SyncleoSelect(SyncleoBaseEntity, SelectEntity):
         self._config = config
         self._is_program_data = feature_key in profile.program_data_fields
         self._is_data_source = feature_key in profile.data_source_features
-        self._is_cooker_program = (
-            feature_key == FEATURE_COOKER_PROGRAM
-            and bool(getattr(profile, "programs", None))
+        self._is_cooker_program = feature_key == FEATURE_COOKER_PROGRAM and bool(
+            getattr(profile, "programs", None)
         )
         self._program_names_by_code = (
-            {
-                code: name
-                for name, (code, _, _) in profile.programs.items()
-            }
+            {code: name for name, (code, _, _) in profile.programs.items()}
             if self._is_cooker_program
             else {}
         )
