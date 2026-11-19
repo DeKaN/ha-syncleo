@@ -63,16 +63,25 @@ from .profiles import (
     SensorConfig,
 )
 
+_UP_BRIGHTNESS_KEY = "up_mode"
+_DOWN_BRIGHTNESS_KEY = "down_mode"
+_UP_RED_KEY = "color_up_r"
+_UP_GREEN_KEY = "color_up_g"
+_UP_BLUE_KEY = "color_up_b"
+_DOWN_RED_KEY = "color_down_r"
+_DOWN_GREEN_KEY = "color_down_g"
+_DOWN_BLUE_KEY = "color_down_b"
+
 # Hommyn uses color_up for both color controls and separate up_mode/down_mode levels.
-BACKLIGHT_FIELDS = [
-    CustomCommandField("up_mode", 1),
-    CustomCommandField("down_mode", 1),
-    CustomCommandField("color_up_r", 1),
-    CustomCommandField("color_up_g", 1),
-    CustomCommandField("color_up_b", 1),
-    CustomCommandField("color_down_r", 1),
-    CustomCommandField("color_down_g", 1),
-    CustomCommandField("color_down_b", 1),
+_BACKLIGHT_FIELDS = [
+    CustomCommandField(_UP_BRIGHTNESS_KEY, 1),
+    CustomCommandField(_DOWN_BRIGHTNESS_KEY, 1),
+    CustomCommandField(_UP_RED_KEY, 1),
+    CustomCommandField(_UP_GREEN_KEY, 1),
+    CustomCommandField(_UP_BLUE_KEY, 1),
+    CustomCommandField(_DOWN_RED_KEY, 1),
+    CustomCommandField(_DOWN_GREEN_KEY, 1),
+    CustomCommandField(_DOWN_BLUE_KEY, 1),
 ]
 
 # Hommyn labels the humidity slider endpoint 85 as CO (continuous humidification).
@@ -97,22 +106,22 @@ PROFILES = [
             HUMIDIFIER_MODE_AROMA: 11,
         },
         default_mode=MODE_AUTO,
-        custom_commands={UdpCommandType.BACKLIGHT: BACKLIGHT_FIELDS},
+        custom_commands={UdpCommandType.BACKLIGHT: _BACKLIGHT_FIELDS},
         lights={
             FEATURE_BACKLIGHT_UP: LightConfig(
-                red_key="color_up_r",
-                green_key="color_up_g",
-                blue_key="color_up_b",
-                brightness_key="up_mode",
+                red_key=_UP_RED_KEY,
+                green_key=_UP_GREEN_KEY,
+                blue_key=_UP_BLUE_KEY,
+                brightness_key=_UP_BRIGHTNESS_KEY,
                 brightness_levels=3,
                 command_type=UdpCommandType.BACKLIGHT,
                 turn_on_level=2,
             ),
             FEATURE_BACKLIGHT_DOWN: LightConfig(
-                red_key="color_up_r",
-                green_key="color_up_g",
-                blue_key="color_up_b",
-                brightness_key="down_mode",
+                red_key=_UP_RED_KEY,
+                green_key=_UP_GREEN_KEY,
+                blue_key=_UP_BLUE_KEY,
+                brightness_key=_DOWN_BRIGHTNESS_KEY,
                 brightness_levels=3,
                 command_type=UdpCommandType.BACKLIGHT,
                 turn_on_level=2,
@@ -173,6 +182,7 @@ PROFILES = [
         },
         binary_sensors=[FEATURE_ERROR],
         numbers=[
+            FEATURE_FAN_SPEED,
             PD_YOGA_ITERATIONS,
             PD_YOGA_TIMER,
             PD_MEDITATION_TIMER,
@@ -183,8 +193,10 @@ PROFILES = [
             PD_PRANA_EXHALE,
             PD_PRANA_EXHALE_DELAY,
         ],
+        number_configs={
+            FEATURE_FAN_SPEED: NumberConfig(min_value=1, max_value=3),
+        },
         selects={
-            FEATURE_FAN_SPEED: SelectConfig(options_map={"1": 1, "2": 2, "3": 3}),
             PD_FITNESS_TIMER: SelectConfig(options_map={"15": 15, "30": 30, "60": 60}),
             PD_PRANA_AUTO_EXERCISE: SelectConfig(
                 options_map={"A1": 1, "A2": 2, "A3": 3, "A4": 4}
@@ -225,22 +237,22 @@ PROFILES = [
         },
         default_mode=MODE_AUTO,
         turn_on_program_data_field=PD_TURN_ON,
-        custom_commands={UdpCommandType.BACKLIGHT: BACKLIGHT_FIELDS},
+        custom_commands={UdpCommandType.BACKLIGHT: _BACKLIGHT_FIELDS},
         lights={
             FEATURE_BACKLIGHT_UP: LightConfig(
-                red_key="color_up_r",
-                green_key="color_up_g",
-                blue_key="color_up_b",
-                brightness_key="up_mode",
+                red_key=_UP_RED_KEY,
+                green_key=_UP_GREEN_KEY,
+                blue_key=_UP_BLUE_KEY,
+                brightness_key=_UP_BRIGHTNESS_KEY,
                 brightness_levels=3,
                 command_type=UdpCommandType.BACKLIGHT,
                 turn_on_level=2,
             ),
             FEATURE_BACKLIGHT_DOWN: LightConfig(
-                red_key="color_up_r",
-                green_key="color_up_g",
-                blue_key="color_up_b",
-                brightness_key="down_mode",
+                red_key=_UP_RED_KEY,
+                green_key=_UP_GREEN_KEY,
+                blue_key=_UP_BLUE_KEY,
+                brightness_key=_DOWN_BRIGHTNESS_KEY,
                 brightness_levels=3,
                 command_type=UdpCommandType.BACKLIGHT,
                 turn_on_level=2,
@@ -302,6 +314,7 @@ PROFILES = [
         },
         binary_sensors=[FEATURE_ERROR],
         numbers=[
+            FEATURE_FAN_SPEED,
             PD_YOGA_ITERATIONS,
             PD_YOGA_TIMER,
             PD_MEDITATION_TIMER,
@@ -311,8 +324,10 @@ PROFILES = [
             PD_PRANA_EXHALE,
             PD_PRANA_EXHALE_DELAY,
         ],
+        number_configs={
+            FEATURE_FAN_SPEED: NumberConfig(min_value=1, max_value=3),
+        },
         selects={
-            FEATURE_FAN_SPEED: SelectConfig(options_map={"1": 1, "2": 2, "3": 3}),
             PD_FITNESS_TIMER: SelectConfig(options_map={"15": 15, "30": 30, "60": 60}),
             PD_PRANA_AUTO_EXERCISE: SelectConfig(options_map={"A1": 1, "A2": 2}),
             PD_PRANA_ITERATION_TIME: SelectConfig(
@@ -353,17 +368,15 @@ PROFILES = [
         },
         default_mode=MODE_AUTO,
         binary_sensors=[FEATURE_ERROR],
-        numbers=[FEATURE_TIMER],
+        numbers=[FEATURE_FAN_SPEED, FEATURE_TIMER],
         number_configs={
+            FEATURE_FAN_SPEED: NumberConfig(min_value=1, max_value=3),
             FEATURE_TIMER: NumberConfig(
                 min_value=0,
                 max_value=43200,
                 step=3600,
                 unit_of_measurement=UnitOfTime.SECONDS,
             ),
-        },
-        selects={
-            FEATURE_FAN_SPEED: SelectConfig(options_map={"1": 1, "2": 2, "3": 3}),
         },
         sensors={
             FEATURE_CURRENT_TEMPERATURE: SensorConfig(

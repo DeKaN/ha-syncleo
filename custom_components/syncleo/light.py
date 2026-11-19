@@ -115,7 +115,7 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
             }
             values.update(
                 {
-                    self._custom_fields[key]: float(int.from_bytes(value, "little"))
+                    self._custom_fields[key]: int.from_bytes(value, "little")
                     for key, value in updates.items()
                 }
             )

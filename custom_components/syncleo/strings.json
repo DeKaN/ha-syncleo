@@ -161,6 +161,9 @@
       "eco_delta": {
         "name": "Eco Delta Temperature"
       },
+      "fan_speed": {
+        "name": "Fan speed"
+      },
       "meditation_timer": {
         "name": "Meditation duration"
       },
