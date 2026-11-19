@@ -6,7 +6,6 @@ from typing import Any
 from homeassistant.components.humidifier import (
     HumidifierDeviceClass,
     HumidifierEntity,
-    HumidifierEntityFeature,
 )
 from homeassistant.const import STATE_OFF
 from homeassistant.core import HomeAssistant, callback
@@ -45,31 +44,17 @@ class SyncleoHumidifier(SyncleoBaseEntity[HumidifierProfile], HumidifierEntity):
     ) -> None:
         super().__init__(connection, profile, entry)
         self._attr_unique_id = f"{self._device_unique_id}_{profile.profile_type}"
+        self._attr_supported_features = profile.supported_features
+        self._attr_min_humidity = profile.min_humidity
+        self._attr_max_humidity = profile.max_humidity
+        self._attr_target_humidity_step = profile.target_humidity_step
+        self._attr_available_modes = list(profile.modes_map.keys())
+
         self._rev_modes_map = {value: key for key, value in profile.modes_map.items()}
         self._is_on = False
         self._mode: str | None = STATE_OFF
         self._current_humidity: float | None = None
         self._target_humidity: float | None = None
-
-    @property
-    def supported_features(self) -> HumidifierEntityFeature:
-        return self._profile.supported_features
-
-    @property
-    def min_humidity(self) -> int:
-        return self._profile.min_humidity
-
-    @property
-    def max_humidity(self) -> int:
-        return self._profile.max_humidity
-
-    @property
-    def target_humidity_step(self) -> int:
-        return self._profile.target_humidity_step
-
-    @property
-    def available_modes(self) -> list[str]:
-        return list(self._profile.modes_map)
 
     @property
     def is_on(self) -> bool:
