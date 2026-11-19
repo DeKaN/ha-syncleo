@@ -158,6 +158,7 @@ class SyncleoBaseEntity[ProfileT: DeviceBaseProfile](Entity):
     """Base class for all Syncleo entities."""
 
     _attr_has_entity_name = True
+    _attr_should_poll = False
     _device_connection_states: ClassVar[dict[str, ConnectionState]] = {}
 
     def __init__(self, connection, profile: ProfileT, entry: SyncleoConfigEntry):
