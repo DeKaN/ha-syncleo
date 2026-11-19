@@ -11,6 +11,8 @@ from homeassistant.components.light.const import ColorMode
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util.color import brightness_to_value, value_to_brightness
+from pysyncleo.commands import CmdCustomCommand
+from pysyncleo.models import CustomCommandField
 
 from .devices import DeviceBaseProfile, LightMixin
 from .devices.profiles import LightConfig
@@ -66,6 +68,17 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
         self._blue_key = config.blue_key
         self._brightness_key = config.brightness_key
         self._brightness_max_level = config.brightness_levels
+        self._custom_command_type = config.command_type
+        self._turn_on_level = config.turn_on_level
+        self._custom_fields = {
+            field.name: field
+            for field in (
+                profile.custom_commands[config.command_type]
+                if config.command_type is not None
+                else []
+            )
+        }
+        self._custom_values: dict[CustomCommandField, float] = {}
 
         self._brightness_levels = (1, self._brightness_max_level)
         self._current_level = 0
@@ -82,15 +95,36 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
 
     @property
     def rgb_color(self) -> tuple[int, int, int] | None:
-        r_bytes = self.get_program_data(self._red_key)
-        g_bytes = self.get_program_data(self._green_key)
-        b_bytes = self.get_program_data(self._blue_key)
+        return (
+            self._get_light_value(self._red_key),
+            self._get_light_value(self._green_key),
+            self._get_light_value(self._blue_key),
+        )
 
-        r = r_bytes[0] if r_bytes else 0
-        g = g_bytes[0] if g_bytes else 0
-        b = b_bytes[0] if b_bytes else 0
+    def _get_light_value(self, key: str) -> int:
+        if self._custom_command_type is not None:
+            return int(self._custom_values.get(self._custom_fields[key], 0))
+        data = self.get_program_data(key)
+        return data[0] if data else 0
 
-        return (r, g, b)
+    async def _async_set_light_fields(self, updates: dict[str, bytes]) -> None:
+        if self._custom_command_type is not None:
+            values = {
+                field: self._custom_values.get(field, 0)
+                for field in self._custom_fields.values()
+            }
+            values.update(
+                {
+                    self._custom_fields[key]: int.from_bytes(value, "little")
+                    for key, value in updates.items()
+                }
+            )
+            await self.async_send_command(
+                CmdCustomCommand(self._custom_command_type, values)
+            )
+            self._custom_values.update(values)
+        else:
+            await self.async_set_program_data_fields(updates)
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         updates: dict[str, bytes] = {}
@@ -107,14 +141,20 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
             target_level = math.ceil(
                 brightness_to_value(self._brightness_levels, kwargs[ATTR_BRIGHTNESS])
             )
+        elif (
+            self._turn_on_level is not None and ATTR_RGB_COLOR in kwargs and self._is_on
+        ):
+            target_level = self._current_level
+        elif self._turn_on_level is not None:
+            target_level = self._turn_on_level
         else:
             target_level = (
                 self._last_level if self._last_level > 0 else self._brightness_max_level
             )
 
-        if (
-            self._brightness_key
-            and self._brightness_key in self._profile.program_data_fields
+        if self._brightness_key and (
+            self._custom_command_type is not None
+            or self._brightness_key in self._profile.program_data_fields
         ):
             updates[self._brightness_key] = bytes([target_level])
         elif self._cmd_class:
@@ -127,7 +167,7 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
             return
 
         if updates:
-            await self.async_set_program_data_fields(updates)
+            await self._async_set_light_fields(updates)
 
         self._current_level = target_level
         self._last_level = target_level
@@ -135,11 +175,11 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
         self.async_write_ha_state()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
-        if (
-            self._brightness_key
-            and self._brightness_key in self._profile.program_data_fields
+        if self._brightness_key and (
+            self._custom_command_type is not None
+            or self._brightness_key in self._profile.program_data_fields
         ):
-            await self.async_set_program_data(self._brightness_key, bytes([0]))
+            await self._async_set_light_fields({self._brightness_key: bytes([0])})
         elif self._cmd_class:
             await self.async_send_command(self._cmd_class(value=False))
         else:
@@ -161,6 +201,19 @@ class SyncleoLight(SyncleoBaseEntity, LightEntity):
         need_update = False
 
         if (
+            self._brightness_key
+            and isinstance(cmd, CmdCustomCommand)
+            and cmd.command_type == self._custom_command_type
+        ):
+            # Share the received fields between lights using the same command.
+            self._custom_values = cmd.value
+            self._current_level = self._get_light_value(self._brightness_key)
+            self._is_on = self._current_level > 0
+            if self._current_level > 0:
+                self._last_level = self._current_level
+            need_update = True
+
+        elif (
             self._brightness_key
             and self._brightness_key in self._profile.program_data_fields
         ):

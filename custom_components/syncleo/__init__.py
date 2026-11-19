@@ -10,6 +10,7 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.instance_id import async_get
+from pysyncleo.commands import CmdCustomCommand, UdpCommand
 from pysyncleo.models import SyncleoUdpDevice
 from pysyncleo.transport import TransportManager
 
@@ -88,6 +89,21 @@ async def async_setup_entry(
     profile = get_device_profile_by_device(connection.device)
 
     if profile:
+        if profile.custom_commands:
+
+            def command_factory(
+                payload: bytes, parsed: UdpCommand
+            ) -> UdpCommand | None:
+                fields = profile.custom_commands.get(parsed.command_type)
+                if fields is None:
+                    return None
+                command = CmdCustomCommand(parsed.command_type)
+                command.deserialize(payload[1:])
+                command.map_features(fields)
+                return command
+
+            connection.command_factory = command_factory
+
         platforms = profile.supported_platforms
         _LOGGER.debug(
             f"Loading platforms {platforms} for {connection.device.mac_address}"

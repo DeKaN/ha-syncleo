@@ -4,6 +4,7 @@ from typing import Any
 
 from homeassistant.components.climate.const import ClimateEntityFeature, HVACMode
 from homeassistant.components.fan import FanEntityFeature
+from homeassistant.components.humidifier import HumidifierEntityFeature
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.components.water_heater import WaterHeaterEntityFeature
 from homeassistant.const import (
@@ -15,7 +16,7 @@ from homeassistant.const import (
 )
 from pysyncleo.commands import UdpCommand
 from pysyncleo.enums import UdpCommandType
-from pysyncleo.models import DiagnosticStatus
+from pysyncleo.models import CustomCommandField, DiagnosticStatus
 
 from ..const import (
     FEATURE_GATEWAY_LATENCY,
@@ -26,6 +27,7 @@ from ..const import (
     PROFILE_TYPE_BOILER,
     PROFILE_TYPE_BREEZER,
     PROFILE_TYPE_HEATER,
+    PROFILE_TYPE_HUMIDIFIER,
     PROFILE_TYPE_KETTLE,
 )
 
@@ -61,6 +63,8 @@ class LightConfig:
     blue_key: str
     brightness_key: str | None = None
     brightness_levels: int = 255
+    command_type: UdpCommandType | None = None
+    turn_on_level: int | None = None
 
 
 @dataclass(kw_only=True)
@@ -240,6 +244,9 @@ class DeviceBaseProfile(PlatformProviderBase):
     profile_type: str
     program_data_fields: dict[str, ProgramDataField] = field(default_factory=dict)
     data_source_features: list[str] = field(default_factory=list)
+    custom_commands: dict[UdpCommandType, list[CustomCommandField]] = field(
+        default_factory=dict
+    )
 
     @property
     def lookup_key(self) -> tuple[str, int]:
@@ -412,37 +419,36 @@ class KettleProfile(WaterHeaterProfile):
     )
 
 
+@dataclass(kw_only=True)
+class HumidifierProfile(
+    DeviceBaseProfile,
+    ButtonMixin,
+    BinarySensorMixin,
+    LightMixin,
+    NumberMixin,
+    SelectMixin,
+    SensorMixin,
+    SwitchMixin,
+):
+    """Profile for humidifiers with optional controls on other platforms."""
+
+    profile_type: str = PROFILE_TYPE_HUMIDIFIER
+    supported_features: HumidifierEntityFeature = HumidifierEntityFeature.MODES
+    min_humidity: int
+    max_humidity: int
+    target_humidity_step: int = 1
+    modes_map: dict[str, int] = field(default_factory=dict)
+    default_mode: str
+    turn_on_program_data_field: str | None = None
+
+    @property
+    def supported_platforms(self) -> list[Platform]:
+        return super().supported_platforms + [Platform.HUMIDIFIER]
+
+
 # ==========================================
 #     TEMPLATES FOR FUTURE DEVICE PROFILES
 # ==========================================
-
-# @dataclass(kw_only=True)
-# class HumidifierProfile(DeviceBaseProfile):
-#     """Profile for Humidifiers."""
-
-#     min_humidity: int
-#     max_humidity: int
-#     supported_features: HumidifierEntityFeature
-#     cmd_mode: UdpCommandType
-#     modes_map: Dict[str, int]
-#     cmd_target_humidity: UdpCommandType
-#     cmd_current_humidity: Optional[UdpCommandType] = None
-#     switches: List[str] = field(default_factory=list)
-#     sensors: List[str] = field(default_factory=list)
-#     speed_map: Dict[str, int] = field(default_factory=dict)
-
-#     @property
-#     def supported_platforms(self) -> List[Platform]:
-#         platforms = [Platform.HUMIDIFIER]
-
-#         if self.switches:
-#             platforms.append(Platform.SWITCH)
-#         if self.sensors:
-#             platforms.append(Platform.SENSOR)
-#         if self.speed_map:
-#             platforms.append(Platform.SELECT)
-
-#         return platforms
 
 
 # @dataclass(kw_only=True)
