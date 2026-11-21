@@ -110,6 +110,7 @@ PD_BREEZER_DAMPER_STATE = PD_DAMPER
 PRESET_ANTI_FROST = "anti_frost"
 PRESET_AUTO = "auto"
 PRESET_NIGHT = "night"
+PRESET_SCHEDULE = "schedule"
 PRESET_MANUAL = "manual"
 PRESET_TURBO = "turbo"
 PRESET_VACATION = "vacation"
